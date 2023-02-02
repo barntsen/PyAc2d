@@ -1,0 +1,7 @@
+#Ignore archive files, object files, c files and cpp files
+
+*.a
+*.o
+*.c
+*.cpp
+*.bin
