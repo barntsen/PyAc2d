@@ -29,6 +29,7 @@ frho    = "rho.bin" # Rho file name
 fq      = "q.bin"   # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
+fp      = "p.bin"   # Output file name for pressure recording
 #----------------------------------------------
 #Create source positions and source wavelet
 #----------------------------------------------
@@ -53,14 +54,14 @@ x=np.zeros((nr))
 y=np.zeros((nr))
 for i in range(0,nr):
   x[i] = i
-  y[i] = 50
+  y[i] = 10
 
 rx = PyepsStore1di(x)    #Convert numpy integer array to c-type
 ry = PyepsStore1di(y)    #Convert numpy integer array to c-type
 snp= PyepsStore1ds(fsnp) #Convert python string to c-type
 
 #Create receiver object
-rec= RecNew(rx,ry,nt,resamp,sresamp,snp);
+rec= RecNew(rx,ry,nr,resamp,sresamp,snp);
 
 #----------------------------------------
 # Create model
@@ -100,6 +101,5 @@ Ac2dSolve(ac2d,model,src,rec,nt,l)
 #--------------------------------------
 #Save Recording
 #--------------------------------------
-fp  = "p.bin"   # Output file name for pressure recording
 p=PyepsStore1ds(fp)
 RecSave(rec,p)

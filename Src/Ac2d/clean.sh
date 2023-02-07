@@ -1,4 +1,4 @@
 #!/bin/sh
 
-rm -f fd2d
+rm -f ac2dmod.o libac2dcpu.o
 rm -f *.o *.c *.cu
