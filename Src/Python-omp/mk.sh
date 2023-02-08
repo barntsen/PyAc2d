@@ -12,12 +12,12 @@ cp ../Ac2d/ac2d.e .
 cp ../Ac2d/diff.e .
 cp ../Ac2d/diff.i .
 
-ec -c pyeps.e
-ec -c -f model.e
-ec -c -f src.e
-ec -c -f rec.e
-ec -c -f ac2d.e
-ec -c -f diff.e
+ec -c  pyeps.e
+ec -c  model.e
+ec -c  src.e
+ec -c  rec.e
+ec -c  ac2d.e
+ec -c  diff.e
 
 cp $EPS/Src/libe.e .
 cp $EPS/Src/libe.i .
@@ -33,10 +33,11 @@ cp runcpu.e runcpu.c
 #
 swig -python fd2d.i
 
-gcc -fopenmp -fPIC -c fd2d_wrap.c  libe.c runcpu.c \
+gcc -O2 -fopenmp -fPIC -c fd2d_wrap.c  libe.c runcpu.c \
      pyeps.c model.c src.c rec.c diff.c ac2d.c  -I/usr/include/python3.8	
 
-gcc -fopenmp -shared -o _fd2d.so -L/usr/local/cuda-10.1/lib64/ runcpu.o libe.o \
-                ac2d.o model.o pyeps.o src.o rec.o diff.o fd2d_wrap.o 
+gcc -O2 -fopenmp -shared -o _fd2d.so -L/usr/local/cuda-10.1/lib64/ runcpu.o libe.o \
+                ac2d.o model.o pyeps.o src.o rec.o diff.o fd2d_wrap.o
+
 
 #The _fd2d.so shared library contains the c-to-python bindings.

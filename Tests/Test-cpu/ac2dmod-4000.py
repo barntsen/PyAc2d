@@ -13,8 +13,8 @@ pi=3.14159   #Pi
 #------------------------------
 #Set all modeling parameters
 #------------------------------
-nx      = 501       #No of grdipoints in x-direction
-ny      = 501       #No of gridpoints in y-direction
+nx      = 4001       #No of grdipoints in x-direction
+ny      = 4001       #No of gridpoints in y-direction
 dx      = 5.0       #Grid interval
 dt      = 0.0005;   #Time sampling interval
 nt      = 1501      #No of time steps

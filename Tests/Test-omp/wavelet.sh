@@ -4,7 +4,7 @@
 # and make plot
 #----------------------
 
-nt=801 #No of samples
+nt=10001 #No of samples
 lw=801  #Window for plotting
 
 ricker -nt $nt -f0 25.0 -t0 0.100 -dt 0.0005 src.bin 
