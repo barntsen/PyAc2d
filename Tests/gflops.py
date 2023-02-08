@@ -20,7 +20,7 @@ x3,y3 = getdata('data-omp.txt')
 
 Nt=1501
 l=6
-flop = Nt*((2*l)*2*2 + 30)
+flop = Nt*((3*l)*2*2 + 33)
 flop=flop/1.0e+09
 y1[:] = x1[:]**2*flop/y1[:] 
 y2[:] = x2[:]**2*flop/y2[:] 
