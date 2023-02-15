@@ -117,20 +117,3 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 echo "** Model size 8001x8001 Timesteps 1501" >> log.txt
 python3 ac2dmod-8000.py  >> log.txt
 
-#-----------------------------------------
-# Model no 6
-#-----------------------------------------
-n1=16001
-n2=16001
-#Create vp
-spike -n1 $n1 -n2 $n2 -val 2500.0 vp.bin
-
-#Create rho 
-spike -n1 $n1 -n2 $n2 -val 1000.0 rho.bin
-
-#Create Q 
-spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
-
-#Run modelling
-echo "** Model size 16001x16001 Timesteps 1501" >> log.txt
-python3 ac2dmod-16000.py  >> log.txt

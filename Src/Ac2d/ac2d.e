@@ -68,7 +68,16 @@ struct ac2d Ac2dNew(struct model Model){
 //   l:      Length of differentiators
 //
 // Returns:  Ac2d object
+//  
+// The acoustic equation of motion are integrated using Virieux's (1986) stress-velocity scheme.
 //
+// v_x(\xx,t+dt) = dt/rho_x [d^+_x sigma(\xx,t)] + dt fx(\xx,t) + v_x(\xx,t)
+// v_z(\xx,t+dt) = dt/rho_z [d^+_z sigma(\xx,t)] + dt fz(\xx,t) + v_z(\xx,t)
+//
+// \dot{s}igma(\xx,t+dt) = dt lambda(\xx)[d_x \dot{e}xx + d_z \dot{e}zz] + dt \dot{q}(\xx,t) 
+//                       + sigma(\xx,t)
+// \dot{e}xx             =  d^-_x vx 
+// \dot{e}zz             =  d^-_z vz 
 int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec Rec,int nt,int l)
 {
   int nx,ny;
