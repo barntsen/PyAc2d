@@ -1,12 +1,2 @@
 ** Model size 251x251 Timesteps 1501
-Solver wall clock time:  0.5080353150005976
-** Model size 501x501 Timesteps 1501
-Solver wall clock time:  0.7055988990005062
-** Model size 1001x1001 Timesteps 1501
-Solver wall clock time:  1.8507071659996654
-** Model size 2001x2001 Timesteps 1501
-Solver wall clock time:  6.075032693999674
-** Model size 4001x4001 Timesteps 1501
-Solver wall clock time:  22.29618870899958
-** Model size 8001x8001 Timesteps 1501
-Solver wall clock time:  90.45980079699984
+Solver wall clock time:  0.49944252199929906
