@@ -3,6 +3,7 @@ struct model {
 int Nx,Ny;
 int Nb;
 float W0;
+float [*,*] Q;
 float [*,*] Kappa;
 float [*,*] Dkappax;
 float [*,*] Dkappay;
@@ -17,6 +18,10 @@ float [*,*] Eta1x;
 float [*,*] Eta1y;
 float [*,*] Eta2x;
 float [*,*] Eta2y;
+float [*,*] Tausx;
+float [*,*] Tausy;
+float [*,*] Tauex;
+float [*,*] Tauey;
 float [*] dx;
 float [*] dy;
 float Dx;
