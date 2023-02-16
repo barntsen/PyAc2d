@@ -5,149 +5,177 @@ include "model.i"
 
 
 // ModelNew creates a new model.
+//
+//
+//@article{Komatitsch2007,
+//   title={An unsplit convolutional perfectly matched layer improved 
+//          at grazing incidence for the seismic wave equation},
+//  author={Komatitsch, Dimitri and Martin, Roland},
+//  journal={Geophysics},
+//  volume={72},
+//  number={5},
+//  pages={SM155--SM167},
+//  year={2007},
+//  publisher={Society of Exploration Geophysicists}
+//}
+
 struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb)
 {
-  int Nx,Ny;
+  struct model Model;  // Model object of type model
+  int Nx,Ny;           // No of Model gridpoints in x and y-directions
+                       // (Same as Model.Nx, Model.Ny)
+  float d0;            // PML parameter
+  float tausx,tausy;
+  float tauex,tauey;
+  float tau0;          // PML parameter
+  float dx,dy;         // PML temporaries
+  float L;             // Length of border zone
+  float x,y;           // Distances from edge of model
+  float Qx,Qy,Qmin;
+  
+  // Loop indices
   int i,j;
-  float tau0,tauemin,tausmin,tausmax,tauemax,Qmin,Qmax;
-  float arg;
-  struct model Model;
+
+  // DEBUG
   int fd;
-  char [*] tmp;
-  float argexp;
+  int n;
 
   Model= new(struct model);
   Model.Dx = Dx;
   Model.Dt = Dt;
   Model.Nx = len(vp,0);
   Model.Ny = len(vp,1);
-  Model.Nb = Nb;
-  Model.W0 = W0;
   Nx = Model.Nx;
   Ny = Model.Ny;
+  Model.Nb = Nb;
+  Model.W0 = W0;
   Model.Kappa   = new(float [Nx,Ny]);
   Model.Dkappax = new(float [Nx,Ny]);
   Model.Dkappay = new(float [Nx,Ny]);
-  Model.Dsx     = new(float [Nx,Ny]);
-  Model.Dsy     = new(float [Nx,Ny]);
+  Model.Drhox     = new(float [Nx,Ny]);
+  Model.Drhoy     = new(float [Nx,Ny]);
   Model.Rho     =  new(float [Nx,Ny]);
-  Model.Q       =  new(float [Nx,Ny]);
-  Model.Tauex   =  new(float [Nx,Ny]);
-  Model.Tausx   =  new(float [Nx,Ny]);
-  Model.Tauey   =  new(float [Nx,Ny]);
-  Model.Tausy   =  new(float [Nx,Ny]);
   Model.Alpha1x   =  new(float [Nx,Ny]);
   Model.Alpha1y   =  new(float [Nx,Ny]);
   Model.Alpha2x   =  new(float [Nx,Ny]);
   Model.Alpha2y   =  new(float [Nx,Ny]);
+  Model.Eta1x   =  new(float [Nx,Ny]);
+  Model.Eta1y   =  new(float [Nx,Ny]);
+  Model.Eta2x   =  new(float [Nx,Ny]);
+  Model.Eta2y   =  new(float [Nx,Ny]);
+  Model.dx   =  new(float [Nx]);
+  Model.dy   =  new(float [Ny]);
 
   // Store the model
   for(i=0; i<Nx;i=i+1){
     for(j=0; j<Ny;j=j+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = rho[i,j];
-      Model.Q[i,j]       = Q[i,j];
     }
   }
 
-  // Compute relaxation times
-  tau0 = 1.0/Model.W0;
+
+  // Set the profile functions
+
+  d0 = 1.0;
+  L = (cast(float,Nb)-1.0)*Dx;
+
   for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      Q = Model.Q;
-      Model.Tauex[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)+1.0);
-      Model.Tauex[i,j]   = 1.0/Model.Tauex[i,j];
-      Model.Tausx[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)-1.0);
-      Model.Tausx[i,j]   = 1.0/Model.Tausx[i,j];
-      Model.Tauey[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)+1.0);
-      Model.Tauey[i,j]   = 1.0/Model.Tauey[i,j];
-      Model.Tausy[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)-1.0);
-      Model.Tausy[i,j]   = 1.0/Model.Tausy[i,j];
-    }
+      Model.dx[i] = d0;
   }
-
-  if(Model.Nb > 0){
-  //
-  // Taper the relaxation times
-  //
-
-  //
-  // Compute value of relaxation times in the attenuating
-  // border zone of the model
-  Qmin = 1.1;
-  Qmax=100000.0;
-  tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
-  tauemin = 1.0/tauemin;
-  tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
-  tausmin = 1.0/tausmin;
-  tauemax = (tau0/Qmax)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
-  tauemax = 1.0/tauemax;
-  tausmax = (tau0/Qmax)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
-  tausmax = 1.0/tausmax;
-
-  argexp=1.0;
-  // taper in x-direction left border
+  for(j=0; j<Ny;j=j+1){
+      Model.dy[j] = d0;
+  }
+  
+  // profile functions left border
   for(i=0; i<Nb;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      arg = (cast(float,i)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauex[i,j] = tauemin 
-                       + (Model.Tauex[Nb,j]-tauemin)*arg;
-      Model.Tausx[i,j] = tausmin 
-                       + (Model.Tausx[Nb,j]-tausmin)*arg;
-    }
+      x = cast(float,i)*Dx;
+      Model.dx[i] = d0*(x/L)*(x/L);
   }
 
-  // taper in x-direction right border
-  for(i=Nx-1-Nb; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      arg = (cast(float,Nx-1-i)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauex[i,j] = tauemin 
-                       + (Model.Tauex[Nb,j]-tauemin)*arg;
-      Model.Tausx[i,j] = tausmin 
-                       + (Model.Tausx[Nb,j]-tausmin)*arg;
-    }
+  // profile functions right border
+  for(i=Nx-1-Nb+1; i<Nx;i=i+1){
+      x=cast(float,Nx-1-i)*Dx;
+      Model.dx[i] = d0*(x/L)*(x/L);
+  }
+  // profile functions top border
+  for(j=0; j<Nb;j=j+1){
+      y = cast(float,j)*Dx;
+      Model.dy[j] = d0*(y/L)*(y/L);
+  }
+  // profile functions bottom border
+  for(j=Ny-1-Nb+1; j<Ny;j=j+1){
+      y=cast(float,Ny-1-j)*Dx;
+      Model.dy[j] = d0*(y/L)*(y/L);
   }
 
-  // taper in y-direction upper border
- for(i=0; i<Nx;i=i+1){
-   for(j=0; j<Nb;j=j+1){
-      arg = (cast(float,j)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauey[i,j] = tauemin 
-                       + (Model.Tauey[i,Nb]-tauemin)*arg;
-      Model.Tausy[i,j] = tausmin 
-                       + (Model.Tausy[i,Nb]-tausmin)*arg;
-    }
-  }
-  // taper in y-direction lower border
-  for(i=0; i<Nx;i=i+1){
-    for(j=Ny-1-Nb; j<Ny;j=j+1){
-      arg = (cast(float,Ny-1-j)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauey[i,j] = tauemin 
-                       + (Model.Tauey[i,Nb]-tauemin)*arg;
-      Model.Tausy[i,j] = tausmin 
-                       + (Model.Tausy[i,Nb]-tausmin)*arg;
-    }
-  }
-}
-  // Compute alpha coefficients
+  // Compute alpha and coefficients
+  Qmin=5.0;
   for(i=0; i<Nx;i=i+1){
     for(j=0; j<Ny;j=j+1){
-      Model.Alpha1x[i,j]   = LibeExp(-Model.Dt*Model.Tausx[i,j]);
-      Model.Alpha1y[i,j]   = LibeExp(-Model.Dt*Model.Tausy[i,j]);
-      Model.Alpha2x[i,j]   = 1.0*Model.Tauex[i,j];
-      Model.Alpha2y[i,j]   = 1.0*Model.Tauey[i,j];
-      Model.Dkappax[i,j]   = Model.Kappa[i,j]
-                            *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
-      Model.Dkappay[i,j]   = Model.Kappa[i,j]
-                             *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
-      Model.Dsx[i,j]       = Model.Rho[i,j]
-                             *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
-      Model.Dsy[i,j]       = Model.Rho[i,j]
-                             *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
+      dx                   = Model.dx[i];
+      dy                   = Model.dy[j];
+      Qx                   = (Q[i,j]-Qmin)*dx  + Qmin;      
+      Qy                   = (Q[i,j]-Qmin)*dy  + Qmin;      
+      tau0                 = 1.0/Model.W0;
+      tauex                = (tau0/Qx)*(LibeSqrt(Qx*Qx+1.0)+1.0);
+      tauey                = (tau0/Qy)*(LibeSqrt(Qy*Qy+1.0)+1.0);
+      tausx                 =(tau0/Qx)*(LibeSqrt(Qx*Qx+1.0)-1.0);
+      tausy                 =(tau0/Qy)*(LibeSqrt(Qy*Qy+1.0)-1.0);
+      Model.Alpha1x[i,j]   = LibeExp(-Dt/tausx);
+      Model.Eta1x[i,j]     = LibeExp(-Dt/tausx);
+      Model.Alpha1y[i,j]   = LibeExp(-Dt/tausy);
+      Model.Eta1y[i,j]     = LibeExp(-Dt/tausy);
+      Model.Alpha2x[i,j]   = Dt/tauex;
+      Model.Eta2x[i,j]     = Dt/tauex;
+      Model.Alpha2y[i,j]   = Dt/tauey;
+      Model.Eta2y[i,j]     = Dt/tauey;
+      Model.Dkappax[i,j]   = Model.Kappa[i,j]*(1.0-tauex/tausx);
+      Model.Dkappay[i,j]   = Model.Kappa[i,j]*(1.0-tauey/tausy);
+      Model.Drhox[i,j]     = (1.0/Model.Rho[i,j])*(1.0-tauex/tausx);
+      Model.Drhoy[i,j]     = (1.0/Model.Rho[i,j])*(1.0-tauey/tausy);
     }
   }
+  fd = LibeOpen("dx.bin","w");
+  n = Nx;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.dx));
+  LibeClose(fd);
 
+  fd = LibeOpen("dy.bin","w");
+  n = Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.dy));
+  LibeClose(fd);
+
+  fd = LibeOpen("Alpha1x.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Alpha1x));
+  LibeClose(fd);
+
+  fd = LibeOpen("Alpha1y.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Alpha1y));
+  LibeClose(fd);
+
+  fd = LibeOpen("Alpha2x.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Alpha2x));
+  LibeClose(fd);
+
+  fd = LibeOpen("Alpha2y.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Alpha2y));
+  LibeClose(fd);
+
+  fd = LibeOpen("Dkappax.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Dkappax));
+  LibeClose(fd);
+
+  fd = LibeOpen("Dkappay.bin","w");
+  n = Nx*Ny;
+  LibeWrite(fd,4*n,cast(char [4*n],Model.Dkappay));
+  LibeClose(fd);
   return(Model);
 }
 // Modelstability checks velocity model for stability.

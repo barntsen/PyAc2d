@@ -27,6 +27,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 echo "** Model size 251x251 Timesteps 1501" > log.txt
 python3 ac2dmod-250.py  >> log.txt
 
+exit
 #-----------------------------------------
 # Model no 2
 #-----------------------------------------
