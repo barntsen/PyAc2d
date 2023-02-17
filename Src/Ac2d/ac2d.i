@@ -2,17 +2,15 @@
 //=====================================
 
 struct ac2d {
-  float [*,*] p0;
-  float [*,*] p1;
-  float [*,*] p2;
-  float [*,*] ax;
-  float [*,*] ay;
-  float [*,*] ex;
-  float [*,*] ey;
-  float [*,*] gammasx;
-  float [*,*] gammasy;
+  float [*,*] p;     // Stress 
+  float [*,*] vx;     // x-component of particle velocity
+  float [*,*] vy;     // y-component of particle velocity
+  float [*,*] exx;    // time derivative of strain x-component
+  float [*,*] eyy;    // time derivative of strain y-component
   float [*,*] gammax;
   float [*,*] gammay;
+  float [*,*] thetax;
+  float [*,*] thetay;
   int ts;             // Timestep no
 }
 

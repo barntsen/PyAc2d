@@ -29,8 +29,8 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.Kappa   = new(float [Nx,Ny]);
   Model.Dkappax = new(float [Nx,Ny]);
   Model.Dkappay = new(float [Nx,Ny]);
-  Model.Dsx     = new(float [Nx,Ny]);
-  Model.Dsy     = new(float [Nx,Ny]);
+  Model.Drhox     = new(float [Nx,Ny]);
+  Model.Drhoy     = new(float [Nx,Ny]);
   Model.Rho     =  new(float [Nx,Ny]);
   Model.Q       =  new(float [Nx,Ny]);
   Model.Tauex   =  new(float [Nx,Ny]);
@@ -41,6 +41,10 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.Alpha1y   =  new(float [Nx,Ny]);
   Model.Alpha2x   =  new(float [Nx,Ny]);
   Model.Alpha2y   =  new(float [Nx,Ny]);
+  Model.Eta1x   =  new(float [Nx,Ny]);
+  Model.Eta1y   =  new(float [Nx,Ny]);
+  Model.Eta2x   =  new(float [Nx,Ny]);
+  Model.Eta2y   =  new(float [Nx,Ny]);
 
   // Store the model
   for(i=0; i<Nx;i=i+1){
@@ -130,21 +134,26 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     }
   }
 }
-  // Compute alpha coefficients
+  // Compute alpha and eta coefficients
   for(i=0; i<Nx;i=i+1){
     for(j=0; j<Ny;j=j+1){
       Model.Alpha1x[i,j]   = LibeExp(-Model.Dt*Model.Tausx[i,j]);
       Model.Alpha1y[i,j]   = LibeExp(-Model.Dt*Model.Tausy[i,j]);
-      Model.Alpha2x[i,j]   = 1.0*Model.Tauex[i,j];
-      Model.Alpha2y[i,j]   = 1.0*Model.Tauey[i,j];
+      Model.Alpha2x[i,j]   = Model.Dt*Model.Tauex[i,j];
+      Model.Alpha2y[i,j]   = Model.Dt*Model.Tauey[i,j];
+      Model.Eta1x[i,j]     = LibeExp(-Model.Dt*Model.Tausx[i,j]);
+      Model.Eta1y[i,j]     = LibeExp(-Model.Dt*Model.Tausy[i,j]);
+      Model.Eta2x[i,j]     = Model.Dt*Model.Tauex[i,j];
+      Model.Eta2y[i,j]     = Model.Dt*Model.Tauey[i,j];
       Model.Dkappax[i,j]   = Model.Kappa[i,j]
                             *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
       Model.Dkappay[i,j]   = Model.Kappa[i,j]
                              *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
-      Model.Dsx[i,j]       = Model.Rho[i,j]
+      Model.Drhox[i,j]       = (1.0/Model.Rho[i,j])
                              *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
-      Model.Dsy[i,j]       = Model.Rho[i,j]
+      Model.Drhoy[i,j]       = (1.0/Model.Rho[i,j])
                              *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
+                             
     }
   }
 

@@ -10,114 +10,115 @@
 
 // Internal functions
 
-  int Ac2dax(struct ac2d Ac2d, struct model Model){}
-  int Ac2day(struct ac2d Ac2d, struct model Model){}
-int Ac2dpressure(struct ac2d Ac2d, struct model Model){} 
+  int Ac2dvx(struct ac2d Ac2d, struct model Model){}
+  int Ac2dvy(struct ac2d Ac2d, struct model Model){}
+  int Ac2dstress(struct ac2d Ac2d, struct model Model){} 
 
 // Public functions
 
 // Ac2dNew creates a new Ac2d object
 //
-// Arguments:
-//   Model:  Model object
+// Parameters:
+//   Model : Model object
 //
-// Returns:  Ac2d object
-//
-struct ac2d Ac2dNew(struct model Model){
+// Return:
+//   Ac2d object  
+  struct ac2d Ac2dNew(struct model Model){
   struct ac2d Ac2d;
   int i,j;
   
   Ac2d = new(struct ac2d);
-  Ac2d.p0=new(float [Model.Nx,Model.Ny]);
-  Ac2d.p1=new(float [Model.Nx,Model.Ny]);
-  Ac2d.p2=new(float [Model.Nx,Model.Ny]);
-  Ac2d.ax=new(float [Model.Nx,Model.Ny]);
-  Ac2d.ay=new(float [Model.Nx,Model.Ny]);
-  Ac2d.ex=new(float [Model.Nx,Model.Ny]);
-  Ac2d.ey=new(float [Model.Nx,Model.Ny]);
+  Ac2d.p=new(float [Model.Nx,Model.Ny]); 
+  Ac2d.vx=new(float [Model.Nx,Model.Ny]);
+  Ac2d.vy=new(float [Model.Nx,Model.Ny]);
+  Ac2d.exx=new(float [Model.Nx,Model.Ny]);
+  Ac2d.eyy=new(float [Model.Nx,Model.Ny]);
   Ac2d.gammax=new(float [Model.Nx,Model.Ny]);
   Ac2d.gammay=new(float [Model.Nx,Model.Ny]);
-  Ac2d.gammasx=new(float [Model.Nx,Model.Ny]);
-  Ac2d.gammasy=new(float [Model.Nx,Model.Ny]);
+  Ac2d.thetax=new(float [Model.Nx,Model.Ny]);
+  Ac2d.thetay=new(float [Model.Nx,Model.Ny]);
   
   for (i=0; i<Model.Nx; i=i+1){ 
     for (j=0; j<Model.Ny; j=j+1){ 
-      Ac2d.p0[i,j] = 0.0;
-      Ac2d.p1[i,j] = 0.0;
-      Ac2d.p2[i,j] = 0.0;
-      Ac2d.ax[i,j] = 0.0;
-      Ac2d.ay[i,j] = 0.0;
-      Ac2d.ex[i,j] = 0.0;
-      Ac2d.ey[i,j] = 0.0;
+      Ac2d.p[i,j]       = 0.0;
+      Ac2d.vx[i,j]      = 0.0;
+      Ac2d.vy[i,j]      = 0.0;
+      Ac2d.exx[i,j]     = 0.0;
+      Ac2d.eyy[i,j]     = 0.0;
       Ac2d.gammax[i,j]  = 0.0;
       Ac2d.gammay[i,j]  = 0.0;
-      Ac2d.gammasx[i,j] = 0.0;
-      Ac2d.gammasy[i,j] = 0.0;
+      Ac2d.thetax[i,j]  = 0.0;
+      Ac2d.thetay[i,j]  = 0.0;
       Ac2d.ts = 0;
     }
   }
   return(Ac2d);
 }
-// Ac2dSolve computes the solution of the acoustic wave equation
-//
-// Arguments:
-//   Ac2d:   Ac2d object
-//   Model:  Model object
-//   Src:    Src object
-//   nt:     No of time steps
-//   l:      Length of differentiators
-//
-// Returns:  Ac2d object
-//  
+// Ac2dSolve computes the solution of the acoustic wave equation.
 // The acoustic equation of motion are integrated using Virieux's (1986) stress-velocity scheme.
 //
-// v_x(\xx,t+dt) = dt/rho_x [d^+_x sigma(\xx,t)] + dt fx(\xx,t) + v_x(\xx,t)
-// v_z(\xx,t+dt) = dt/rho_z [d^+_z sigma(\xx,t)] + dt fz(\xx,t) + v_z(\xx,t)
+// vx(\xx,t+dt) = dt/rhox [d^+_x sigma(\xx,t)] + dt fx(\xx,t) + vx(\xx,t)
+//              + thetax d[1/rhox]
+// vy(\xx,t+dt) = dt/rhoz [d^+_y sigma(\xx,t)] + dt fy(\xx,t) + vy(\xx,t)
+//              + thetay d[1/rhoy]
 //
-// \dot{s}igma(\xx,t+dt) = dt lambda(\xx)[d_x \dot{e}xx + d_z \dot{e}zz] + dt \dot{q}(\xx,t) 
-//                       + sigma(\xx,t)
+// \dot{p}(\xx,t+dt) = dt lambda(\xx)[d_x \dot{e}xx + d_y \dot{e}zz] + dt \dot{q}(\xx,t) 
+//                   + dt [gammax dK + gammay dK]
+//                       + p(\xx,t)
 // \dot{e}xx             =  d^-_x vx 
-// \dot{e}zz             =  d^-_z vz 
+// \dot{e}yy             =  d^-_z vy 
+//
+//  gammax(\xx, t+dt) = alpha1x gammax(\xx,t) + alpha2x \dot{e}xx 
+//  gammay(\xx, t+dt) = alpha1y gammay(\xx,t) + alpha2y \dot{e}yy 
+//
+//  thetax(\xx, t+dt) = theta1x gammax(\xx,t) + theta2x d^+x p
+//  thetay(\xx, t+dt) = theta1y gammay(\xx,t) + theta2y d^+y p
+//  
+//  Parameters:  
+//    Ac2d : Solver object
+//    Model: Model object
+//    Src  : Source object
+//    Rec  : Receiver object
+//    nt   : Number of timesteps to do starting with current step  
+//    l    : The differentiator operator length
 int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec Rec,int nt,int l)
 {
-  int nx,ny;
-  int sx,sy;
+  int sx,sy;         // Source x,y-coordinates 
+  struct diff Diff;  // Differentiator object
+  int ns,ne;         // Start stop timesteps
   int i,k;
-  float [*,*] tmp;
-  struct diff Diff;
-  float perc,oldperc;
-  int ns,ne;
-  int iperc;
 
-  Diff = DiffNew(l);
+  float perc,oldperc; // Percentage finished current and old
+  int iperc;          // Percentage finished
+
+  Diff = DiffNew(l);  // Create differentiator object
 
   oldperc=0.0;
-  ns=Ac2d.ts; 
-  ne = ns+nt;
+  ns=Ac2d.ts;         //Get current timestep 
+  ne = ns+nt;         
   for(i=ns; i<ne; i=i+1){
 
-    // Compute accelerations
-    DiffDxplus(Diff,Ac2d.p1,Ac2d.ex,Model.Dx);       
-    Ac2dax(Ac2d,Model);   
-    DiffDyplus(Diff,Ac2d.p1,Ac2d.ey,Model.Dx);       
-    Ac2day(Ac2d,Model);   
+    // Compute spatial derivative of stress
+    // Use exx and eyy as temp storage
+    DiffDxplus(Diff,Ac2d.p,Ac2d.exx,Model.Dx); // Forward differentiation x-axis
+    Ac2dvx(Ac2d,Model);                        // Compute vx
+    DiffDyplus(Diff,Ac2d.p,Ac2d.eyy,Model.Dx); // Forward differentiation y-axis
+    Ac2dvy(Ac2d,Model);                        // Compute vy
 
-    // Compute strains
-    DiffDxminus(Diff,Ac2d.ax,Ac2d.ex,Model.Dx);     
-    DiffDyminus(Diff,Ac2d.ay,Ac2d.ey,Model.Dx);    
+    // Compute time derivative of strains
+    DiffDxminus(Diff,Ac2d.vx,Ac2d.exx,Model.Dx); //Compute exx     
+    DiffDyminus(Diff,Ac2d.vy,Ac2d.eyy,Model.Dx); //Compute eyy   
 
-    // Update pressure
+    // Update stress
 
-     Ac2dpressure(Ac2d,Model);  
+     Ac2dstress(Ac2d,Model);  
 
     // Add source
-    nx=Model.Nx;
-    ny=Model.Ny;
     for (k=0; k<Src.Ns;k=k+1){
       sx=Src.Sx[k];
       sy=Src.Sy[k];
-      Ac2d.p2[sx,sy] = Ac2d.p2[sx,sy]
-                      +(Model.Dt*Model.Dt)*(Src.Src[i]/(Model.Dx*Model.Dx)) ; 
+      Ac2d.p[sx,sy] = Ac2d.p[sx,sy]
+                    + Model.Dt*(Src.Src[i]/(Model.Dx*Model.Dx)) ; 
     }
 
     // Print progress
@@ -134,63 +135,61 @@ int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec R
    }
 
     //Record wavefield
-    RecReceiver(Rec,i,Ac2d.p2); 
+    RecReceiver(Rec,i,Ac2d.p); 
 
     // Record Snapshots
-    RecSnap(Rec,i,Ac2d.p2);
-
-    /* Move present future pressure p2 to p1
-       and present pressure p1 to p0       */ 
-    tmp=Ac2d.p0;
-    Ac2d.p0=Ac2d.p1;
-    Ac2d.p1=Ac2d.p2;
-    Ac2d.p2=tmp;
+    RecSnap(Rec,i,Ac2d.p);
   }
   return(OK);
 }
-// Ac2ax computes the acceleration
+// Ac2vx computes the x-component of particle velocity
 //
-int Ac2dax(struct ac2d Ac2d, struct model Model)
-{
-  int nx,ny;
-  int i,j;
-
-  nx = Model.Nx;
-  ny = Model.Ny;
-  
-  parallel(i=0:nx,j=0:ny){
-    Ac2d.ax[i,j] = (1.0/Model.Rho[i,j])*Ac2d.ex[i,j] 
-                + (1.0/Model.Rho[i,j])*Ac2d.gammasx[i,j]*Model.Dsx[i,j];
-    Ac2d.gammasx[i,j] = Ac2d.gammasx[i,j]*Model.Alpha1x[i,j] 
-                       + Model.Alpha2x[i,j]*Ac2d.ax[i,j]*Model.Dt; 
-  }
-}
-// Ac2ay computes the acceleration
-//
-int Ac2day(struct ac2d Ac2d, struct model Model)
-{
-  int nx,ny;
-  int i,j;
-
-  nx = Model.Nx;
-  ny = Model.Ny;
-  
-  parallel(i=0:nx,j=0:ny){
-    Ac2d.ay[i,j] = (1.0/Model.Rho[i,j])*Ac2d.ey[i,j] 
-               + (1.0/Model.Rho[i,j])*Ac2d.gammasy[i,j]*Model.Dsy[i,j];
-    Ac2d.gammasy[i,j] = Ac2d.gammasy[i,j]*Model.Alpha1y[i,j] 
-                        + Model.Alpha2y[i,j]*Ac2d.ay[i,j]*Model.Dt; 
-  }
-}
-// Ac2dpressure computes acoustic pressure at current time
-//
-// Arguments: 
-//   Ac2d: Ac2d object
+// Parameters:
+//   Ac2d : Solver object 
 //   Model: Model object
+int Ac2dvx(struct ac2d Ac2d, struct model Model)
+{
+  int nx,ny;
+  int i,j;
+
+  nx = Model.Nx;
+  ny = Model.Ny;
+  
+  // The derivative of stress in x-direction is stored in exx
+  // Scale with inverse density and advance one time step
+  parallel(i=0:nx,j=0:ny){
+    Ac2d.vx[i,j] = Model.Dt*(1.0/Model.Rho[i,j])*Ac2d.exx[i,j] + Ac2d.vx[i,j]
+                 + Model.Dt*Ac2d.thetax[i,j]*Model.Drhox[i,j];
+    Ac2d.thetax[i,j]  = Model.Eta1x[i,j]*Ac2d.thetax[i,j] + Model.Eta2x[i,j]*Ac2d.exx[i,j];
+  }
+}
+// Ac2vy computes the y-component of particle velocity
 //
-// Returns: None 
+// Parameters:
+//   Ac2d : Solver object 
+//   Model: Model object
+int Ac2dvy(struct ac2d Ac2d, struct model Model)
+{
+  int nx,ny;
+  int i,j;
+
+  nx = Model.Nx;
+  ny = Model.Ny;
+  
+  // The derivative of stress in y-direction is stored in eyy
+  // Scale with inverse density and advance one time step
+  parallel(i=0:nx,j=0:ny){
+    Ac2d.vy[i,j] = Model.Dt*(1.0/Model.Rho[i,j])*Ac2d.eyy[i,j] + Ac2d.vy[i,j]
+                 + Model.Dt*Ac2d.thetay[i,j]*Model.Drhoy[i,j];
+     Ac2d.thetay[i,j]  = Model.Eta1y[i,j]*Ac2d.thetay[i,j] + Model.Eta2y[i,j]*Ac2d.eyy[i,j];
+  }
+}
+// Ac2dstress computes acoustic stress 
 //
-int Ac2dpressure(struct ac2d Ac2d, struct model Model){
+// Parameters:
+//   Ac2d : Solver object 
+//   Model: Model object
+int Ac2dstress(struct ac2d Ac2d, struct model Model){
   int nx, ny;
   int i,j;
 
@@ -198,12 +197,11 @@ int Ac2dpressure(struct ac2d Ac2d, struct model Model){
   ny = Model.Ny;
 
   parallel(i=0:nx,j=0:ny){
-    Ac2d.p2[i,j] = 2.0*Ac2d.p1[i,j] - Ac2d.p0[i,j] 
-                 + (Model.Dt*Model.Dt)*Model.Kappa[i,j]*(Ac2d.ex[i,j]+Ac2d.ey[i,j]) 
-                 + (Model.Dt*Model.Dt)*(Model.Dkappax[i,j]*Ac2d.gammax[i,j]
-                 +                      Model.Dkappay[i,j]*Ac2d.gammay[i,j]); 
-
-   Ac2d.gammax[i,j] = Model.Alpha1x[i,j]*Ac2d.gammax[i,j] + Model.Alpha2x[i,j]*Model.Dt*Ac2d.ex[i,j];
-   Ac2d.gammay[i,j] = Model.Alpha1y[i,j]*Ac2d.gammay[i,j] + Model.Alpha2y[i,j]*Model.Dt*Ac2d.ey[i,j];
+    Ac2d.p[i,j] = Model.Dt*Model.Kappa[i,j]*(Ac2d.exx[i,j]+Ac2d.eyy[i,j])  
+                  + Ac2d.p[i,j]
+                  + Model.Dt*(Ac2d.gammax[i,j]*Model.Dkappax[i,j]
+                   +Ac2d.gammay[i,j]*Model.Dkappay[i,j]);
+    Ac2d.gammax[i,j] = Model.Alpha1x[i,j]*Ac2d.gammax[i,j] + Model.Alpha2x[i,j]*Ac2d.exx[i,j];
+    Ac2d.gammay[i,j] = Model.Alpha1y[i,j]*Ac2d.gammay[i,j] + Model.Alpha2y[i,j]*Ac2d.eyy[i,j];
   }
 }
