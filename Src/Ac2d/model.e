@@ -1,21 +1,52 @@
 // Methods for the model struct
+//
 
 include <libe.i>
 include "model.i"
 
+//Internal functions
+int Modeld(float [*] d, float dx, int nb){}
+float Modeltaus(float Q, float w0){}
+float Modeltaue(float Q, float w0){}
 
 // ModelNew creates a new model.
+// The model is defined by several 2D arrays, with the x-coordinate
+// as the first index, and the y-coordinate as the second index.
+// A position in the model (x,y) maps to the arrays as [i,j]
+// where x=Dx*i, y=Dx*j
+// The arrays vp and rho dfines the P-wave velocity and the density.
+// Q defines the P-wave Q-value.
+// Dx and Dt are the spatial and time sampling intervals, while
+// W0 is the angular frequency of the Q absorption peak.
+// Nb (in grid points) is the width of the border zone used for the 
+// boundary conditions.
+// The absorbing boundaries is equal to the CPML method
+// but constructed using a visco-elastic medium with
+// relaxation specified by a standard-linear solid, while 
+// Newtons equation of motion includes viscous losses through
+// a time dependent density which uses a standard-linera solid
+// relaxation mechanism.
+// The Boundary condition is implemented by using a strongly
+// absorbing medium with low Q around a border zone with width Nb.
+
 struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb)
 {
-  int Nx,Ny;
+  struct model Model; // Object to instantiate
+
+  int Nx,Ny;              // Model dimensions in x- and y-directions
+  float tau0;             // Relaxation time at Peak 1/Q-value
+  
+  // Smoothing parameters
+  float Qmin, Qmax;
+  float tauemin,tauemax;
+  float tausmin,tausmax;
+
+  // Relaxation times
+  float tausx, tausy;
+  float tauex, tauey;
+
   int i,j;
-  float tau0,tauemin,tausmin,tausmax,tauemax,Qmin,Qmax;
-  float arg;
-  struct model Model;
-  int fd;
-  char [*] tmp;
-  float argexp;
 
   Model= new(struct model);
   Model.Dx = Dx;
@@ -33,10 +64,6 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.Drhoy     = new(float [Nx,Ny]);
   Model.Rho     =  new(float [Nx,Ny]);
   Model.Q       =  new(float [Nx,Ny]);
-  Model.Tauex   =  new(float [Nx,Ny]);
-  Model.Tausx   =  new(float [Nx,Ny]);
-  Model.Tauey   =  new(float [Nx,Ny]);
-  Model.Tausy   =  new(float [Nx,Ny]);
   Model.Alpha1x   =  new(float [Nx,Ny]);
   Model.Alpha1y   =  new(float [Nx,Ny]);
   Model.Alpha2x   =  new(float [Nx,Ny]);
@@ -45,6 +72,8 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.Eta1y   =  new(float [Nx,Ny]);
   Model.Eta2x   =  new(float [Nx,Ny]);
   Model.Eta2y   =  new(float [Nx,Ny]);
+  Model.dx   =  new(float [Nx]);
+  Model.dy   =  new(float [Ny]);
 
   // Store the model
   for(i=0; i<Nx;i=i+1){
@@ -55,105 +84,53 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     }
   }
 
+  //Compute 1D profile functions
+    Modeld(Model.dx, Model.Dx, Model.Nb);
+    Modeld(Model.dy, Model.Dx, Model.Nb);
+ 
   // Compute relaxation times
-  tau0 = 1.0/Model.W0;
   for(i=0; i<Nx;i=i+1){
     for(j=0; j<Ny;j=j+1){
-      Q = Model.Q;
-      Model.Tauex[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)+1.0);
-      Model.Tauex[i,j]   = 1.0/Model.Tauex[i,j];
-      Model.Tausx[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)-1.0);
-      Model.Tausx[i,j]   = 1.0/Model.Tausx[i,j];
-      Model.Tauey[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)+1.0);
-      Model.Tauey[i,j]   = 1.0/Model.Tauey[i,j];
-      Model.Tausy[i,j]   = (tau0/Q[i,j])*(LibeSqrt(Q[i,j]*Q[i,j]+1.0)-1.0);
-      Model.Tausy[i,j]   = 1.0/Model.Tausy[i,j];
-    }
-  }
+      tau0 = 1.0/Model.W0;
+      Qmin = 1.1;
+      tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
+      tauemin = 1.0/tauemin;
+      tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
+      tausmin = 1.0/tausmin;
 
-  if(Model.Nb > 0){
-  //
-  // Taper the relaxation times
-  //
+      Qmax  = Model.Q[Nb,j];
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+      tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
+      tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
 
-  //
-  // Compute value of relaxation times in the attenuating
-  // border zone of the model
-  Qmin = 1.1;
-  Qmax=100000.0;
-  tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
-  tauemin = 1.0/tauemin;
-  tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
-  tausmin = 1.0/tausmin;
-  tauemax = (tau0/Qmax)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
-  tauemax = 1.0/tauemax;
-  tausmax = (tau0/Qmax)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
-  tausmax = 1.0/tausmax;
+      Qmax  = Model.Q[i,Nb];
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+      tauey = tauemin + (tauemax-tauemin)*Model.dy[j];
+      tausy = tausmin + (tausmax-tausmin)*Model.dy[j];
 
-  argexp=1.0;
-  // taper in x-direction left border
-  for(i=0; i<Nb;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      arg = (cast(float,i)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauex[i,j] = tauemin 
-                       + (Model.Tauex[Nb,j]-tauemin)*arg;
-      Model.Tausx[i,j] = tausmin 
-                       + (Model.Tausx[Nb,j]-tausmin)*arg;
-    }
-  }
-
-  // taper in x-direction right border
-  for(i=Nx-1-Nb; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      arg = (cast(float,Nx-1-i)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauex[i,j] = tauemin 
-                       + (Model.Tauex[Nb,j]-tauemin)*arg;
-      Model.Tausx[i,j] = tausmin 
-                       + (Model.Tausx[Nb,j]-tausmin)*arg;
-    }
-  }
-
-  // taper in y-direction upper border
- for(i=0; i<Nx;i=i+1){
-   for(j=0; j<Nb;j=j+1){
-      arg = (cast(float,j)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauey[i,j] = tauemin 
-                       + (Model.Tauey[i,Nb]-tauemin)*arg;
-      Model.Tausy[i,j] = tausmin 
-                       + (Model.Tausy[i,Nb]-tausmin)*arg;
-    }
-  }
-  // taper in y-direction lower border
-  for(i=0; i<Nx;i=i+1){
-    for(j=Ny-1-Nb; j<Ny;j=j+1){
-      arg = (cast(float,Ny-1-j)*Dx)/(cast(float,Nb)*Dx);
-      Model.Tauey[i,j] = tauemin 
-                       + (Model.Tauey[i,Nb]-tauemin)*arg;
-      Model.Tausy[i,j] = tausmin 
-                       + (Model.Tausy[i,Nb]-tausmin)*arg;
-    }
-  }
-}
-  // Compute alpha and eta coefficients
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
-      Model.Alpha1x[i,j]   = LibeExp(-Model.Dt*Model.Tausx[i,j]);
-      Model.Alpha1y[i,j]   = LibeExp(-Model.Dt*Model.Tausy[i,j]);
-      Model.Alpha2x[i,j]   = Model.Dt*Model.Tauex[i,j];
-      Model.Alpha2y[i,j]   = Model.Dt*Model.Tauey[i,j];
-      Model.Eta1x[i,j]     = LibeExp(-Model.Dt*Model.Tausx[i,j]);
-      Model.Eta1y[i,j]     = LibeExp(-Model.Dt*Model.Tausy[i,j]);
-      Model.Eta2x[i,j]     = Model.Dt*Model.Tauex[i,j];
-      Model.Eta2y[i,j]     = Model.Dt*Model.Tauey[i,j];
+      // Compute alpha and eta coefficients
+      Model.Alpha1x[i,j]   = LibeExp(-Model.Dt*tausx);
+      Model.Alpha1y[i,j]   = LibeExp(-Model.Dt*tausy);
+      Model.Alpha2x[i,j]   = Model.Dt*tauex;
+      Model.Alpha2y[i,j]   = Model.Dt*tauey;
+      Model.Eta1x[i,j]     = LibeExp(-Model.Dt*tausx);
+      Model.Eta1y[i,j]     = LibeExp(-Model.Dt*tausy);
+      Model.Eta2x[i,j]     = Model.Dt*tauex;
+      Model.Eta2y[i,j]     = Model.Dt*tauey;
       Model.Dkappax[i,j]   = Model.Kappa[i,j]
-                            *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
+                             *(1.0-tausx/tauex);
       Model.Dkappay[i,j]   = Model.Kappa[i,j]
-                             *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
-      Model.Drhox[i,j]       = (1.0/Model.Rho[i,j])
-                             *(1.0-Model.Tausx[i,j]/Model.Tauex[i,j]);
-      Model.Drhoy[i,j]       = (1.0/Model.Rho[i,j])
-                             *(1.0-Model.Tausy[i,j]/Model.Tauey[i,j]);
-                             
+                             *(1.0-tausy/tauey);
+      Model.Drhox[i,j]     = (1.0/Model.Rho[i,j])
+                             *(1.0-tausx/tauex);
+      Model.Drhoy[i,j]     = (1.0/Model.Rho[i,j])
+                             *(1.0-tausy/tauey);
     }
   }
 
@@ -176,9 +153,51 @@ float ModelStability(struct model Model)
         LibePuts(stderr,"Stability index too large! ");
         LibePutf(stderr,stab);
         LibePuts(stderr,"\n"); 
+        LibeFlush(stderr);
       }
     }
   }
 
   return(stab);
+}
+// Modeld creates a 1D profile function tapering the left
+// and right borders. 
+int Modeld(float [*] d, float dx, int nb){
+  int i,n;
+
+  n = len(d,0);
+
+  for(i=0; i<n; i=i+1){
+    d[i]=1.0;
+  }
+
+  // Taper left border
+  for(i=0; i<nb;i=i+1){
+      d[i] = d[i]*(cast(float,i)*dx)/(cast(float,nb)*dx);
+  }
+
+  // taper right border
+  for(i=n-1-nb; i<n;i=i+1){
+      d[i] = d[i]*(cast(float,n-1-i)*dx)/(cast(float,nb)*dx);
+  }
+
+  return(OK);
+}
+// Modeltaue computes taue from Q and w0.
+float Modeltaue(float Q, float w0){
+  float tau0,taue; 
+
+  tau0=1.0/w0;
+  taue=(tau0/Q)*(LibeSqrt(Q*Q+1.0)-1.0);
+
+  return(taue);
+}
+// Modeltaus computes taus from Q and w0.
+float Modeltaus(float Q, float w0){
+  float tau0,taus; 
+
+  tau0=1.0/w0;
+  taus=(tau0/Q)*(LibeSqrt(Q*Q+1.0)-1.0);
+
+  return(taus);
 }
