@@ -1,0 +1,1013 @@
+\documentclass[11pt]{article}
+\usepackage{natbib}
+\begin{document}  
+\input{macro}  %bring in ... the macro's    
+%
+%---------------------------------------------------------------
+\newcommand{\dt}[1]{\partial_t{#1}}
+\newcommand{\ddt}[1]{\partial^2_t{#1}}
+\newcommand{\dddt}[1]{\partial^3_t{#1}}
+\newcommand{\inv}[1]{\frac{1}{#1}}
+\newcommand{\diff}[1]{D^+_{#1}}
+\newcommand{\difb}[1]{D^-_{#1}}
+%---------------------------------------------------------------
+\title{Visco-elastic Finite difference seismic modeling with 
+       time-dependent effective density}
+\author{B.Arntsen}
+\date{\today}
+\maketitle
+\clearpage
+%===============================================================================
+\section*{Elastic equations of motion} 
+%===============================================================================
+Consider an elastic medium characterized by the density $\rho(\xx)$, 
+and lam\'{e}
+parameters $\lambda(\xx)$ and $\mu(\xx)$ at each spatial point $\xx$.
+Now assume that $u(\xx)_i$ is the i'th component of the particle displacement 
+and
+$\sigma_{ij}$ is the stress tensor and $c_{ijkl}$ is Hook's tensor.
+The elastic equations of motion and Hook's law in Cartesian coordinates are
+given as
+%
+\begin{eqnarray}
+  \rho(\xx) \ddt{u_i(\xx, t)} & = & \p_j \sigma_{ij}(\xx, t) +f_i(\xx,t),\\
+					   \label{eq:el-eqm}
+        \sigma_{ij}(\xx,t)    & = & c_{ijkl}e_{kl} +q_{ij}.
+					  \label{eq:el-cse}
+\end{eqnarray}
+%
+Here $f_i$ is a driving force, and $q_{ij}$ is a driving stress.
+In the isotropic case one has
+%
+\begin{eqnarray}
+   c_{ijkl} = \lambda\delta_{ij}\delta_{kl} + \mu\left(\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk}\right),
+                                 \label{eq:el-moduli}
+\end{eqnarray}
+%
+giving
+%
+\begin{eqnarray}
+  \rho(\xx) \ddt{u_i(\xx, t)} & = & \p_j \sigma_{ij}(\xx, t) +f_i(\xx,t),\\
+					   \label{eq:iso-elm}
+  \sigma_{ij}(\xx, t) & = & 
+        \lambda(\xx) e_{kk}\delta_{ij} + 2\mu e_{ij} +q_{ij}.
+					  \label{eq:iso-cse}
+\end{eqnarray}
+%
+Here $f_i$ is the i'th component of the driving force, while the strain
+tensor $e_{ij}$
+is equal to
+%
+\begin{eqnarray}
+    e_{ij} = \frac{1}{2}[\p_i u_j(\xx, t) + \p_j u_i(\xx,t)].
+					  \label{eq:iso-strain}
+\end{eqnarray}
+%
+Writing out the individual components of the equations above, one gets:
+%
+\begin{eqnarray*}
+  \rho \ddt{u}_x = \p_x \sigma_{xx} +\p_y \sigma_{xy} +\p_z \sigma_{xz} 
+                                                      + f_x, \\
+  \rho \ddt{u}_y = \p_x \sigma_{yx} +\p_y \sigma_{yy} +\p_z \sigma_{yz} 
+                                                      + f_y, \\
+  \rho \ddt{u}_z = \p_x \sigma_{zx} +\p_y \sigma_{zy} +\p_z \sigma_{zz} 
+                                                      + f_z,
+\end{eqnarray*}
+%
+\begin{eqnarray*}
+  \sigma_{xx} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{xx} 
+                                                   +q_{xx}, \\
+  \sigma_{yy} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{yy} 
+                                                   +q_{yy}, \\
+  \sigma_{zz} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{zz} 
+                                                   +q_{zz}, \\
+  \sigma_{xy} & = & 2\mu e_{xy} +q_{xy}, \\
+  \sigma_{xz} & = & 2\mu e_{xz} +q_{xz}, \\
+  \sigma_{yz} & = & 2\mu e_{yz} +q_{yz}.
+\end{eqnarray*}
+%
+%===============================================================================
+\section*{Viscoelastic equations of motion} 
+%===============================================================================
+Using the description in Appendix A, we can write down the viscoe-elastic equations
+of motion and the constitutive relation.
+In addition to visco-elastic stress-strain relation we have also
+introduced time-dependence for the density.
+The density then shows relaxation in the same way as a visco-elastic medium.
+\begin{eqnarray*}
+  \ddt{u_i(\xx, t)} & = & \rho^{-1}_u(\xx)\p_j \sigma_{ij}(\xx, t) 
+                                               +f_i(\xx,t),\\
+                    & + & \chi(\xx,t)*\p_j \sigma_{ij}(\xx, t), \\
+					   \label{eq:iso-ve-eqm}
+  \sigma_{ij}(\xx, t) & = & 
+                            \lambda_u e_{kk}\delta_{ij} + 2\mu_u e_{ij} 
+                                               +q_{ij} \nonumber\\
+                      & + & \delta_{ij}\phi_{\lambda}(t)*e_{mm} 
+                                         +2\phi_{\mu}(t)*e_{ij}
+					  \label{eq:iso-ve-cse}
+\end{eqnarray*}
+Writing out the individual components of the equations above, one gets:
+%
+\begin{eqnarray*}
+  \ddt{u}_x & = & \rho^{-1}_u\left[\p_x \sigma_{xx} +\p_y \sigma_{xy} 
+                                           +\p_z \sigma_{xz}\right] + f_x, \\
+            & = & + \chi*\left[\p_x \sigma_{xx} +\p_y \sigma_{xy} 
+                                           +\p_z \sigma_{xz}\right], \\
+  \ddt{u}_y & = & \rho^{-1}_u\left[\p_x \sigma_{yx} +\p_y \sigma_{yy} 
+                                           +\p_z \sigma_{yz}\right] + f_y, \\
+            & = & \chi*\left[\p_x \sigma_{yx} +\p_y \sigma_{yy} 
+                                           +\p_z \sigma_{yz}\right] \\
+  \ddt{u}_z & = & \rho^{-1}_u\left[\p_x \sigma_{zx} +\p_y \sigma_{zy} 
+                                           +\p_z \sigma_{zz}\right] + f_z, \\
+            & = & \chi*\left[\p_x \sigma_{zx} +\p_y \sigma_{zy} 
+                                           +\p_z \sigma_{zz}\right],
+\end{eqnarray*}
+%
+\begin{eqnarray*}
+  \sigma_{xx} & = & \lambda_u \left (e_{xx} + e_{yy} + e_{zz}\right)
+                                   + 2\mu_u e_{xx} +q_{xx}          \\  
+              & + & \phi_{\lambda}*[e_{xx}+e_{yy}+e_{zz}] 
+                                    + 2\phi_{\mu}(t)*e_{xx},        \\
+  \sigma_{yy} & = & \lambda_u \left (e_{xx} + e_{yy} + e_{zz}\right)
+                                    + 2\mu_u e_{yy} +q_{yy}         \\ 
+              & + & \phi_{\lambda}*[e_{xx}+e_{yy}+e_{zz}] 
+                                    + 2\phi_{\mu}(t)*e_{yy},        \\
+  \sigma_{zz} & = & \lambda_u \left (e_{xx} + e_{yy} + e_{zz}\right)
+                                    + 2\mu_u e_{zz} +q_{zz}         \\ 
+              & + & \phi_{\lambda}*[e_{xx}+e_{yy}+e_{zz}] 
+                                    + 2\phi_{\mu}(t)*e_{zz},        \\
+  \sigma_{xy} & = & 2\mu_u e_{xy} +q_{xy} + 2\phi_{\mu}(t)*e_{xy},  \\
+  \sigma_{xz} & = & 2\mu_u e_{xz} +q_{xz} + 2\phi_{\mu}(t)*e_{xz},  \\
+  \sigma_{yz} & = & 2\mu_u e_{yz} +q_{yz}+  2\phi_{\mu}(t)*e_{yz}.
+\end{eqnarray*}
+%
+%===============================================================================
+\subsection*{Viscoelastic velocity-stress formulation} 
+%===============================================================================
+Using the velocity $v_i = \dot{u}_i$, one gets
+\begin{eqnarray*}
+  \dt{v}_x & = & \rho^{-1}_u\left[\p_x \sigma_{xx} +\p_y \sigma_{xy} 
+                                    +\p_z \sigma_{xz}\right] + f_x, \\
+            & = & + \chi*\left[\p_x \sigma_{xx} +\p_y \sigma_{xy} 
+                                    +\p_z \sigma_{xz}\right], \\
+  \dt{v}_y & = & \rho^{-1}_u\left[\p_x \sigma_{yx} +\p_y \sigma_{yy} 
+                                    +\p_z \sigma_{yz}\right] + f_y, \\
+            & = & \chi*\left[\p_x \sigma_{yx} +\p_y \sigma_{yy} 
+                                    +\p_z \sigma_{yz}\right] \\
+  \dt{v}_z & = & \rho^{-1}_u\left[\p_x \sigma_{zx} +\p_y \sigma_{zy} 
+                                    +\p_z \sigma_{zz}\right] + f_z, \\
+            & = & \chi*\left[\p_x \sigma_{zx} +\p_y \sigma_{zy} 
+                                    +\p_z \sigma_{zz}\right],
+\end{eqnarray*}
+\begin{eqnarray*}
+  \dot{\sigma}_{xx} & = & \lambda_u \left (\dot{e}_{xx} 
+                                 + \dot{e}_{yy} + \dot{e}_{zz}\right)
+                                 + 2\mu_u \dot{e}_{xx} +\dot{q}_{xx}   \\ 
+              & + & \phi_{\lambda}*[\dot{e}_{xx}+\dot{e}_{yy}+\dot{e}_{zz}] + 2\phi_{\mu}(t)*\dot{e}_{xx}, \\
+  \dot{\sigma}_{yy} & = & \lambda_u \left (\dot{e}_{xx} + \dot{e}_{yy} + \dot{e}_{zz}\right)
+                                                     + 2\mu_u \dot{e}_{yy} +\dot{q}_{yy} \nonumber\\
+              & + & \phi_{\lambda}*[\dot{e}_{xx}+\dot{e}_{yy}+\dot{e}_{zz}] + 2\phi_{\mu}(t)*\dot{e}_{yy},\\
+  \dot{\sigma}_{zz} & = & \lambda_u \left (\dot{e}_{xx} + \dot{e}_{yy} + \dot{e}_{zz}\right)
+                                                     + 2\mu_u \dot{e}_{zz} +q_{zz} \nonumber\\
+              & + & \phi_{\lambda}*[\dot{e}_{xx}+\dot{e}_{yy}+\dot{e}_{zz}] + 2\phi_{\mu}(t)*\dot{e}_{zz},\\
+  \dot{\sigma}_{xy} & = & 2\mu_u \dot{e}_{xy} +q_{xy} + 2\phi_{\mu}(t)*\dot{e}_{xy},\\
+  \dot{\sigma}_{xz} & = & 2\mu_u \dot{e}_{xz} +q_{xz} + 2\phi_{\mu}(t)*\dot{e}_{xz},\\
+  \dot{\sigma}_{yz} & = & 2\mu_u \dot{e}_{yz} +q_{yz}+  2\phi_{\mu}(t)*\dot{e}_{yz}.
+\end{eqnarray*}
+%================================================================================
+\subsection*{Memory functions} 
+%================================================================================
+We now define so-called memory variables by including the time convolution into one set of variables:
+\begin{eqnarray}
+ \gamma^l_{\lambda}(t) & =& \frac{1}{\Delta\lambda}_l \phi^l_{\lambda}*[\dot{e}_{xx}+\dot{e}_{yy}+\dot{e}_{zz}], \nonumber\\
+ \gamma^l_{ij}(t) & =& \frac{1}{\Delta\mu_l}\phi^l_{\mu}*[\dot{e}_{ij}],      \nonumber
+                           \label{eq:gamma-l}, \\
+ \theta^l_{kij}(t) & =& \frac{1}{\Delta\rho^{-1}_l}\chi^l*\p_k[\sigma_{ij}],      \nonumber
+                           \label{eq:theta-l}
+\end{eqnarray}
+Here 
+\begin{eqnarray}
+  \Delta\rho^{-1}_l = \rho^{-1}_u\left(1-\frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}\right)
+\end{eqnarray}
+This gives the expressions for the $\gamma$ functions as:
+\begin{eqnarray}
+ \gamma^l_{\lambda}    & = & \left[\frac{\exp(-t/\tau^{\lambda}_{\sigma l})}{\tau^{\lambda}_{\sigma l}
+                             \sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}}\right] 
+                              [\dot{e}_{xx}+\dot{e}_{yy}+\dot{e}_{zz}] \nonumber\\
+ \gamma^l_{ij}    & = & \left[\frac{\exp(-t/\tau^{\mu}_{\sigma l})}{\tau^{\mu}_{\sigma l}
+                             \sum_{l=1}^N \frac{\tau^{\mu}_{\epsilon l}}{\tau^{\mu}_{\sigma l}}}\right] 
+                              \dot{e}_{ij}\nonumber\\
+ \theta^l_{kij}    & = & \left[\frac{\exp(-t/\tau^{\rho}_{\sigma l})}{\tau^{\rho}_{\sigma l}
+                             \sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}}\right] 
+                              \p_k \sigma_{ij}\nonumber\\
+\end{eqnarray}
+
+and also 
+\begin{eqnarray}
+  \gamma_{\lambda}(t) & = & \sum_{l=1}^N \gamma^l_{\lambda}, \nonumber\\
+  \gamma_{ij}(t)     & = & \sum_{l=1}^N \gamma^l_{ij}.         \nonumber\\
+  \theta_{kij}(t)     & = & \sum_{l=1}^N \theta^l_{ij}.         \nonumber\\
+                           \label{eq:gamma}
+\end{eqnarray}
+
+This gives the final form of the viscoelastic equations
+%
+\begin{eqnarray}
+  \dt{v}_x & = & \rho^{-1}_i\left(\p_x \sigma_{xx} +\p_y \sigma_{xy} +\p_z \sigma_{xz}\right) + f_x \\
+           & + & \sum_{l=0}^N\theta^l_{xxx}\Delta\rho^{-1}_{l} 
+              +  \sum_{l=0}^N\theta^l_{yxy}\Delta\rho^{-1}_{l} 
+              +  \sum_{l=0}^N\theta^l_{zxz}\Delta\rho^{-1}_{l}, \\ 
+  \dt{v}_y & = & \p_x \sigma_{yx} +\p_y \sigma_{yy} +\p_z \sigma_{yz} + f_y, \\
+           & + & \sum_{l=0}^N\theta^l_{xyx}\Delta\rho^{-1}_{l} 
+             +  \sum_{l=0}^N\theta^l_{yyy}\Delta\rho^{-1}_{ll} 
+             +  \sum_{l=0}^N\theta^l_{zyz}\Delta\rho^{-1}_{ll}, \\ 
+  \dt{v}_z & = & \p_x \sigma_{zx} +\p_y \sigma_{zy} +\p_z \sigma_{zz} + f_z, \\
+           & + & \sum_{l=0}^N\theta^l_{xzx} +  \sum_{l=0}^N\theta^l_{yzy} +  \sum_{l=0}^N\theta^l_{zzz}.
+\end{eqnarray}
+\begin{eqnarray}
+  \dot{\sigma}_{xx} & = & \lambda_u \left (\dot{e}_{xx} + \dot{e}_{yy} + \dot{e}_{zz}\right)+ 2\mu_u \dot{e}_{xx} +\dot{q}_{xx} \nonumber\\
+              & + & \sum_{l=1}^N\gamma^l_{\lambda}\Delta\lambda_l  + 2\sum_{l=1}^N\gamma^l_{xx}\Delta\mu_l, \\
+  \dot{\sigma}_{yy} & = & \lambda_u \left (\dot{e}_{xx} + \dot{e}_{yy} + \dot{e}_{zz}\right)+ 2\mu_u \dot{e}_{yy} +\dot{q}_{yy} \nonumber\\
+              & + & \sum_{l=1}^N\gamma^l_{\lambda}\Delta\lambda_l  + 2\sum_{l=1}^N\gamma^l_{yy}\Delta\mu_l, \\
+  \dot{\sigma}_{zz} & = & \lambda_u \left (\dot{e}_{xx} + \dot{e}_{yy} + \dot{e}_{zz}\right)+ 2\mu_u \dot{e}_{zz} +\dot{q}_{zz} \nonumber\\
+              & + & \sum_{l=1}^N\gamma^l_{\lambda}\Delta\lambda_l  + 2\sum_{l=1}^N\gamma_{zz}\Delta\mu_l\nonumber, \\
+  \dot{\sigma}_{xy} & = & 2\mu \dot{e}_{xy} + 2\sum_{l=1}^N\gamma^l_{xy}\Delta\mu_l+\dot{q}_{xy}\nonumber,\\
+  \dot{\sigma}_{xz} & = & 2\mu \dot{e}_{xz} + 2\sum_{l=1}^N\gamma^l_{xz}\Delta\mu_l+\dot{q}_{xz}\nonumber,\\
+  \dot{\sigma}_{yz} & = & 2\mu \dot{e}_{yz} + 2\sum_{l=1}^N\gamma^l_{yz}\Delta\mu_l+\dot{q}_{yz}\nonumber,\\
+                          \label{eq:stress}
+\end{eqnarray} 
+\begin{eqnarray}
+    \dot{e_{xx}} & = & \p_x v_x, \\
+    \dot{e_{yy}} & = & \p_y v_y, \\
+    \dot{e_{zz}} & = & \p_z v_z, \\
+    \dot{e_{xy}} & = & \frac{1}{2}(\p_x v_y + \p_y v_x),\\
+    \dot{e_{xz}} & = & \frac{1}{2}(\p_x v_z + \p_z v_y),\\
+    \dot{e_{yz}} & = & \frac{1}{2}(\p_y v_z + \p_z v_y).
+\end{eqnarray}
+
+%================================================================================
+\section*{Integration of memory functions}
+%================================================================================
+The $mmeory$ functions  obeys approximately the relations
+
+\begin{eqnarray}
+\gamma^l_{\lambda}(t) & = &
+            \exp(-\frac{\Delta t}{\tau^{\lambda l}_{\sigma}})\gamma^l_{\lambda}(t-\Delta t)
+            +\left(\frac{\Delta t}{\tau^{\lambda}_{\sigma l}
+            \sum_{l=1}^N\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}}\right)
+             \left(\dot{e}_{xx}+ \dot{e}_{yy}+\dot{e}_{zz}\right) ,\nonumber\\
+\gamma^l_{ij}(t) & = &
+            \exp(-\frac{\Delta t}{N\tau^{\mu}_{\sigma l}})\gamma^l_{ij}(t-\Delta t)
+            + \left(\frac{\Delta t}{\tau^{\mu}_{\sigma l}
+            \sum_{l=1}^N\frac{\tau^{\mu}_{\epsilon l}}{\tau^{\mu}_{\sigma l}}}\right) \dot{e}_{ij}.\nonumber\\
+\theta^l_{kij}(t) & = &
+            \exp(-\frac{\Delta t}{N\tau^{\rho}_{\sigma l}})\theta^l_{kij}(t-\Delta t)
+            + \left(\frac{\Delta t}{\tau^{\rho}_{\sigma l}
+            \sum_{l=1}^N\frac{\tau^{\rho}_{\epsilon l}}{\tau^{\mu}_{\sigma l}}}\right) \p_k \sigma_{ij}.\nonumber\\
+\end{eqnarray}
+%
+Defining the quantities
+\begin{eqnarray}
+\alpha^l_1 & = & \exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma l}}),\\
+\alpha^l_2 & = & \frac{\Delta t}{\tau^{\lambda}_{\sigma l}\sum_{l=1}^N\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}} ,\\
+\beta^l_1  & = &\exp(-\frac{\Delta t}{\tau^{\mu}_{\sigma l}}) ,\\
+\beta^l_2  & = &\frac{\Delta t}{\tau^{\mu}_{\sigma l}\sum_{l=1}^N\frac{\tau^{\mu}_{\epsilon l}}{\tau^{\mu}_{\sigma l}}},\\
+\eta^l_1  & = &\exp(-\frac{\Delta t}{\tau^{\rho}_{\sigma l}}) ,\\
+\eta^l_2  & = &\frac{\Delta t}{\tau^{\rho}_{\sigma l}\sum_{l=1}^N\frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}} 
+\end{eqnarray}
+
+%
+we get
+\begin{eqnarray}
+\gamma^l_{\lambda}(t)  & = &\alpha^l_1 \gamma^l_{\lambda}(t-\Delta t) 
+                        + \alpha^l_2\left( \dot{e}_{xx}+ \dot{e}_yy+\dot{e}_zz\right) ,\nonumber \\
+\gamma^l_{ij}(t)      & = &\beta^l_1 \gamma^l_{ij}(t - \Delta t) 
+                        + \beta^l_2\dot{e}_{ij}.\nonumber\\
+\theta^l_{kij}(t)      & = &\eta^l_{1} \theta^l_{kij}(t - \Delta t) 
+                        + \eta^l_2\p_k \sigma_{ij}.\nonumber\\
+\end{eqnarray}
+%
+%================================================================================
+\section*{Discretization of the three dimensional case}
+%================================================================================
+We now consider a regular grid with positions $\xx$ defined as
+\begin{eqnarray}
+\xx & = & (x,y,z),\\
+x   & = & p\Delta x,\\
+y   & = & q\Delta y,\\
+z   & = & r\Delta z,\\
+t   & = & n\Delta t.
+\end{eqnarray}
+where $p=0,1,2,\ldots,N_x$, $q=0,1,2,\ldots,N_y$ and $r=0,1,2,\ldots,N_z$ and
+$N_x,N_y$ and $N_z$ are the number of grid points in the $x,y$ and $z$-directions.
+$n=0,1,2,\ldots,N_t$ where $N_t$ is the number of time steps.
+
+We will also need a regular grid which is displaced, or staggered, relative to the the regular grid.
+Sometimes we will refer to the regular grid as the reference grid.
+
+The particle velocities  $v_x$,$v_y$ and $v_z$ are defined on staggered grids
+as follows
+%
+\begin{eqnarray}
+   v_x(\xx, t) & = & v_x(x+\Delta x/2, y, z, t),\\
+   v_y(\xx, t) & = & v_y(x, y+\Delta y/2, z, t),\\
+   v_z(\xx, t) & = & v_z(x, y, z+\Delta z/2, t). 
+\end{eqnarray}
+%
+The $\theta_{kij}$ are defined on the same staggered grid as the
+particle velocities:
+\begin{eqnarray}
+   \theta_{xxx}(\xx, t) & = & \theta(x+\Delta x/2,y,z)_{xxx},\\
+   \theta_{yxy}(\xx, t) & = & \theta(x,y+\Delta y/2,z)_{yxy},\\
+   \theta_{zxz}(\xx, t) & = & \theta(x,y,z+\Delta z/2)_{zxz},\\
+   \theta_{xyx}(\xx, t) & = & \theta(x+\Delta x/2,y,z)_{xyx},\\
+   \theta_{yyy}(\xx, t) & = & \theta(x,y+\Delta y/2,z)_{yyy},\\
+   \theta_{zyz}(\xx, t) & = & \theta(x,y,z+\Delta z/2  )_{zyz},\\
+   \theta_{xzx}(\xx, t) & = & \theta(x+\Delta x/2,y,z)_{xzx},\\
+   \theta_{yzy}(\xx, t) & = & \theta(x,y+\Delta y/2,z)_{yzy}\\
+   \theta_{zzz}(\xx, t) & = & \theta(x,y,z+\Delta z/2)_{xxx}.
+\end{eqnarray}
+
+
+The diagonal stresses and the gamma functions are defined on a regular grid:
+\begin{eqnarray}
+   \sigma_{xx}(\xx, t) & = & \sigma_{xx}( x, y,z, t), \\
+   \sigma_{yy}(\xx, t) & = & \sigma_{yy}(x, y, z, t), \\
+   \sigma_{zz}(\xx, t) & = & \sigma_{zz}(x, y, z, t), \\ 
+   \gamma_{\lambda}(\xx, t) & = & \gamma_{\lambda}(x, y,  z, t), \\ 
+   \gamma_{\mu}(\xx, t) & = & \gamma_{\mu}(x, y, z, t), \\ 
+   \gamma_{xx}(\xx, t) & = & \gamma_{xx}(x, y, z,  t), \\ 
+   \gamma_{yy}(\xx, t) & = & \gamma_{yy}( x, y, z,  t), \\ 
+   \gamma_{zz}(\xx, t) & = & \gamma_{zz}(x, y, z,  t). 
+\end{eqnarray}
+%
+The off-diagonal stresses and the off-diagonal gamma functions are defined on
+several staggered grids
+%
+\begin{eqnarray}
+   \sigma_{xy}(\xx, t) & = & \sigma_{xy}(x +\Delta x/2, y + \Delta y/2, z, t), \\
+   \sigma_{xz}(\xx, t) & = & \sigma_{xz}(x +\Delta x/2, y,z + \Delta z/2,  t), \\
+   \sigma_{yz}(\xx, t) & = & \sigma_{yz}(x, y + \Delta y/2, z+\Delta z/2,  t), \\
+   \gamma_{xy}(\xx, t) & = & \gamma_{xy}(x +\Delta x/2, y + \Delta y/2, z, t), \\
+   \gamma_{xz}(\xx, t) & = & \gamma_{xz}(x +\Delta x/2, y,z + \Delta z/2,  t), \\
+   \gamma_{yz}(\xx, t) & = & \gamma_{yz}(x, y + \Delta y/2, z+\Delta z/2,  t), \\
+\end{eqnarray}
+%
+
+The Lam\'{e} parameters are defined on a regular grid as follows:
+as follows:
+%
+\begin{eqnarray}
+   \lambda_u(\xx) & = & \lambda_u(x,y,z),\\
+   \mu_u(\xx)     & = & \mu_u(x,y, z).
+\end{eqnarray}
+
+The inverse density and $\mu$ are defined  on three different staggered grids as follows:
+\begin{eqnarray}
+   \rho_x^{-1}(\xx) & = & \rho^{-1}(x+\Delta x/2, y, z),\\
+   \rho_y^{-1}(\xx) & = & \rho^{-1}(x,y+\Delta y/2, z),\\
+   \rho_z^{-1}(\xx) & = &\rho^{-1}(x,y,z+\Delta z/2),\\
+   \mu_{uxy}(\xx) & = &   \mu_u(x+\Delta x/2, y+\Delta y/2, z),\\
+   \mu_{uyz}(\xx) & = &   \mu_u(x, y+\Delta y/2, z+\Delta z/2),\\
+   \mu_{uxz}(\xx) & = &   \mu_u(x+\Delta x/2, y,z+\Delta z),\\
+\end{eqnarray}
+
+The visco-elastic parameters $\beta_1$, $\beta_2$ and $\eta_1$ and $\eta_2$ are also defined on several staggered grids:
+\begin{eqnarray}
+   \beta_{1xy}\xx) & = &   \beta_1(x+\Delta x, y+\Delta y, z),\\
+   \beta_{1yz}(\xx) & = &  \beta_1(x,y+\Delta y, z+\Delta z),\\
+   \beta_{1xz}(\xx) & = &  \beta_1(x+\Delta x, y,z+\Delta z),\\
+   \beta_{2xy}(\xx) & = &  \beta_2(x+\Delta x, y+\Delta y, z),\\
+   \beta_{2yz}(\xx) & = &  \beta_2(x,y+\Delta y, z+\Delta z),\\
+   \beta_{2xz}(\xx) & = &  \beta_2(x+\Delta x, y,z+\Delta z),\\
+   \eta_{1x}(\xx) & = &   \eta_1(x+\Delta x/2,y,z),\\
+   \eta_{2x}(\xx) & = &   \eta_2(x+\Delta x/2,y,z),\\
+   \eta_{1y}(\xx) & = &   \eta_1(x,y+\Delta y/2,z),\\
+   \eta_{2y}(\xx) & = &   \eta_1(x,y+\Delta y/2,z),\\
+   \eta_{1z}(\xx) & = &   \eta_1(x,y,z+\Delta z/2),\\
+   \eta_{2z}(\xx) & = &   \eta_1(x,y,z+\Delta z/2).
+\end{eqnarray}
+
+Differentiation is now replaced by numerical approximations so that $\p_x,\p_y$ and $\p_z$ are
+replaced with numerical operators $d^+_x,d^-_x,d^+_y,d^-_y,d^+_z$ and $d^-_z$.
+These operators connects the staggered and reference grids, and we illustrate this with the differentiation
+in the x-direction.
+The derivative of a function $a(x)$ is approximately given at $a(x+\Delta x/2)$ and
+at $a(x-\Delta x/2)$ by
+\begin{eqnarray}
+a'(x+\Delta x/2) & = & d^+_x a(x),\\
+a'(x-\Delta x/2) & = & d^-_x a(x).
+\end{eqnarray}
+
+The differentiators $d^+$ and $d^-$ are given by
+%
+\begin{eqnarray}
+   \d^+ & = & \inv{\Delta x}\sum_{l=1}^L \alpha_l\left[u(x +l\Delta x) -
+		          u(x - (l-1)\Delta x\right]\nonumber\\	
+   \d^- & = & \inv{\Delta x}\sum_{l=1}^L \alpha_l\left[u(x +(l-1)\Delta x) -
+					          u(x - l\Delta x)\right]
+\end{eqnarray}
+where the coefficients $\alpha_l$ are found through an optimization procedure.
+Similar differentiators are defined for the $y$-direction and for the $z$-direction, with obvious names.
+
+Using the numerical differentiators the equations of motion becomes:
+
+\begin{eqnarray}
+  \dt{v}_x & = & \rho^{-1}_i\left(d^+_x \sigma_{xx} +d^+_y \sigma_{xy} +d^+_z \sigma_{xz}\right) + f_x \\
+           & + & \sum_{l=0}^N\theta^l_{xxx} +  \sum_{l=0}^N\theta^l_{yxy} +  \sum_{l=0}^N\theta^l_{zxz}, \\ 
+  \dt{v}_y & = & d^+_x \sigma_{yx} +d^+_y \sigma_{yy} +d^+_z \sigma_{yz} + f_y, \\
+           & + & \sum_{l=0}^N\theta^l_{xyx} +  \sum_{l=0}^N\theta^l_{yyy} +  \sum_{l=0}^N\theta^l_{zyz}, \\ 
+  \dt{v}_z & = & d^+_x \sigma_{zx} +d^+_y \sigma_{zy} +d^+_z \sigma_{zz} + f_z, \\
+           & + & \sum_{l=0}^N\theta^l_{xzx} +  \sum_{l=0}^N\theta^l_{yzy} +  \sum_{l=0}^N\theta^l_{zzz}.
+\end{eqnarray}
+
+The computation of the strains becomes as follows:
+\begin{eqnarray}
+    \dot{e}_{xx} & = & d^-_x v_x, \nonumber \\
+    \dot{e}_{yy} & = & d^-_y v_y, \nonumber \\
+    \dot{e}_{zz} & = & d^-_z v_z, \nonumber \\
+    \dot{e}_{xy} & = & \frac{1}{2}(d^+_x v_y + d^+_y v_x),\nonumber\\
+    \dot{e}_{xz} & = & \frac{1}{2}(d^+_x v_z + d^+_z v_x),\nonumber\\
+    \dot{e}_{yz} & = & \frac{1}{2}(d^+_y v_z +d^+_z v_y).\nonumber\\
+                \label{eq:strains}
+\end{eqnarray}
+The time derivatives is approximated by the central difference
+\begin{eqnarray}
+\dot{a}(t) = \frac{a(t+\Delta t/2) - a(t-\Delta t/2)}{\Delta t}
+                      \label{eq:time-derivative}
+\end{eqnarray}
+
+%=================================================================
+\section*{Solution algorithm for the three dimensional case}
+%=================================================================
+We are now in a position to formulate a complete numerical 
+solution of the visco-elastic equations.
+
+\subsection*{Computation of the particle velocity}
+We use the expression for the approximate time derivative given by equation \eqref{eq:time-derivative}
+in equations \eqref{eq:vel-discrete} to obtain an expression for the components of the particle velocity
+\begin{eqnarray}
+v_x(t+\Delta t/2) & = & \Delta t\rho_x^{-1}\left[d^+_x \sigma_{xx}(t) +d^+_y \sigma_{xy}(t) +d^+_z \sigma_{xz}(t)\right] 
+                         + \Delta t \rho_x^{-1}f_x(t) +\nonumber\\ 
+           & + & \Delta t \sum_{l=0}^N\theta^l_{xxx}(t) +  \Delta t \sum_{l=0}^N\theta^l_{yxy}(t) +  \Delta t \sum_{l=0}^N\theta^l_{zxz}(t)
+                   +v_x(t-\Delta t/2),\nonumber\\
+v_y(t+\Delta t/2) & = & \Delta t\rho_y^{-1}\left[d^+_x \sigma_{yx}(t) +d^+_y \sigma_{yy}(t) +d^+_z \sigma_{yz}(t)\right] 
+                         + \Delta t \rho_y^{-1}f_y(t)\nonumber\\
+           & + & \Delta t\sum_{l=0}^N\theta^l_{xyx}(t) +  \Delta t\sum_{l=0}^N\theta^l_{yyy}(t) +  \Delta t\sum_{l=0}^N\theta^l_{zyz}(t)
+                        + v_y(t-\Delta t/2), \nonumber\\ 
+v_z(t+\Delta t/2) & = & \Delta t \rho_z^{-1}\left[d^+_x \sigma_{zx}(t) +d^+_y \sigma_{zy}(t) +d^+_z \sigma_{zz}(t)\right] 
+                        + \Delta t \rho_z^{-1}f_z(t)\nonumber\\  
+           & + & \Delta t\sum_{l=0}^N\theta^l_{xzx}(t) +  \Delta t\sum_{l=0}^N\theta^l_{yzy}(t) +  \Delta t\sum_{l=0}^N\theta^l_{zzz}(t)\nonumber.
+                       +v_z(t-\Delta t/2) \\  
+\end{eqnarray}
+The strains can now be computed from equation \eqref{eq:strains}
+\begin{eqnarray}
+    \dot{e}_{xx}(t+\Delta t/2) & = & d^-_x v_x(t+\Delta t/2), \nonumber\\
+    \dot{e}_{yy}(t+\Delta t/2) & = & d^-_y v_y(t+\Delta t/2), \nonumber\\
+    \dot{e}_{zz}(t+\Delta t/2) & = & d^-_z v_z(t+\Delta t/2), \nonumber\\
+    \dot{e}_{xy}(t+\Delta t/2) & = & \frac{1}{2}\left[d^+_x v_y(t+\Delta t/2) + d^+_y v_x(t+\Delta t/2)\right],\nonumber \\
+    \dot{e}_{xz}(t+\Delta t/2) & = & \frac{1}{2}\left[d^+_x v_z(t+\Delta t/2) + d^+_z v_x(t+\Delta t/2)\right],\nonumber \\
+    \dot{e}_{yz}(t+\Delta t/2) & = & \frac{1}{2}\left[d^+_y v_z(t+\Delta t/2) +d^+_z v_y(t+\Delta t/2)\right]. \nonumber\\
+\end{eqnarray}
+%
+Equations \eqref{eq:stress}   can be solved for the stresses using the same approach as for the particle velocities:
+\begin{eqnarray}
+  \sigma_{xx}(t+\Delta t) & = & \Delta t\lambda_u \left [\dot{e}_{xx}(t+\Delta t/2) + \dot{e}_{yy}(t+\Delta t/2) + 
+                                \dot{e}_{zz}(t+\Delta t/2)\right]\nonumber\\
+                           & + & 2\mu_u \dot{e}_{xx}(t+\Delta t/2) +\Delta t\dot{q}_{xx} \nonumber\\
+                           & + & \Delta t\sum_{l=1}^N\gamma^l_{\lambda}(t+\Delta t/2)\Delta\lambda_l  
+                             +   2\Delta t\sum_{l=1}^N\gamma^l_{xx}(t+\Delta t/2)\Delta\mu_l(t+\Delta t/2)\nonumber\\ 
+                           & + &\sigma_{xx}(t),\\
+  \sigma_{yy}(t+\Delta t) & = & \Delta t\lambda_u \left [\dot{e}_{xx}(t+\Delta t/2) + \dot{e}_{yy}(t+\Delta t/2) + 
+                                \dot{e}_{zz}(t+\Delta t/2)\right]\\
+                          & + & 2\Delta t \mu_u \dot{e}_{yy}(t+\Delta t/2) +\Delta t \dot{q}_{yy}(t+\Delta t/2) \nonumber\\
+                          & + & \Delta t\sum_{l=1}^N\gamma^l_{\lambda}(t+\Delta t/2)\Delta\lambda_l  
+                            +   2\Delta t\sum_{l=1}^N\gamma^l_{yy}(t+\Delta t/2)\Delta\mu_l\\
+                          & +& \sigma_{yy}(t) \\
+  \sigma_{zz}(t+\Delta t) & = & \Delta t\lambda_u \left [\dot{e}_{xx}(t+\Delta t/2) + \dot{e}_{yy}(t+\Delta t/2) 
+                               + \dot{e}_{zz}(t+\Delta t/2)\right] \\
+                          & + & 2\mu_u \dot{e}_{zz}(t+\Delta t/2) +\Delta t \dot{q}_{zz}(t+\Delta t/2) \nonumber\\
+                          & + & \Delta t\sum_{l=1}^N\gamma^l_{\lambda}(t+\Delta t/2)\Delta\lambda_l   
+                            +   2\Delta t\sum_{l=1}^N\gamma_{zz}\Delta\mu_l (t+\Delta t/2)\nonumber, \\
+                          & + & \sigma_{zz}.\\
+  \sigma_{xy}(t+\Delta t) & = & 2\Delta t\mu \dot{e}_{xy}(t+\Delta t/2) + 2\Delta t\sum_{l=1}^N\gamma^l_{xy}(t+\Delta t/2)\Delta\mu_l+
+                                \Delta t \dot{q}_{xy}(t+\Delta t/2)\nonumber\\
+                          & + & \sigma_{xy}(t)\nonumber,\\
+  \sigma_{xz}(t+\Delta t) & = & 2\Delta t\mu \dot{e}_{xz}(t+\Delta t/2) + 2\Delta t \sum_{l=1}^N\gamma^l_{xz}(t+\Delta t/2)\Delta\mu_l+
+                                    \Delta t \dot{q}_{xz}(t+\Delta t/2)\nonumber\\ 
+                          & +& \sigma_{xz}(t),\\
+  \sigma_{yz}(t+\Delta t) & = & 2\Delta \mu \dot{e}_{yz}(t+\Delta t/2) + 2\Delta t\sum_{l=1}^N\gamma^l_{yz}(t+\Delta t/2)\Delta\mu_l
+                                   +\dot{q}_{yz}(t+\Delta t/2)\nonumber\\
+                          & +& \sigma_{yz}(t)\nonumber.\\
+                          \label{eq:stress}
+\end{eqnarray} 
+The gamma functions are updated as follows
+\begin{eqnarray}
+\gamma^l_{\lambda}(t+3/2\Delta t)  & = &\alpha^l_1 \gamma^l_{\lambda}(t+\Delta t/2) 
+                        + \alpha^l_2\left[ \dot{e}_{xx}(t+\Delta t/)+ \dot{e}_{yy}(t+\Delta t/2)
+                        +\dot{e}_{zz}(t+\Delta t/2)\right] ,\nonumber \\
+\gamma^l_{\mu}(t+3/2\Delta t)     & = &\beta^l_1 \gamma^l_{\mu}(t+\Delta t/2) 
+                        + \beta^l_2\left[ \dot{e}_{xx}(t+\Delta t/)+ \dot{e}_{yy}(t+\Delta t/2)
+                        +\dot{e}_{zz}(t+\Delta t/2)\right] ,\nonumber \\
+\gamma^l_{xy}(t+3/2\Delta t)      & = &\beta^l_{1xy} \gamma^l_{xy}(t + \Delta t/2) 
+                        + \beta^l_{2xy}\dot{e}_{xy}(t+\Delta t/2).\nonumber\\
+\gamma^l_{xz}(t+3/2\Delta t)      & = &\beta^l_{1xz} \gamma^l_{xz}(t + \Delta t/2) 
+                        + \beta^l_{2xz}\dot{e}_{xz}(t+\Delta t/2).\nonumber\\
+\gamma^l_{yz}(t+3/2\Delta t)      & = &\beta^l_{1xz} \gamma^l_{yz}(t + \Delta t/2) 
+                        + \beta^l_{2xz}\dot{e}_{yz}(t+\Delta t/2).\nonumber\\
+\end{eqnarray}
+
+The $\theta$ functions are updated as:
+\begin{eqnarray}
+   \theta_{xxx}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{xxx}(t + \Delta t/2)
+                        + \eta^l_{2}\p_x{\sigma}_{xx}(t+\Delta t/2).\nonumber\\
+   \theta_{yxy}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{yxy}(t + \Delta t/2)
+                        + \eta^l_{2}\p_y{\sigma}_{xy}(t+\Delta t/2).\nonumber\\
+   \theta_{zxz}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{zxz}(t + \Delta t/2)
+                        + \eta^l_{2}\p_z {\sigma}_{xz}(t+\Delta t/2).\nonumber\\
+   \theta_{xyx}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{xyx}(t + \Delta t/2)
+                        + \eta^l_{2}\p_x {\sigma}_{yx}(t+\Delta t/2).\nonumber\\
+   \theta_{yyy}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{yyy}(t + \Delta t/2)
+                        + \eta^l_{2}\p_y {\sigma}_{yy}(t+\Delta t/2).\nonumber\\
+   \theta_{zyz}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{zyz}(t + \Delta t/2)
+                        + \eta^l_{2}\p_z {\sigma}_{yz}(t+\Delta t/2).\nonumber\\
+   \theta_{xyx}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{xyx}(t + \Delta t/2)
+                        + \eta^l_{2}\p_x {\sigma}_{yx}(t+\Delta t/2).\nonumber\\
+   \theta_{xzx}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{xzx}(t + \Delta t/2)
+                        + \eta^l_{2}\p_x {\sigma}_{zx}(t+\Delta t/2).\nonumber\\
+   \theta_{yzy}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{yzy}(t + \Delta t/2)
+                        + \eta^l_{2}\p_y {\sigma}_{zy}(t+\Delta t/2).\nonumber\\
+   \theta_{zzz}(t+\Delta t)  
+                         & = &\eta^l_{1} \theta^l_{zzz}(t + \Delta t/2)
+                        + \eta^l_{2}\p_z {\sigma}_{zz}(t+\Delta t/2).\nonumber\\
+\end{eqnarray}
+%==============================================================================
+\section*{2D Acoustic case}
+%==============================================================================
+For the acoustic 2D case we reduce the equations above by neglecting 
+the y-axis terms
+and putting $\mu=0$.
+We consider also the pseudo-stress $\sigma$ defined by
+\begin{eqnarray*}
+\sigma = \frac{1}{2}\left(\sigma_{xx} + \sigma_{zz}\right) 
+\end{eqnarray*}
+We then get the acoustic 2D scheme as:
+\begin{eqnarray*}
+v_x(t+\Delta t/2) & = & \Delta t\left[\rho_{ux}^{-1}d^+_x \sigma_{xx}(t)  
+                         + \rho_{ux}^{-1}f_x(t)\right] +\nonumber\\
+           & + & \Delta t \sum_{l=0}^N\theta^l_{x}(t)\Delta\rho^{-1}_{x}  
+                   +v_x(t-\Delta t/2),\nonumber\\
+v_z(t+\Delta t/2) & = & \Delta t \left[\rho_{uz}^{-1}d^+_z \sigma_{zz}(t) 
+                        + \Delta t \rho_{uz}^{-1}f_z(t)\right]\nonumber\\  
+           & + & \Delta t\sum_{l=0}^N\theta^l_{z}(t)\Delta \rho^{-1}_{z}
+                       +v_z(t-\Delta t/2). 
+\end{eqnarray*}
+The strains can now be computed from :
+\begin{eqnarray*}
+    \dot{e}_{xx}(t+\Delta t/2) & = & d^-_x v_x(t+\Delta t/2), \\
+    \dot{e}_{zz}(t+\Delta t/2) & = & d^-_z v_z(t+\Delta t/2). 
+\end{eqnarray*}
+%
+Equations \eqref{eq:stress}   can be solved for the stresses using 
+the same approach as for the particle velocities:
+\begin{eqnarray*}
+  \sigma(t+\Delta t) 
+       & = & \Delta t\lambda_u \left [\dot{e}_{xx}(t+\Delta t/2) 
+             +\dot{e}_{zz}(t+\Delta t/2)\right]\nonumber
+             +\Delta t\dot{q} \nonumber,                       \\
+       & + & \Delta t\sum_{l=1}^N\gamma^l(t+\Delta t/2)\Delta\lambda_l  
+                           + \sigma(t).
+\end{eqnarray*} 
+
+We now split the $\gamma^l$ into two parts $\gamma^l_x$ and $\gamma^l_z$ 
+as follows:
+\begin{eqnarray*}
+  \sigma(t+\Delta t) & = & \Delta t\lambda_u \left [\dot{e}_{xx}(t+\Delta t/2) 
+                          +\dot{e}_{zz}(t+\Delta t/2)\right]\nonumber
+                           +\Delta t\dot{q} \nonumber\\
+                     & + & \Delta t
+                 \sum_{l=1}^N\left[\gamma^l_{x}(t+\Delta t/2)\Delta\lambda_l  
+                                                   +\gamma^l_{z}(t+\Delta t/2)\Delta\lambda_l  \right]
+                           + \sigma(t).\\
+\end{eqnarray*} 
+
+The $\theta$ functions are updated as:
+\begin{eqnarray*}
+   \theta_{x}(t+\Delta t)  
+                         & = &\eta^l_{1x} \theta^l_{x}(t)
+                        + \eta^l_{2x}\p_x{\sigma}(t),\\
+   \theta_{z}(t+\Delta t)  
+                         & = &\eta^l_{1z} \theta^l_{x}(t)
+                        + \eta^l_{2z}\p_y{\sigma}(t).
+\end{eqnarray*}
+The $\gamma$ functions are given by
+\begin{eqnarray*}
+\gamma^l_x(t+3/2\Delta t)  & = &\alpha^l_{1x} \gamma^l_x(t+\Delta t/2) 
+                        + \alpha^l_{2x}\dot{e}_{xx}(t+\Delta t/2), \\
+\gamma^l_z(t+3/2\Delta t)  & = &\alpha^l_{1z} \gamma^l_z(t+\Delta t/2) 
+                        + \alpha^l_{2z}\dot{e}_{zz}(t+\Delta t/2). 
+\end{eqnarray*}
+
+Also the coefficents are
+\begin{eqnarray*}
+\alpha^l_{1x}  & = & \exp\left(-\frac{d_x(x)\Delta t}
+                          {\tau^{\lambda}_{\sigma l}}\right),        \\
+\alpha^l_{2x}  & = & \frac{-d_x(x)\Delta t}
+                  {(\tau^{\lambda}_{\sigma l}
+                   \sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}
+                                     {\tau^{\lambda}_{\sigma l}  })
+                  }                                                  \\
+\alpha^l_{1z}  & = & \exp\left(-\frac{d_z(z)\Delta t}
+                          {\tau^{\lambda}_{\sigma l}}\right),        \\
+\alpha^l_{2z}  & = & \frac{-d_z(z)\Delta t}
+                  {(\tau^{\lambda}_{\sigma l}
+                   \sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}
+                                     {\tau^{\lambda}_{\sigma l}  })
+                  }                                                  \\
+\eta^l_{1x}  & = & \exp\left(-\frac{d_x(x)\Delta t}
+                          {\tau^{\rho}_{\sigma l}}\right),           \\
+\eta^l_{2x}  & = & \frac{d_x(x)\Delta t}
+                  {(\tau^{\rho}_{\sigma l}
+                   \sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}
+                                     {\tau^{\rho}_{\sigma l}  })
+                  },                                                 \\
+\eta^l_{1z}  & = & \exp\left(-\frac{d_z(z)\Delta t}
+                          {\tau^{\rho}_{\sigma l}}\right),           \\
+\eta^l_{2z}  & = & \frac{d_z(z)\Delta t}
+                  {(\tau^{\rho}_{\sigma l}
+                   \sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}
+                                     {\tau^{\rho}_{\sigma l}  })
+                  }.
+\end{eqnarray*}
+The profile functions $d_x$ and $d_z$ are
+\begin{eqnarray*}
+  d_x(x) = (x/L),
+  d_z(y) = (z/L),
+\end{eqnarray*}
+where $L$ is the length of the absorbing layer and 
+and we also have
+\begin{eqnarray}
+\Delta \lambda_l = \lambda_u\left(1-\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}\right)
+\Delta \rho^{-1} = \rho^{-1}_u\left(1-\frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}\right)
+\end{eqnarray}
+%==============================================================================
+\bibliographystyle{seg}  % style file is seg.bst
+\bibliography{references}
+%==============================================================================
+%===============================================================================
+\Appendix{A}{The viscoelastic standard linear solid} 
+%===============================================================================
+Bolzman's generalization of Hook's law to the visco-elastic case is
+\citep{Hudson1985}:
+\begin{eqnarray}
+\sigma_{ij} = \psi_{ijkl}*\dot{e}_{kl},
+                  \label{eq:boltzman}
+\end{eqnarray}where $\psi_{ijkl}$ is known as the relaxation tensor.
+The $*$ denotes convolution defined by
+\begin{eqnarray}
+a(t)*b(t)=\int_0^t a(t-\tau)b(\tau).
+\end{eqnarray}
+Integrating \eqref{eq:boltzman} by parts
+\begin{eqnarray}
+\sigma_{ij}(t)=|_0^t \psi_{ijkl}(t-\tau)e_{kl}(\tau) +\int_0^t \dot{\psi}_{ijkl}(t-\tau)e_{kl}(\tau),
+\end{eqnarray}
+and using $e(t=0)=0$ I get
+\begin{eqnarray}
+\sigma_{ij}(t)=\psi(0)_{ijkl}e_{kl}(t) +\int_{0+}^t \dot{\psi}_{ijkl}(t-\tau)e_{kl}(\tau)
+\end{eqnarray}
+For the Zener model the components of the $\psi_{ijkl}$ tensor have the form
+\begin{eqnarray}
+  \psi(t)=K\left[1-\frac{1}{N}\sum_{l=1}^N 
+            (1-\frac{\tau_{\epsilon l}}{\tau_{\sigma l}})\exp(-t/\tau_{\sigma l})\right]H(t).
+\end{eqnarray}
+%
+where $K_r$ is a relaxed modulus, $N$ is the number of Zener mechanisms,$\tau_{\sigma l}$
+and $\tau_{\epsilon l}$ are relaxation times. $H(t)$ is the Heavy side function.
+The time derivative of $\psi$ is equal to:
+\begin{eqnarray}
+\dot{\psi} = \phi(t),
+\end{eqnarray}
+where $\phi$ is equal to:
+\begin{eqnarray}
+\phi(t)=
+  \frac{1}{N}\sum_{l=1}^N\left[\left(\frac{K_r}{\tau_{\sigma l}}\right) 
+            \left(1-\frac{\tau_{\epsilon l}}{\tau_{\sigma l}}\right)\exp(-t/\tau_{\sigma l})\right]H(t).
+                \label{eq:phi}
+\end{eqnarray}
+
+Using the above we have for the stress:
+\begin{eqnarray}
+\sigma_{ij}(t)=c_{ijkl}e_{kl} +\int_{0+}^t \phi_{ijkl}(t-\tau)e_{kl}(\tau)
+\end{eqnarray}
+This is most conveniently written as
+\begin{eqnarray}
+\sigma_{ij}(t)=c_{ijkl}(t)*e_{kl}(t),
+\end{eqnarray}
+where
+\begin{eqnarray}
+ c_{ijkl}(t)=\psi(0)_{ijkl}\delta(t) +\phi_{ijkl}(t),
+\end{eqnarray}
+%
+By definition $\psi(t=0)$ corresponds to the unrelaxed modulus so that we have
+\begin{eqnarray}
+K_u = \frac{1}{N}\sum_{l=1}^N \frac{\tau_{\epsilon l}}{\tau_{\sigma l}} K_r
+\end{eqnarray}
+or
+\begin{eqnarray}
+K_r = \frac{K_u}{\frac{1}{N}\sum_{l=1}^N \frac{\tau_{\epsilon l}}{\tau_{\sigma l}}}
+\end{eqnarray}
+The $\phi$ function can then be expressed in terms of the unrelaxed moduli:
+\begin{eqnarray}
+\phi(t) =   
+  \sum_{l=1}^N\left[\left(\frac{\exp(-t/\tau_{\sigma l})}{\tau_{\sigma l}\sum_{l=1}^N \frac{\tau_{\epsilon l}}{\tau_{\sigma l}}}\right)
+            K_u\left(1-\frac{\tau_{\epsilon l}}{\tau_{\sigma l}}\right)\right]
+\end{eqnarray}
+Finally, we express $\phi$ as:
+\begin{eqnarray}
+\phi(t) = \sum_{l=1}^N \phi^l(t)
+\end{eqnarray}
+where
+\begin{eqnarray}
+\phi^l(t) = 
+  \left(\frac{\exp(-t/\tau_{\sigma l})}{\tau_{\sigma l}\sum_{l=1}^N \frac{\tau_{\epsilon l}}{\tau_{\sigma l}}}\right)
+            \Delta K_l
+\end{eqnarray}
+and $\Delta K_l$ is
+\begin{eqnarray}
+\Delta K_l = K_u\left(1-\frac{\tau_{\epsilon l}}{\tau_{\sigma l}}\right)
+\end{eqnarray}
+
+It is most practical to write the time-dependent visco-elastic constants as
+\begin{eqnarray}
+  \lambda(t) & = & \lambda_u \delta(t) + \phi_{\lambda}(t), \\
+  \mu(t)    &  =  &\mu_u\delta(t)+\phi_{\mu}(t),
+\end{eqnarray}
+where
+%
+$\phi_{\lambda}$ is given as:
+\begin{eqnarray}
+  \phi_{\lambda}(t) = \sum_{l=1}^N 
+  \left(\frac{\exp(-t/\tau^{\lambda}_{\sigma l})}{\tau^{\lambda}_{\sigma l}\sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}}\right)
+            \Delta \lambda_l
+\end{eqnarray}
+%
+and $\phi_{\mu}$ is given as:
+\begin{eqnarray}
+  \phi_{\mu}(t) = \sum_{l=1}^N 
+  \left(\frac{\exp(-t/\tau^{\mu}_{\sigma l})}{\tau^{\mu}_{\sigma l}\sum_{l=1}^N \frac{\tau^{\mu}_{\epsilon l}}{\tau^{\mu}_{\sigma l}}}\right)
+            \Delta \mu_l
+\end{eqnarray}
+%-----------------------------------------------------------------------------
+\subsection*{Q-factors}
+%-----------------------------------------------------------------------------
+The $Q$ values are related to the Fourier transform of the $\lambda$ modulus as
+\begin{eqnarray}
+  Q^{-1}_{\lambda}(\omega) = \frac{Im \lambda(\omega)}{Re \lambda(\omega)}
+\end{eqnarray}
+Assuming $\lambda$ is given as
+\begin{eqnarray}
+\lambda(t) = \lambda_u\delta(t) + \phi_{\lambda}(t).
+\end{eqnarray}
+The fourier transform of $\lambda$ is given by
+
+\begin{eqnarray}
+\lambda(\omega) = \lambda_u + \int_{-\infty}^{\infty} \phi_{\lambda}(t) \exp(-i\omega t).
+\end{eqnarray}
+The Fourier transform of $\phi_\lambda$ is:
+
+\begin{eqnarray}
+\phi_{\lambda}(\omega)=  \frac{1}{N}\sum_{l=1}^N\left(\frac{\lambda_r}{\tau^{\lambda}_{\sigma l}}\right) 
+            \left(1-\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}\right)
+           \int^{+\infty}_0 dt\exp(-i\omega)\exp(-t/\tau^{\lambda}_{\sigma l}).
+\end{eqnarray}
+
+The results is:
+\begin{eqnarray}
+\phi_{\lambda}(\omega)=  \frac{1}{N}\sum_{l=1}^N\left(\frac{\lambda_r}{\tau^{\lambda}_{\sigma l}}\right) 
+            \left(1-\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}} \right)\frac{1}{1+i\omega\tau^{\lambda}_{\sigma l}}.
+\end{eqnarray}
+
+The fourier transform of $\lambda$ is then
+\begin{eqnarray}
+\lambda(\omega) = \lambda_u 
++\frac{1}{N}\sum_{l=1}^N\left(\frac{\lambda_r}{\tau^{\lambda}_{\sigma l}}\right) 
+            \left(1-\frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}} \right)\frac{1}{1+i\omega\tau^{\lambda}_{\sigma l}}.
+\end{eqnarray}
+
+After some (tedious) algebra one obtains
+\begin{eqnarray}
+\lambda(\omega) = \lambda_r \frac{1}{N}\sum_{l=1}^N\frac{1+i\omega\tau^{\lambda}_{\epsilon l}}{1+i\omega\tau^{\lambda}_{\sigma l}} 
+\end{eqnarray}
+
+Separating into real and imaginary parts, I get
+
+\begin{eqnarray}
+\lambda(\omega) & = & \lambda_r 
+\frac{1}{N}\sum_{l=1}^N
+\frac{1+\omega^2\tau^{\lambda}_{\sigma l}\tau^{\lambda}_{\epsilon l}}
+     {1+(\omega\tau^{\lambda}_{\sigma l})^2}  \\\nonumber
+                & + & i\lambda_r \frac{1}{N}\sum_{l=1}^N\frac{\omega\tau^{\lambda}_{\sigma l}(\tau^{\lambda}_{\epsilon}/\tau^{\lambda}_{\sigma l}-1)}
+                                                              {1+(\omega\tau^{\lambda}_{\sigma l})^2}  \nonumber\\
+\end{eqnarray}
+
+We then have
+\begin{eqnarray}
+Q^{-1}_{\lambda} = \frac{\sum_{l=1}^N {\omega\tau^{\lambda}_{\sigma l}\left(\tau^{\lambda}_{\epsilon l}/\tau^{\lambda}_{\sigma l} -1\right)}
+                                           /\left[1 + (\omega\tau^{\lambda}_{\sigma l})^2\right] 
+                        }
+                        {\sum_{l=1}^N (1 + \omega^2\tau^{\lambda}_{\sigma l}\tau^{\lambda}_{\epsilon l})
+                                           /\left[1 + (\omega\tau^{\lambda}_{\sigma l})^2\right]       
+                        }
+\end{eqnarray}
+
+The results for the frequency dependence of $\mu$ is obtained in exactly the same manner as above:
+\begin{eqnarray}
+\mu(\omega) = \mu_r \frac{1}{N}\sum_{l=1}^N\frac{1+i\omega\tau^{\mu}_{\epsilon l}}{1+i\omega\tau^{\mu}_{\sigma l}} 
+\end{eqnarray}
+ and the Q-factor for $\mu$ is
+%
+\begin{eqnarray}
+Q^{-1}_{\mu} = \frac{\sum_{l=1}^N {\omega\tau^{\lambda}_{\sigma l}\left(\tau^{\mu}_{\epsilon l}/\tau^{\lambda}_{\sigma l} -1\right)}
+                                           /\left[1 + (\omega\tau^{\mu}_{\sigma l})^2\right] 
+                        }
+                        {\sum_{l=1}^N (1 + \omega^2\tau^{\mu}_{\sigma l}\tau^{\mu}_{\epsilon l})
+                                           /\left[1 + (\omega\tau^{\mu}_{\sigma l})^2\right]       
+                        }
+\end{eqnarray}
+%
+In practice we need to relate $Q_l$ and $Q_{\mu}$ to $Q_{\kappa}$. We use the relation
+%
+\begin{eqnarray}
+\kappa(\omega) = \lambda(\omega)+ \frac{2}{3}\mu(\omega).
+\end{eqnarray}
+%
+Splitting into real and imaginary parts
+%
+\begin{eqnarray}
+\kappa_r(\omega) = \lambda_r(\omega)+ \frac{2}{3}\mu_r(\omega).
+\kappa_i(\omega) = \lambda_i(\omega)+ \frac{2}{3}\mu_i(\omega).
+\end{eqnarray}
+%
+\begin{eqnarray}
+\frac{1}{Q_{\kappa}} = \frac{\kappa_i}{\kappa_r} = \frac{\lambda_i + (2/3)\mu_i}{\lambda_r + (2/3)\mu_r}
+\end{eqnarray}
+%
+%
+\begin{eqnarray}
+\frac{1}{Q_{\kappa}} = \frac{\kappa_i}{\kappa_r} = \frac{\left(\frac{\lambda_i}{\lambda_r}\right)\lambda_r
+                                                   + (2/3)\left(\frac{\mu_i}{\mu_r}\right)\mu_r}
+                                                  {\lambda_r + (2/3)\mu_r}
+\end{eqnarray}
+%
+%
+\begin{eqnarray}
+Q^{-1}_{\kappa} = \frac{Q^{-1}_\lambda \lambda_r + (2/3)Q^{-1}_{\mu}}
+                                                  {\lambda_r + (2/3)\mu_r}
+\end{eqnarray}
+%
+We can use the P-wave and S-wave velocities
+%
+\begin{eqnarray}
+\lambda = \rho V^2_p - (2/3)\rho V^2_s \nonumber\\
+\mu = \rho V^2_s
+\end{eqnarray}
+%
+\begin{eqnarray}
+Q^{-1}_{\kappa} = Q^{-1}_\lambda\left[1-\left(\frac{2}{3}\right)\left(\frac{V_s}{V_p}\right)^2\right]
+                  + Q^{-1}_{\mu}\left(\frac{2}{3}\right)\left(\frac{V_s}{V_p}\right)^2
+\end{eqnarray}
+%
+%-------------------------------------------------------------------------------
+\subsection*{Effective density} 
+%-------------------------------------------------------------------------------
+We now assume that the effective density has the following form
+\begin{eqnarray}
+ \rho^{-1}_{eff}(t) = s(t).
+\end{eqnarray}
+We also assume that 
+\begin{eqnarray}
+ s(t) = s(0)\delta(t)+\chi(t)
+\end{eqnarray}
+So that the inverse of the effective density reads
+\begin{eqnarray}
+ \rho^{-1}_{eff}(t) = s_u\delta(t)+\chi(t).
+\end{eqnarray}
+where $s_u = s(0)=\rho^{-1}_u$.
+
+%===============================================================================
+\Appendix{B}{Recursive computation of $\gamma$ and $s$.}
+%================================================================================
+The $\gamma$'s involve a convolution, which is difficult to compute directly.
+However, a recursive relation can be found by considering
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) & = &
+  \int^{t+\Delta t}_0 d\tau\,
+  \frac{1}{\tau^{\lambda}_{\sigma l}
+   {\sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}
+   {\tau^{\lambda}_{\sigma l}}} }
+  \exp(-\frac{t+\Delta t -\tau}{\tau^{\lambda}_{\sigma}})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) & = &
+  \frac{1}{\tau^{\lambda}_{\sigma l}{\sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}{\tau^{\lambda}_{\sigma l}}} }
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})
+  \int^{t+\Delta t}_{0} d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{\sigma}})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+ & = & 
+  \frac{1}{\tau^{\lambda}_{\sigma l}\sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}}
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})
+  \int^{t}_0 d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{\sigma}})
+  \dot{e}_{xx}(\tau)\\
+ & + &
+  \frac{1}{\tau^{\lambda}_{\sigma l}\sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}}
+  %\frac{1}{\sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}}
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})
+  \int^{t+\Delta t}_t d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{\sigma}})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+The second intergral is approximated by
+ assuming that $\dot{e}_{xx}(t)$ is constant in the interval $t$ to $t+\Delta t$
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+ & = & %\frac{1}{\tau_{\epsilon}} 
+  \frac{1}{\tau^{\lambda}_{\sigma l}\sum_{l=1}^N \frac{\tau^{\rho}_{\epsilon l}}{\tau^{\rho}_{\sigma l}}}
+\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})
+       \int^{t}_0 d\tau\,
+       \exp(-\frac{t-\tau}{\tau^{\lambda}_{\sigma}})
+       \dot{e}_{xx}(\tau)\\
+ & + &
+       \frac{1}{\tau_{\epsilon}} \exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})
+       \dot{e}_{xx}(t)\int^{t+\Delta t}_t d\tau\,
+       \exp(-\frac{t-\tau}{\tau^{\lambda}_{\sigma}})
+\end{eqnarray*}
+Performing the integral we then get
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+   & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
+   & + & \frac{\tau_{\sigma}}{\tau_{\epsilon}}
+         \left[1-\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}})\right]
+         \dot{e}_{xx}(t).
+\end{eqnarray*}
+%
+For small $\Delta t \ll 1$ the last equation is also
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+   & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
+   & + & \frac{1}{\tau_{\epsilon}}\dot{e}_{xx}(t).
+\end{eqnarray*}
+%==============================================================================
+\Appendix{C}{Comparison with CPML}
+%==============================================================================
+\cite{Komatitsch2007} show that the implementation of the CPML method can
+be performed by replacing each spatial derivative with
+\begin{eqnarray*}
+  \p_x = \frac{1}{k_x}\p_x + \psi_x
+\end{eqnarray*}
+Where the memory variable $\psi$ is computed as
+\begin{eqnarray*}
+  \psi^n_x = b_x\psi^{n-1} + a_x \left(\p_x)\right)^{n+1/2}
+\end{eqnarray*}
+Here the coefficients $a_x$ and $b_x$ are
+\begin{eqnarray*}
+  b_x = \exp-(d_x/k_x +\alpha_x)\Delta t,\\
+  a_x = \frac{d_x}{k_x(d_x + k_x\alpha_x}(b_x-1)
+\end{eqnarray*}
+In the numerical examples, $k_x=1$, so one gets
+\begin{eqnarray*}
+  \p_x = \p_x + \psi_x
+\end{eqnarray*}
+\begin{eqnarray*}
+  b_x = \exp(-d_x\Delta t) \exp(-\alpha_x\Delta t),\\
+  a_x = \frac{d_x}{d_x + \alpha_x}(b_x-1)
+\end{eqnarray*}
+Here the profile function $d_x$ is equal to
+\begin{eqnarray*}
+  d_x(x) = d_0(x/L)^2,
+  d_y(y) = d_0(y/L)^2,
+\end{eqnarray*}
+where $L$ is the length of the absorbing zone and 
+$d_0 = 341.9$.
+Also we have
+\begin{eqnarray*}
+\alpha = \alpha_{max}(L-x)/L
+\end{eqnarray*}
+where $\alpha_{max} = \pi f_0$.
+
+\end{document}      
+
