@@ -3,7 +3,7 @@
 ./clean.sh
 
 #Copy in python module c shared lib
-cp ../../Src/Python-gpu/_fd2d.so .
+cp ../../Src/Python-cuda/_fd2d.so .
 
 #Create wavelet
 nt=1501 #No of samples

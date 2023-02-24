@@ -19,10 +19,9 @@
 // Ac2dNew creates a new Ac2d object
 //
 // Parameters:
-//   Model : Model object
+//   - Model : Model object
 //
-// Return:
-//   Ac2d object  
+// Return    :Ac2d object  
   struct ac2d Ac2dNew(struct model Model){
   struct ac2d Ac2d;
   int i,j;

@@ -86,8 +86,8 @@ struct diff DiffNew( int l)
 }
 // Dxminus computes the backward derivative in the x-direction.
 //
-// Arguments:
-//  Diff: Diff object 
+//  Parameters:
+//  Diff           : Diff object 
 //  float  A       : Input 2D array
 //  float dx       : Sampling interval
 //  float dA       : Output array 
