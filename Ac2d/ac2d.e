@@ -55,23 +55,24 @@
 }
 // Ac2dSolve computes the solution of the acoustic wave equation.
 // The acoustic equation of motion are integrated using Virieux's (1986) stress-velocity scheme.
+// (See the notes.tex file in the Doc directory).
+// 
+// v_x(\xx,t+dt) = dt/\rho_x [d^+_x \sigma(\xx,t)] + dt f_x(\xx,t) + v_x(\xx,t)
+//              + \theta_x d[1/\rho_x]
+// v_y(\xx,t+dt) = dt/\rho_z [d^+_y \sigma(\xx,t)] + dt f_y(\xx,t) + v_y(\xx,t)
+//              + \theta_y d[1/\rho_y]
 //
-// vx(\xx,t+dt) = dt/rhox [d^+_x sigma(\xx,t)] + dt fx(\xx,t) + vx(\xx,t)
-//              + thetax d[1/rhox]
-// vy(\xx,t+dt) = dt/rhoz [d^+_y sigma(\xx,t)] + dt fy(\xx,t) + vy(\xx,t)
-//              + thetay d[1/rhoy]
-//
-// \dot{p}(\xx,t+dt) = dt lambda(\xx)[d_x \dot{e}xx + d_y \dot{e}zz] + dt \dot{q}(\xx,t) 
-//                   + dt [gammax dK + gammay dK]
+// \dot{p}(\xx,t+dt) = dt \lambda(\xx)[d_x \dot{e}_{xx} + d_y \dot{e}_{zz} + dt \dot{q}(\xx,t) 
+//                   + dt [\gammax d\lambda + \gammay d\lambda]
 //                       + p(\xx,t)
-// \dot{e}xx             =  d^-_x vx 
-// \dot{e}yy             =  d^-_z vy 
+// \dot{e}xx             =  d^-_x v_x 
+// \dot{e}yy             =  d^-_z v_y 
 //
-//  gammax(\xx, t+dt) = alpha1x gammax(\xx,t) + alpha2x \dot{e}xx 
-//  gammay(\xx, t+dt) = alpha1y gammay(\xx,t) + alpha2y \dot{e}yy 
+//  \gamma_x(\xx, t+dt) = \alpha_{1x} \gamma_x(\xx,t) + alpha_{2x} \dot{e}_{xx} 
+//  \gamma_y(\xx, t+dt) = \alpha_{1y} \gamma_y(\xx,t) + alpha_{2y} \dot{e}_{yy} 
 //
-//  thetax(\xx, t+dt) = theta1x gammax(\xx,t) + theta2x d^+x p
-//  thetay(\xx, t+dt) = theta1y gammay(\xx,t) + theta2y d^+y p
+//  \theta_x(\xx, t+dt) = \eta_{1x} \theta_x(\xx,t) + \eta_{2x} d^+x p
+//  \theta_y(\xx, t+dt) = \eta_{1y} \theat_y(\xx,t) + \eta_{2y} d^+y p
 //  
 //  Parameters:  
 //    Ac2d : Solver object

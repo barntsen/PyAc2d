@@ -17,6 +17,7 @@
 \date{\today}
 \maketitle
 \clearpage
+PRELIMINARY VERSION UNDER DEVELOPMENT. CONTAINS ERRORS.
 %===============================================================================
 \section*{Elastic equations of motion} 
 %===============================================================================
@@ -400,6 +401,7 @@ a'(x-\Delta x/2) & = & d^-_x a(x).
 \end{eqnarray}
 
 The differentiators $d^+$ and $d^-$ are given by
+\citep{Holberg1987}
 %
 \begin{eqnarray}
    \d^+ & = & \inv{\Delta x}\sum_{l=1}^L \alpha_l\left[u(x +l\Delta x) -
@@ -769,6 +771,7 @@ and $\phi_{\mu}$ is given as:
 %-----------------------------------------------------------------------------
 \subsection*{Q-factors}
 %-----------------------------------------------------------------------------
+See \cite{Casula1992} for further relations between Q and relaxation times.
 The $Q$ values are related to the Fourier transform of the $\lambda$ modulus as
 \begin{eqnarray}
   Q^{-1}_{\lambda}(\omega) = \frac{Im \lambda(\omega)}{Re \lambda(\omega)}
@@ -886,6 +889,29 @@ Q^{-1}_{\kappa} = Q^{-1}_\lambda\left[1-\left(\frac{2}{3}\right)\left(\frac{V_s}
                   + Q^{-1}_{\mu}\left(\frac{2}{3}\right)\left(\frac{V_s}{V_p}\right)^2
 \end{eqnarray}
 %
+%------------------------------------------------------------------------
+\subsection*{Q-model parametrization}
+%-------------------------------------------------------------------------------
+Q-models can be described by the two relaxation times, $\tau_{\sigma}$
+and $\tau_{\epsilon}$. However it is simpler to use the two parameters
+$\tau_0$ and $Q_0$ to describe a model.
+According to \cite{Casula1992}, Appendix B, we have
+\begin{eqnarray*}
+  Q(\omega) = Q_0\frac{1+\omega^2\tau_0^2}{2\omega\tau_0}
+\end{eqnarray*}
+where
+\begin{eqnarray*}
+  Q_0 = \frac{2\tau_0}{\tau_{\epsilon} -\tau_{\sigma}}, \\
+  \tau_0^2 = \tau_{\epsilon}\tau_{\sigma}.
+\end{eqnarray*}
+$\omega=1/\tau_0$ is the minimum value for $Q(\omega)$, i.e. the
+absorption top.
+We can now find $\tau_{\sigma}$ and $\tau_{\epsilon}$ in terms of
+$\tau_0$ and $Q_0$ as:
+\begin{eqnarray*}
+  \tau_{\epsilon} = \frac{\tau_0}{Q_0}\left[\sqrt{Q^2_0+1} +1\right], \\
+  \tau_{\sigma} = \frac{\tau_0}{Q_0}\left[\sqrt{Q^2_0+1} -1\right].
+\end{eqnarray*}
 %-------------------------------------------------------------------------------
 \subsection*{Effective density} 
 %-------------------------------------------------------------------------------
@@ -976,38 +1002,36 @@ For small $\Delta t \ll 1$ the last equation is also
 %==============================================================================
 \cite{Komatitsch2007} show that the implementation of the CPML method can
 be performed by replacing each spatial derivative with
-\begin{eqnarray*}
-  \p_x = \frac{1}{k_x}\p_x + \psi_x
-\end{eqnarray*}
-Where the memory variable $\psi$ is computed as
-\begin{eqnarray*}
-  \psi^n_x = b_x\psi^{n-1} + a_x \left(\p_x)\right)^{n+1/2}
-\end{eqnarray*}
-Here the coefficients $a_x$ and $b_x$ are
-\begin{eqnarray*}
-  b_x = \exp-(d_x/k_x +\alpha_x)\Delta t,\\
-  a_x = \frac{d_x}{k_x(d_x + k_x\alpha_x}(b_x-1)
-\end{eqnarray*}
-In the numerical examples, $k_x=1$, so one gets
-\begin{eqnarray*}
-  \p_x = \p_x + \psi_x
-\end{eqnarray*}
-\begin{eqnarray*}
-  b_x = \exp(-d_x\Delta t) \exp(-\alpha_x\Delta t),\\
-  a_x = \frac{d_x}{d_x + \alpha_x}(b_x-1)
-\end{eqnarray*}
-Here the profile function $d_x$ is equal to
-\begin{eqnarray*}
-  d_x(x) = d_0(x/L)^2,
-  d_y(y) = d_0(y/L)^2,
-\end{eqnarray*}
-where $L$ is the length of the absorbing zone and 
-$d_0 = 341.9$.
-Also we have
-\begin{eqnarray*}
-\alpha = \alpha_{max}(L-x)/L
-\end{eqnarray*}
-where $\alpha_{max} = \pi f_0$.
-
+(Their's equation (16) and (18)):
+\begin{eqnarray}
+  s_x = \delta(t) - d_x H(t) \exp \left[-(d_x+\alpha_x)t\right].
+                                          \label{eq:A-Komatitsch} 
+\end{eqnarray}
+We compare this with our equation
+\begin{eqnarray}
+  \lambda(t)/\lambda_u = \delta(t) + \frac{1}{\tau_{\epsilon}}
+                         \exp(-t/\tau_{\sigma}) H(t)
+                         \left(1-\frac{\tau_{\epsilon}}{\tau_{\sigma}}\right)
+                                           \label{eq:A-lambda}
+\end{eqnarray}
+Comparing equation \eqref{eq:A-Komatitsch} with equation
+\eqref{eq:A-lambda} one gets:
+\begin{eqnarray}
+-d_x         & = & \frac{1}{\tau_{\epsilon}}\left(1-\frac{\tau_{\epsilon}}
+                                            {\tau_{\sigma}}\right), \\
+d_x +\alpha & = & \frac{1}{\tau_{\sigma}}
+\end{eqnarray}
+Solving for $\tau_{\epsilon}$ and $\tau_{\sigma}$ one gets
+\begin{eqnarray}
+  \tau_{\sigma}   & = & \frac{1}{(d_x+\alpha)},\\
+  \tau_{\epsilon} & = & \frac{1}{\alpha}.
+\end{eqnarray}.
+Here 
+\begin{eqnarray}
+ d_x (x) & = & d_0 \left(\frac{x}{L}\right)^2,
+\end{eqnarray}
+where $d_0$ is a constant and $L$ is the length of
+the PML zone and $x$ is the distance from the start (outer border)
+of the PML zone.
 \end{document}      
 

@@ -58,11 +58,7 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 // The medium in the border zone has a Q-value of Qmax
 // at the inner bondary (taken from the Q-model) and
 // the Q-value is gradualy reduced to Qmin at the outer boundary.
-//
-// Reference: B. Arntsen, 2023, "Non-reflecting boundary conditions
-//              using a visco-elastic medium with time dependent 
-//              effective density",Tecnical report, NTNU.
-//              (See the Doc directory)
+// (See the notes.tex in the Doc directory for the equations.)
 struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb)
 {
