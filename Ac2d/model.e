@@ -23,21 +23,28 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 //
 // Return:  Model structure
 //
+// ModelNew creates the parameters needed by the Ac2d object
+// to perform 2D acoustic modeling.
+// The main parameters are density $\rho$ and bulk modulus $\kappa$ which are
+// calculated from the wave velocity and density.
+// In addition are the visco-elastic coefficients $\alpha_1$, $\alpha_2$ ,
+// $\eta_1$  and $\eta_2$ computed.
+//
 // The model is defined by several 2D arrays, with the x-coordinate
 // as the first index, and the y-coordinate as the second index.
 // A position in the model (x,y) maps to the arrays as [i,j]
 // where x=Dx*i, y=Dx*j
-// The absorbing boundaries is equal to the CPML method
+// The absorbing boundaries is comparable to the CPML method
 // but constructed using a visco-elastic medium with
 // relaxation specified by a standard-linear solid, while 
 // a time dependent density which uses a standard-linear solid
 // relaxation mechanism.
 //
-//                     Nx                        
+//                     Nx                Outer border        
 //    |----------------------------------------------|
 //    |           Qmin=1.1                           |
 //    |                                              |
-//    |           Qmax=Q(x,y=Dx*Nb)                  |
+//    |           Qmax=Q(x,y=Dx*Nb)     Inner border |
 //    |      ----------------------------------      |
 //    |      |                                |      |
 //    |      |                                |      | Ny
@@ -51,6 +58,9 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 //    |                                              |
 //    |-----------------------------------------------
 //
+//    Fig 1: Organisation of the Q-model.
+//           The other arrays are organised in the same way.
+//
 // The Boundary condition is implemented by using a strongly
 // absorbing medium in a border zone with width Nb.
 // The border zone has the same width both in the horizontal
@@ -58,7 +68,60 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 // The medium in the border zone has a Q-value of Qmax
 // at the inner bondary (taken from the Q-model) and
 // the Q-value is gradualy reduced to Qmin at the outer boundary.
+//
+//  In the finit-edifference solver we use the standard
+//  linear solid to implement time dependent 
+//  bulk modulus and density.
+//  The standard linear solid model uses
+//  two parameters, $\tau_{sigma}$ and $\tau_{\epsilon}$.
+//  These are related to the Q-value by
 // (See the notes.tex in the Doc directory for the equations.)
+//  
+//    taue(Q0) = tau0/Q0(\sqrt{Q^2_0+1} +1\right)
+//    taus(Q0) = tau0/Q0(\sqrt{Q^2_0+1} +1\right)
+//
+//  Q0 is here the value for Q at the frequency W0.
+//
+//  The coeffcients needed by the solver methods in the Ac2d object are
+//    alpha1x =  exp(d_x/Dt)exp(tausx),                                  \\
+//    alpha2x =  dx Dt/tauex
+//    alpha1y =  exp(d_x/Dt)exp(tausy),                                  \\
+//    alpha2y =  dx Dt/tauey
+//    eta1x   =  exp(d_x/Dt)exp(tausx),                                  \\
+//    eta2x   =  dx Dt/tauex
+//    eta1y   =  exp(d_x/Dt)exp(tausy),                                  \\
+//    eta2y   =  dx Dt/tauey
+//
+// Relaxation times are interpolated between the values given by the Q-value 
+// Qmax at the inner border of the model and the Qimin at the outer border. 
+// For the interpolation we just assume that the relaxation times
+// varies proportionaly with the square of the distance from
+// the inner border, according to
+//
+//   tausx(x) = tausxmin + (tausxmax-tausxmin)*d(x)
+//   tausy(x) = tausymin + (tausxmax-tausymin)*d(y)
+//   tauex(x) = tauexmin + (tauexmax-tauexmin)*d(x)
+//   tauey(x) = taueymin + (tausymax-tausymin)*d(y)
+//                       
+// where 
+//
+//   d(x) = (x/L)^2
+//
+// x is the distance from the outer border, while
+// L is the length of the border.
+// We also have
+//
+//   tausxmax = taus(Qmax)
+//   tausxmin = taus(Qmin)
+//   tausymax = taus(Qmax)
+//   tausymin = taus(Qmin)
+//   tauexmax = taue(Qmax)
+//   tauexmin = taue(Qmin)
+//   taueymax = taue(Qmax)
+//   taueymin = taue(Qmin)
+//
+// Here Qmin= 1.1, while Qmax is equal to the value 
+// of Q at the inner border.
 struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb)
 {
@@ -71,13 +134,13 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   float Qmin, Qmax;       // Minimum and Maximum Q-values in boundary zone
   float tauemin,tauemax;  // Taue values corresponding to Qmin and Qmax
   float tausmin,tausmax;  // Taus values corresponding to Qmin and Qmax
-  float argx;             // Temp variabels
-  float argy;             // Temp variables
 
   // Relaxation times
-  float tausx, tausy;
+  float tausx, tausy;     
   float tauex, tauey;
 
+  float argx;            // Temp variabels
+  float argy;            // Temp variables
   int i,j;               // Loop indices
 
   Model= new(struct model);
@@ -143,24 +206,24 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       tausmin = 1.0/tausmin;
 
       Qmax  = Model.Q[Nb,j];
+      // Note that we compute the inverse
+      // of relaxation times, and use the same
+      // name for the inverses, taus=1/taus.
+      // In all formulas below this section we
+      // work with the inverse of the relaxation times.
       tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
       tauemax = 1.0/tauemax;
       tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
       tausmax = 1.0/tausmax;
-      // Note that the equations below corresponds to
-      // smoothing of the inverse taus with a taper
-      // in the x-direction in the left and right border zone
       tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
       tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
-
       Qmax  = Model.Q[i,Nb];
       tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
       tauemax = 1.0/tauemax;
       tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
       tausmax = 1.0/tausmax;
-      // Note that the equations below corresponds to
-      // smoothing of the inverse taus with a taper
-      // in the y-direction in the top- and bottom border zone
+
+      // Interpolate relaxation times 
       tauey = tauemin + (tauemax-tauemin)*Model.dy[j];
       tausy = tausmin + (tausmax-tausmin)*Model.dy[j];
 
@@ -170,7 +233,7 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       argx = Model.dx[i];
       argy = Model.dy[j];
       // An extra tapering factor of exp(-(x/L)**2)
-      // is used to taper coefficeints
+      // is used to taper some coefficeints 
       Model.Alpha1x[i,j]   = LibeExp(-argx)*LibeExp(-Model.Dt*tausx);
       Model.Alpha1y[i,j]   = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
       Model.Alpha2x[i,j]   = Model.Dt*tauex;
@@ -179,6 +242,9 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       Model.Eta1y[i,j]     = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
       Model.Eta2x[i,j]     = Model.Dt*tauex;
       Model.Eta2y[i,j]     = Model.Dt*tauey;
+ 
+      // Compute the change in moduli due to
+      // visco-ealsticity (is equal to zero for the elastic case)
       Model.Dkappax[i,j]   = Model.Kappa[i,j]
                              *(1.0-tausx/tauex);
       Model.Dkappay[i,j]   = Model.Kappa[i,j]

@@ -1,15 +1,16 @@
 #!/bin/sh
 
+# Test script for PyAc2d. To run all tests,
+# remove the exit command after model 1.
+
 ./clean.sh
 
 #Copy in python module c shared lib
-cp ../../Src/Python-omp/_fd2d.so .
+cp ../Python-cpu/_fd2d.so .
 
 #Create wavelet
 nt=1501 #No of samples
 ricker -nt $nt -f0 25.0 -t0 0.100 -dt 0.0005 src.bin 
-
-export OMP_NUM_THREADS=6
 
 #-----------------------------------------
 # Model no 1
@@ -28,6 +29,9 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 #Run modelling
 echo "** Model size 251x251 Timesteps 1501" > log.txt
 python3 ac2dmod-250.py  >> log.txt
+
+#To run all tests comment out the next line
+exit
 
 #-----------------------------------------
 # Model no 2

@@ -16,7 +16,8 @@ class bin :
              
     def read(self,dim) :
         """Read binary data"""
-        data=np.fromfile(self.file, dtype='float32')
+        n=product(dim)
+        data=np.fromfile(self.file, count=n ,dtype='float32')
         data=data.reshape(dim)
         self.file.close()
         return data 

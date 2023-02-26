@@ -1,0 +1,25 @@
+<h1>Ac2d - 2D Acoustic Finite-Difference simulation of seismic waves</h1>
+
+<p>This directory contains the source files for the Ac2d simulation library.
+The library is written in a smal Domain Specific Language (DSL)
+and converted to either standard c, CUDA or c with OpenMP pragma's
+using a source-to-source translator (transpiler). 
+The transpiler is named eps and found in a separate github repo: 
+<a href="https://www.example.com">Eps</a></p>
+
+<h2>List of source files</h2>
+
+<ul>
+<li>mk.sh   : Script for compiling the source code</li>
+<li>ac2d.e  : Solver object</li>
+<li>diff.e  : Differentiator object</li>
+<li>model.e : Model object</li>
+<li>rec.e   : Receiver object</li>
+<li>src.e   : Source object  </li>
+<li>ac2dmod.e : Example code to run the library</li>
+</ul>
+
+<h2>Tests</h2>
+
+<p>The Test directory contains simple tests
+and plotting routines for initial verification.</p>

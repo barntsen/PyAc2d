@@ -57,22 +57,22 @@
 // The acoustic equation of motion are integrated using Virieux's (1986) stress-velocity scheme.
 // (See the notes.tex file in the Doc directory).
 // 
-// v_x(\xx,t+dt) = dt/\rho_x [d^+_x \sigma(\xx,t)] + dt f_x(\xx,t) + v_x(\xx,t)
-//              + \theta_x d[1/\rho_x]
-// v_y(\xx,t+dt) = dt/\rho_z [d^+_y \sigma(\xx,t)] + dt f_y(\xx,t) + v_y(\xx,t)
-//              + \theta_y d[1/\rho_y]
+//     vx(t+dt)   = dt/rhox d^+x[ sigma(t)] + dt fx + vx(t)
+//                + thetax D[1/rhox]
+//     vy(t+dt)   = dt/rhoy d^+y sigma(t) + dt fy(t) + vy(t)
+//                + thetay D[1/rhoy]
 //
-// \dot{p}(\xx,t+dt) = dt \lambda(\xx)[d_x \dot{e}_{xx} + d_y \dot{e}_{zz} + dt \dot{q}(\xx,t) 
-//                   + dt [\gammax d\lambda + \gammay d\lambda]
-//                       + p(\xx,t)
-// \dot{e}xx             =  d^-_x v_x 
-// \dot{e}yy             =  d^-_z v_y 
+//     dp/dt(t+dt) = dt Kappa[d^-x dexx/dt + d-y deyy/dt + dt dq/dt(t) 
+//                 + dt [gammax Dkappa + gammay Dkappa]
+//                 + p(t)
+//     dexx/dt     =  d^-_x v_x 
+//     deyy/dt     =  d^-_z v_y 
 //
-//  \gamma_x(\xx, t+dt) = \alpha_{1x} \gamma_x(\xx,t) + alpha_{2x} \dot{e}_{xx} 
-//  \gamma_y(\xx, t+dt) = \alpha_{1y} \gamma_y(\xx,t) + alpha_{2y} \dot{e}_{yy} 
+//     gammax(t+dt) = alpha1x gammax(t) + alpha2x dexx/dt 
+//     gammay(t+dt) = alpha1y gammay(t) + alpha2y deyy/dt 
 //
-//  \theta_x(\xx, t+dt) = \eta_{1x} \theta_x(\xx,t) + \eta_{2x} d^+x p
-//  \theta_y(\xx, t+dt) = \eta_{1y} \theat_y(\xx,t) + \eta_{2y} d^+y p
+//     thetax(t+dt) = eta1x thetax(t) + eta2x d^+x p
+//     thetay(t+dt) = eta1y thetay(t) + eta2y d^+y p
 //  
 //  Parameters:  
 //    Ac2d : Solver object
@@ -122,9 +122,9 @@ int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec R
     }
 
     // Print progress
-    perc=100.0*(cast(float,i)/cast(float,nt-1));
+    perc=100.0*(cast(float,i)/cast(float,ne-ns-1));
     if(perc-oldperc >= 1.0){
-      iperc=cast(int,perc+0.5);
+      iperc=cast(int,perc);
       if(LibeMod(iperc,10)==0){
         LibePuts(stderr,"perc: ");
         LibePuti(stderr,iperc);

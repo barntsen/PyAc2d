@@ -20,7 +20,7 @@ ec  -f -O src.e
 ec  -f -O rec.e
 ar rcs libac2domp.o ac2d.o diff.o model.o src.o rec.o
 
-# Compile nividia gpu version
+# Compile nividia cuda version
 ecc      -g -n $nt -m $nb ac2d.e
 ecc      -g -n $nt -m $nb diff.e
 ecc      -g -n $nt -m $nb model.e
@@ -28,7 +28,7 @@ ecc      -g -n $nt -m $nb src.e
 ecc      -g -n $nt -m $nb rec.e
 ar rcs libac2dgpu.o ac2d.o diff.o model.o src.o rec.o
 
-# Compile amd gpu version
+# Compile amd hip version
 #ech  -c -n $nt -m $nb ac2d.e
 #ech  -n $nt -m $nb diff.e
 #ech  -n $nt -m $nb  model.e
