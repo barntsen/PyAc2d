@@ -2,4 +2,4 @@
 
 # Clean script
 
-rm *.aux *.bbl *.blg *.log
+rm -f *.aux *.bbl *.blg *.log

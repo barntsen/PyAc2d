@@ -6,7 +6,7 @@
 ./clean.sh
 
 #Copy in python module c shared lib
-cp ../Python-cpu/_fd2d.so .
+cp ../../Python-cpu/_fd2d.so .
 
 #Create wavelet
 nt=1501 #No of samples
@@ -32,7 +32,6 @@ python3 ac2dmod-250.py  >> log.txt
 
 #To run all tests comment out the next line
 exit
-
 #-----------------------------------------
 # Model no 2
 #-----------------------------------------
