@@ -36,8 +36,8 @@ class bin :
 
 def product(tuple1):
     """Calculates the product of a tuple"""
-    if len(tuple1) == 1 :
-      return tuple1[0]
+    if len(tuple) == 1 :
+      return tuple(0)
     else :
       prod = 1
       for x in tuple1:
