@@ -122,11 +122,10 @@ int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec R
     }
 
     // Print progress
-    perc=100.0*(cast(float,i)/cast(float,ne-ns-1));
-    if(perc-oldperc >= 1.0){
-      iperc=cast(int,perc);
+    perc=1000.0*(cast(float,i)/cast(float,ne-ns-1));
+    if(perc-oldperc >= 10.0){
+      iperc=cast(int,perc)/10;
       if(LibeMod(iperc,10)==0){
-        LibePuts(stderr,"perc: ");
         LibePuti(stderr,iperc);
         LibePuts(stderr,"\n");
         LibeFlush(stderr);
