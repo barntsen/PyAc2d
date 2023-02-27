@@ -27,3 +27,8 @@ cd ..
 cd Python-omp
 ./clean.sh
 cd ..
+
+cd Tests
+./clean.sh
+cd ..
+
