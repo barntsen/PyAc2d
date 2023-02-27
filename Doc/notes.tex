@@ -623,14 +623,14 @@ Also the coefficents are
 \begin{eqnarray*}
 \alpha^l_{1x}  & = & \exp\left(-\frac{d_x(x)\Delta t}
                           {\tau^{\lambda}_{\sigma l}}\right),        \\
-\alpha^l_{2x}  & = & \frac{-d_x(x)\Delta t}
+\alpha^l_{2x}  & = & \frac{d_x(x)\Delta t}
                   {(\tau^{\lambda}_{\sigma l}
                    \sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}
                                      {\tau^{\lambda}_{\sigma l}  })
                   }                                                  \\
 \alpha^l_{1z}  & = & \exp\left(-\frac{d_z(z)\Delta t}
                           {\tau^{\lambda}_{\sigma l}}\right),        \\
-\alpha^l_{2z}  & = & \frac{-d_z(z)\Delta t}
+\alpha^l_{2z}  & = & \frac{d_z(z)\Delta t}
                   {(\tau^{\lambda}_{\sigma l}
                    \sum_{l=1}^N \frac{\tau^{\lambda}_{\epsilon l}}
                                      {\tau^{\lambda}_{\sigma l}  })
@@ -652,8 +652,8 @@ Also the coefficents are
 \end{eqnarray*}
 The profile functions $d_x$ and $d_z$ are
 \begin{eqnarray*}
-  d_x(x) = (x/L),
-  d_z(y) = (z/L),
+  d_x(x) = (x/L)^2,
+  d_z(y) = (z/L)^2,
 \end{eqnarray*}
 where $L$ is the length of the absorbing layer and 
 and we also have
@@ -995,7 +995,7 @@ For small $\Delta t \ll 1$ the last equation is also
 \begin{eqnarray*}
 \gamma^{\lambda}_x(t+\Delta t) 
    & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
-   & + & \frac{1}{\tau_{\epsilon}}\dot{e}_{xx}(t).
+   & + & \frac{\Delta t}{\tau_{\epsilon}}\dot{e}_{xx}(t).
 \end{eqnarray*}
 %==============================================================================
 \Appendix{C}{Comparison with CPML}
