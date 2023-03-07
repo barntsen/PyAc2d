@@ -5,11 +5,53 @@ include <libe.i>  // Standard library
 include "model.i" // Model struct definition
 
 //Internal functions
+struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+                      float Dx, float Dt, float W0, int Nb){} // Maxwell Q-model
+//struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+//                      float Dx, float Dt, float W0, int Nb)
 int Modeld(float [*] d, float dx, int nb){}  // 1D profile function
 float Modeltaus(float Q, float w0){}         // Compute taus
 float Modeltaue(float Q, float w0){}         // Compute taue
 
 // ModelNew creates a new model.
+//
+// Parameters: 
+//
+//  - vp :  P-wave velocity model
+//  - rho:  Density 
+//  - Q  :  Q-values
+//  - Dx :  Grid interval in x- and y-directions
+//  - Dt :  Modeling time sampling interval
+//  - W0 :  Q-model peak angular frequency
+//  - Nb :  Width of border attenuation zone (in grid points)
+//  - Rheol : Type of Q-model. Rheol=MAXWELL (Maxwell solid)
+//                             Rheol=SLS     (Standard linear solid)
+//
+// Return:  Model structure
+//
+// ModelNew creates the parameters needed by the Ac2d object
+// to perform 2D acoustic modeling.
+// For the details of the MAXWELL or SLS type models
+// see the comments in Modelmaxwell and Modelsls.
+
+
+struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+                      float Dx, float Dt, float W0, int Nb, int Rheol)
+{
+  struct model m;
+
+  if(Rheol == MAXWELL){
+    m = Modelmaxwell(vp, rho, Q, Dx, Dt, W0, Nb); 
+  }
+  else{
+    LibePuts(stderr, "Q-model not implemented \n"); 
+    LibeFlush(stderr);
+    m=NULL;
+  } 
+  
+  return(m);
+}
+// Modelmaxwell creates a new model.
 //
 // Parameters: 
 //
@@ -116,13 +158,12 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 // Here Qmin= 1.1, while Qmax is equal to the value 
 // of Q at the inner border.
 // 
-struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb)
 {
   struct model Model; // Object to instantiate
 
   int Nx,Ny;          // Model dimensions in x- and y-directions
-  float tau0;         // Relaxation time at Peak 1/Q-value
   
   // Smoothing parameters
   float Qmin, Qmax;       // Minimum and Maximum Q-values in boundary zone
@@ -193,21 +234,21 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       // Note that we compute the inverse
       // of tau0, and use the same
       // name for the inverse, tau0=1/tau0.
-      // In all formulas below this section we
-      // work with the inverse of the relaxation times.
       
       Qmin = 1.1;  // MinimumQ-value at the outer boundaries:       
-      tau0min = Qmin/Model.W0
+      tau0min = Qmin/Model.W0;
       tau0min = 1.0/tau0min;
       Qmax  = Model.Q[Nb,j];
-      tau0max = Qmax/Model.W0
+      tau0max = Qmax/Model.W0;
       tau0max = 1.0/tau0max;
+
       // Interpolate tau0 in x-direxction
-      tau0x = tau0min + (tau0max-ta0emin)*Model.dx[i];
+      tau0x = tau0min + (tau0max-tau0min)*Model.dx[i];
 
       Qmax  = Model.Q[i,Nb];
-      tau0max = Qmax/Model.W0
+      tau0max = Qmax/Model.W0;
       tau0max = 1.0/tau0max;
+
       // Interpolate tau0 in y-direxction
       tau0y = tau0min + (tau0max-tau0min)*Model.dy[j];
 
@@ -220,15 +261,15 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       // is used to taper some coefficeints 
       Model.Alpha1x[i,j]   = LibeExp(-argx)*LibeExp(-Model.Dt*tau0x);
       Model.Alpha1y[i,j]   = LibeExp(-argy)*LibeExp(-Model.Dt*tau0y);
-      Model.Alpha2x[i,j]   = -Model.Dt*tauex;
-      Model.Alpha2y[i,j]   = -Model.Dt*tauey;
+      Model.Alpha2x[i,j]   = -Model.Dt*tau0x;
+      Model.Alpha2y[i,j]   = -Model.Dt*tau0y;
       Model.Eta1x[i,j]     = LibeExp(-argx)*LibeExp(-Model.Dt*tau0x);
       Model.Eta1y[i,j]     = LibeExp(-argy)*LibeExp(-Model.Dt*tau0y);
-      Model.Eta2x[i,j]     = -Model.Dt*tauex;
-      Model.Eta2y[i,j]     = -Model.Dt*tauey;
+      Model.Eta2x[i,j]     = -Model.Dt*tau0x;
+      Model.Eta2y[i,j]     = -Model.Dt*tau0y;
  
-      // Compute the change in moduli due to
-      // visco-ealsticity (is equal to zero for the elastic case)
+      // For the Maxwell solid Dkappa = kappa and Drho = 1/rho
+      // to comply with the solver algorithm i ac2d.e
       Model.Dkappax[i,j]   = Model.Kappa[i,j];
       Model.Dkappay[i,j]   = Model.Kappa[i,j];
       Model.Drhox[i,j]     = (1.0/Model.Rho[i,j]);

@@ -6,7 +6,9 @@
 ./clean.sh
 
 #Copy in python module c shared lib
-cp ../../Python-cpu/_fd2d.so .
+cp ../../Python-omp/_fd2d.so .
+#Copy in python module 
+cp ../../Python-omp/fd2d.py .
 
 #Create wavelet
 nt=1501 #No of samples

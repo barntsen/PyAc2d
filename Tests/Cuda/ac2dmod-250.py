@@ -19,7 +19,7 @@ dx      = 5.0       #Grid interval
 dt      = 0.0005;   #Time sampling interval
 nt      = 1501      #No of time steps
 t0      = 0.1       #Pulse delay
-f0      = 20.0      #Dominant frequency 
+f0      = 25.0      #Dominant frequency 
 w0      = 2.0*pi*f0 #Dominant angular frequency
 resamp  = 1         #Resampling factor (relative to no of timesteps ) for data
 sresamp = 10        #Resampling factor for snapshots
@@ -30,6 +30,8 @@ frho    = "rho.bin" # Rho file name
 fq      = "q.bin"   # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
+MAXWELL = 1
+SLS     = 2
 #----------------------------------------------
 #Create source positions and source wavelet
 #----------------------------------------------
@@ -85,7 +87,7 @@ data=fin.read((ny,nx))
 q=PyepsStore2df(data);
 
 #Create a new model
-model=ModelNew (vp,rho,q,dx,dt,w0,nb)
+model=ModelNew (vp,rho,q,dx,dt,w0,nb,MAXWELL)
       
 #--------------------------------------
 #Create fd solver

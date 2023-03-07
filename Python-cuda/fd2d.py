@@ -110,8 +110,8 @@ def PyepsDel2df(arr):
 def PyepsSet2df(arr, i, j, val):
     return _fd2d.PyepsSet2df(arr, i, j, val)
 
-def ModelNew(kappa, rho, Q, Dx, Dt, W0, Nb):
-    return _fd2d.ModelNew(kappa, rho, Q, Dx, Dt, W0, Nb)
+def ModelNew(kappa, rho, Q, Dx, Dt, W0, Nb, Rheol):
+    return _fd2d.ModelNew(kappa, rho, Q, Dx, Dt, W0, Nb, Rheol)
 
 def SrcNew(source, sx, sy):
     return _fd2d.SrcNew(source, sx, sy)

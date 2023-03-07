@@ -87,7 +87,8 @@
   nctempfloat2* PyepsSet2df (nctempfloat2 *arr,int i,int j,float val);
 
   struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,
-                          nctempfloat2 *Q,float Dx,float Dt,float W0,int Nb);
+                          nctempfloat2 *Q,float Dx,float Dt,
+                          float W0,int Nb, int Rheol);
   
   struct src *SrcNew(nctempfloat1 *source, nctempint1 *sx, nctempint1 *sy);
 
@@ -120,7 +121,8 @@
   nctempfloat2* PyepsSet2df (nctempfloat2 *arr,int i,int j,float val);
 
   struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,
-                          nctempfloat2 *Q,float Dx,float Dt,float W0,int Nb);
+                          nctempfloat2 *Q,float Dx,float Dt,
+                          float W0,int Nb,int Rheol);
 
   struct src * SrcNew(nctempfloat1 *source, nctempint1 *sx, nctempint1 *sy);
 

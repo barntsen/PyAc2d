@@ -28,8 +28,11 @@ float Dt;
 
 // ModelNew creates a new Model obejct
 struct model ModelNew(float [*,*] kappa, float [*,*] rho, float [*,*] Q,
-                      float Dx, float Dt, float W0, int Nb){}
+                      float Dx, float Dt, float W0, int Nb, int Rheol){}
 
 // ModelStability computes stability index
 float ModelStability(struct model Model){}
 
+// Constants
+const MAXWELL = 1;
+const SLS     = 2;

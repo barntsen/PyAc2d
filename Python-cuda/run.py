@@ -30,6 +30,8 @@ fq      = "q.bin"   # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
 fp      = "p.bin"   # Output file name for pressure recording
+MAXWELL = 1         # Maxwell Q-model
+SLS     = 2         # Standard Linear Solid Q-model
 #----------------------------------------------
 #Create source positions and source wavelet
 #----------------------------------------------
@@ -85,7 +87,8 @@ data=fin.read((ny,nx))
 q=PyepsStore2df(data);
 
 #Create a new model
-model=ModelNew (vp,rho,q,dx,dt,w0,nb)
+rheol=MAXWELL
+model=ModelNew (vp,rho,q,dx,dt,w0,nb,rheol)
       
 #--------------------------------------
 #Create fd solver
