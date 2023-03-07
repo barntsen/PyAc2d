@@ -11,6 +11,8 @@ cp ../Ac2d/ac2d.i .
 cp ../Ac2d/ac2d.e .
 cp ../Ac2d/diff.e .
 cp ../Ac2d/diff.i .
+cp ../Python-cpu/pyeps.e .
+cp ../Python-cpu/pyeps.py .
 
 ec -c  pyeps.e
 ec -c  model.e

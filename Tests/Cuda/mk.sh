@@ -9,6 +9,7 @@
 cp ../../Python-cuda/_fd2d.so .
 #Copy in python module module
 cp ../../Python-cuda/fd2d.py .
+cp ../../Python-cuda/pyeps.py .
 
 #Create wavelet
 nt=1501 #No of samples

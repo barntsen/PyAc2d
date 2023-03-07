@@ -8,7 +8,7 @@ include "model.i" // Model struct definition
 struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
                       float Dx, float Dt, float W0, int Nb){} // Maxwell Q-model
 struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
-                      float Dx, float Dt, float W0, int Nb)   // Sls Q-model
+                      float Dx, float Dt, float W0, int Nb){}   // Sls Q-model
 int Modeld(float [*] d, float dx, int nb){}  // 1D profile function
 float Modeltaus(float Q, float w0){}         // Compute taus
 float Modeltaue(float Q, float w0){}         // Compute taue

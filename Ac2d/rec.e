@@ -21,7 +21,6 @@ include "rec.i"
 struct rec RecNew(int [*] rx, int [*] ry, int nt, 
                   int resamp, int sresamp, char [*] file)
 {
-  int fd;
   struct rec Rec;
 
   Rec = new(struct rec);
@@ -93,7 +92,6 @@ int RecSave(struct rec Rec, char [*] file)
 int RecSnap(struct rec Rec,int it, float [*,*] snp)
 {
   int n;
-  int i,j;
   int Nx, Ny;
   char [*] tmp;
   
