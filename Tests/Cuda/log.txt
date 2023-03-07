@@ -1,2 +1,1 @@
-** Model size 251x251 Timesteps 1501
-Solver wall clock time:  0.3859677569998894
+Solver wall clock time:  0.3724677319987677

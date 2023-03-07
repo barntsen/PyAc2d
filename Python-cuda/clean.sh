@@ -11,6 +11,7 @@ rm -f ac2d.i
 rm -f ac2d.e 
 rm -f diff.e 
 rm -f diff.i 
+rm -f pyeps.e
 
 rm -f libe.e 
 rm -f libe.i 
@@ -18,3 +19,4 @@ rm -f m.i
 rm -f run.i 
 rm -f runcpu.e 
 rm -rf __pycache__
+rm -f *.py
