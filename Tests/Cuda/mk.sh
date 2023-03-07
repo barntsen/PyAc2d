@@ -13,7 +13,7 @@ cp ../../Python-cuda/pyeps.py .
 
 #Create wavelet
 nt=1501 #No of samples
-ricker -nt $nt -f0 25.0 -t0 0.100 -dt 0.0005 src.bin 
+ricker -nt $nt -f0 30.0 -t0 0.100 -dt 0.0005 src.bin 
 
 n1=251
 n2=251

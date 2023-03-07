@@ -1,1 +1,1 @@
-Solver wall clock time:  0.3724677319987677
+Solver wall clock time:  0.38106835300277453
