@@ -1,15 +1,14 @@
 #!/bin/sh
 
-# Test script for PyAc2d. To run all tests,
-# remove the exit command after model 1.
+# Test script for PyAc2d. 
 
 ./clean.sh
 
 #Copy in python module c shared lib
-cp ../../Python-cuda/_fd2d.so .
+#cp ../../Python-cuda/_fd2d.so .
 #Copy in python module module
-cp ../../Python-cuda/fd2d.py .
-cp ../../Python-cuda/pyeps.py .
+#cp ../../Python-cuda/fd2d.py .
+#cp ../../Python-cuda/pyeps.py .
 
 #Create wavelet
 nt=1501 #No of samples
@@ -28,7 +27,8 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
 echo "** Model size 251x251 Timesteps 1501" > log.txt
-python3 ../Scripts/ac2dmod.py  > log.txt
+BIN=../../Bin
+$BIN/ac2dmodcu  > log.txt
 
 ../Scripts/snp.sh
 

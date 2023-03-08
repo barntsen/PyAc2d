@@ -5,12 +5,6 @@
 
 ./clean.sh
 
-#Copy in python module c shared lib
-cp ../../Python-cpu/_fd2d.so .
-#Copy in python module 
-cp ../../Python-cpu/fd2d.py .
-cp ../../Python-cpu/pyeps.py .
-
 #Create wavelet
 nt=1501 #No of samples
 ricker -nt $nt -f0 25.0 -t0 0.150 -dt 0.0005 src.bin 
@@ -28,7 +22,8 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
 echo "** Model size 251x251 Timesteps 1501" > log.txt
-python3 ../Scripts/ac2dmod.py  > log.txt
+BIN=../../Bin
+$BIN/ac2dmodcpu
 
 #Display snapshots
 ../Scripts/snp.sh

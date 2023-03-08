@@ -1,7 +1,7 @@
-
+#!/usr/bin/python3
 import numpy as np
-from fd2d import *
-from pyeps import *
+from pyac2dcu import *
+from pyepscu import *
 import babin as ba
 import time
 

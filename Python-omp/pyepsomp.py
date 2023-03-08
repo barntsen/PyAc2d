@@ -1,5 +1,5 @@
 import numpy as np
-from fd2d import *
+from pyac2domp import *
 
 def PyepsStore2df(arr):
   nx = arr.shape[0]

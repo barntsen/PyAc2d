@@ -1,1 +1,1 @@
-Solver wall clock time:  8.066038744000252
+** Model size 251x251 Timesteps 1501

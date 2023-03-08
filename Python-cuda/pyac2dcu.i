@@ -1,5 +1,5 @@
 /* smodel.i */
- %module fd2d
+ %module pyac2dcu 
  %{
  /* Put header files here or function declarations like below */
 
@@ -70,6 +70,10 @@
 
   int LibeInit();
 
+  void *GpuNew(int n);
+  void *GpuDelete(void *f);
+  void *GpuError();
+
   nctempchar1* PyepsCre1ds (int Nx);
   int PyepsDel1ds (nctempchar1 *arr);
   nctempchar1* PyepsSet1ds (nctempchar1 *arr,int i, char val);
@@ -104,6 +108,10 @@
   
   int LibeInit();
 
+  void *GpuNew(int n);
+  void *GpuDelete(void *f);
+  void *GpuError();
+
   nctempchar1* PyepsCre1ds (int Nx);
   int PyepsDel1ds (nctempchar1 *arr);
   nctempchar1* PyepsSet1ds (nctempchar1 *arr,int i, char val);
@@ -122,7 +130,7 @@
 
   struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,
                           nctempfloat2 *Q,float Dx,float Dt,
-                          float W0,int Nb,int Rheol);
+                          float W0,int Nb, int Rheol);
 
   struct src * SrcNew(nctempfloat1 *source, nctempint1 *sx, nctempint1 *sy);
 

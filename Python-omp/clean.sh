@@ -18,5 +18,5 @@ rm -f m.i
 rm -f run.i 
 rm -f runcpu.e 
 rm -rf __pycache__
-rm -f *.py
+rm -f pyac2domp.py
 rm -f pyeps.e

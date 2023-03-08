@@ -1,5 +1,5 @@
 /* smodel.i */
- %module fd2d
+ %module pyac2domp
  %{
  /* Put header files here or function declarations like below */
 

@@ -2,6 +2,9 @@
 
 # Script for cleaning up
 
+#
+rm -rf Bin/*
+
 #Clean Documentation
 cd Doc
 ./clean.sh
@@ -32,3 +35,4 @@ cd Tests
 ./clean.sh
 cd ..
 
+rm -rf Bin/*
