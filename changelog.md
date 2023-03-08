@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added new file : changelog.md ([b22ce9d](https://github.com/barntsen/PyAc2d/commit/b22ce9d039b36ab83f93c8ba64de033250dcb336) by Borge Arntsen).
 - Added documentation in Doc ([3e49b22](https://github.com/barntsen/PyAc2d/commit/3e49b228f1adb275c58fe3118502b7d2d0ea7e67) by Borge Arntsen).
 - Added small chamges to the test log files ([1e616b7](https://github.com/barntsen/PyAc2d/commit/1e616b74d86627cf9bcaacb8b1c2a9dbdf0dfe4d) by Borge Arntsen).
 - Added readme files and some small changes in scripts. ([e44e520](https://github.com/barntsen/PyAc2d/commit/e44e520f5a4f3f7ffa13adc5d024dec23b2780c6) by Borge Arntsen).
