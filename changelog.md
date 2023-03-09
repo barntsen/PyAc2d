@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
-## [0.1.0](https://github.com/barntsen/PyAc2d/releases/tag/0.1.0) - 2023-03-08
+## [0.1.0](https://github.com/barntsen/PyAc2d/releases/tag/0.1.0) - 2023-03-09
 
 <small>[Compare with first commit](https://github.com/barntsen/PyAc2d/compare/eadfe1596e79c5b22ea9050c5b8ceab818aa98fb...0.1.0)</small>
 
@@ -20,5 +20,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- change : readme.md documentation updated ([c1931b5](https://github.com/barntsen/PyAc2d/commit/c1931b501b7876db408f2d00afcffafb0cdfb4e3) by Borge Arntsen).
 - Changed model.e to accomodate both Standard Linear Solid and Maxwell solid. Only maxwell solid implemented. ([b87fd15](https://github.com/barntsen/PyAc2d/commit/b87fd1538da6c466664aa716634f616cfc3c3eb5) by Borge Arntsen).
 
