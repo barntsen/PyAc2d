@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import numpy as np
 from pyac2dcpu import *
-from pyeps import *
+from pyepscpu import *
 import babin as ba
 import time
 
@@ -71,6 +71,7 @@ rec= RecNew(rx,ry,nt,resamp,sresamp,snp);
 #Get the velocity model
 fin = ba.bin(fvp)
 data=fin.read((ny,nx))
+print("*** Data size: ", data.shape)
 #Convert 2d numpy float array to c-type
 vp=PyepsStore2df(data);
 

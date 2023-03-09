@@ -4,10 +4,10 @@ from pyac2dcpu import *
 def PyepsStore2df(arr):
   nx = arr.shape[0]
   ny = arr.shape[1]
-  out = PyepsCre2df(nx,ny) 
+  out = PyepsCre2df(ny,nx) 
 
-  for i in range(0,ny):
-    for j in range(0,nx):
+  for i in range(0,nx):
+    for j in range(0,ny):
       PyepsSet2df(out,j,i,float(arr[i,j]))
 
   return(out)
