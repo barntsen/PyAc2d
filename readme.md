@@ -33,3 +33,4 @@ To compile the code and run the tests clone also the
                 on single and multicore cpus and nvidia gpu.
  - Doc         -Documentation of the finite-difference method
                 and code.
+ - Bin         -Python executable scripts
