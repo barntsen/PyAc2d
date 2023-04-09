@@ -1,7 +1,6 @@
 #!/bin/sh
 
 # Test script for PyAc2d. To run all tests,
-# remove the exit command after model 1.
 
 ./clean.sh
 
