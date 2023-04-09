@@ -137,7 +137,7 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
 //    eta2y   =  -dx Dt/tau0y
 //
 // tau0 is interpolated between the values given by the Q-value 
-// Qmax at the inner border of the model and the Qimin at the outer border. 
+// Qmax at the inner border of the model and the Qmin at the outer border. 
 // For the interpolation we just assume that the relaxation times
 // varies proportionaly with the square of the distance from
 // the inner border, according to

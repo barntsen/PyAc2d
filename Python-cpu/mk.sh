@@ -40,4 +40,4 @@ gcc -O2 -shared -o _pyac2dcpu.so -L/usr/local/cuda-10.1/lib64/ runcpu.o libe.o \
                 ac2d.o model.o pyeps.o src.o rec.o diff.o pyac2dcpu_wrap.o
 
 
-#The _fd2dcpu.so shared library contains the c-to-python bindings.
+#The _pyac2dcpu.so shared library contains the c-to-python bindings.
