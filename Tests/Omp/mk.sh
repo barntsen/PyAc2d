@@ -23,7 +23,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 #Run modelling
 echo "** Model size 251x251 Timesteps 1501" > log.txt
 BIN=../../Bin
-$BIN/ac2dmodomp > log.txt
+$BIN/ac2dmodomp 
 
 
 #Show snapshots

@@ -1,1 +1,0 @@
-** Model size 251x251 Timesteps 1501

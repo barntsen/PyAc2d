@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Test script for PyAc2d. To run all tests,
+# Test script for PyAc2d. 
 
 ./clean.sh
 
