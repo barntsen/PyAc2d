@@ -157,7 +157,7 @@ int Ac2dvx(struct ac2d Ac2d, struct model Model)
   // The derivative of stress in x-direction is stored in exx
   // Scale with inverse density and advance one time step
   parallel(i=0:nx,j=0:ny){
-    Ac2d.vx[i,j] = Model.Dt*(1.0/Model.Rho[i,j])*Ac2d.exx[i,j] + Ac2d.vx[i,j]
+    Ac2d.vx[i,j] = Model.Dt*(Model.Rho[i,j])*Ac2d.exx[i,j] + Ac2d.vx[i,j]
                  + Model.Dt*Ac2d.thetax[i,j]*Model.Drhox[i,j];
     Ac2d.thetax[i,j]  = Model.Eta1x[i,j]*Ac2d.thetax[i,j] + Model.Eta2x[i,j]*Ac2d.exx[i,j];
   }
@@ -178,7 +178,7 @@ int Ac2dvy(struct ac2d Ac2d, struct model Model)
   // The derivative of stress in y-direction is stored in eyy
   // Scale with inverse density and advance one time step
   parallel(i=0:nx,j=0:ny){
-    Ac2d.vy[i,j] = Model.Dt*(1.0/Model.Rho[i,j])*Ac2d.eyy[i,j] + Ac2d.vy[i,j]
+    Ac2d.vy[i,j] = Model.Dt*(Model.Rho[i,j])*Ac2d.eyy[i,j] + Ac2d.vy[i,j]
                  + Model.Dt*Ac2d.thetay[i,j]*Model.Drhoy[i,j];
      Ac2d.thetay[i,j]  = Model.Eta1y[i,j]*Ac2d.thetay[i,j] + Model.Eta2y[i,j]*Ac2d.eyy[i,j];
   }
