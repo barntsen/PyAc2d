@@ -220,7 +220,7 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   for(i=0; i<Nx;i=i+1){
     for(j=0; j<Ny;j=j+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
-      Model.Rho[i,j]   = rho[i,j];
+      Model.Rho[i,j]   = 1.0/rho[i,j];
       Model.Q[i,j]       = Q[i,j];
     }
   }
@@ -275,8 +275,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       // to comply with the solver algorithm in ac2d.e
       Model.Dkappax[i,j]   = Model.Kappa[i,j];
       Model.Dkappay[i,j]   = Model.Kappa[i,j];
-      Model.Drhox[i,j]     = (1.0/Model.Rho[i,j]);
-      Model.Drhoy[i,j]     = (1.0/Model.Rho[i,j]);
+      Model.Drhox[i,j]     = Model.Rho[i,j];
+      Model.Drhoy[i,j]     = Model.Rho[i,j];
     }
   }
 
