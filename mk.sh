@@ -21,3 +21,5 @@ cd ..
 cd Python-omp
 ./mk.sh
 cd ..
+
+./install.sh

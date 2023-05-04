@@ -272,7 +272,7 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       Model.Eta2y[i,j]     = -Model.Dt*tau0y;
  
       // For the Maxwell solid Dkappa = kappa and Drho = 1/rho
-      // to comply with the solver algorithm i ac2d.e
+      // to comply with the solver algorithm in ac2d.e
       Model.Dkappax[i,j]   = Model.Kappa[i,j];
       Model.Dkappay[i,j]   = Model.Kappa[i,j];
       Model.Drhox[i,j]     = (1.0/Model.Rho[i,j]);
