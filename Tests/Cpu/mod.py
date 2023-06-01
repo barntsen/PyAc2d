@@ -20,6 +20,7 @@ frho    = "rho.bin" # Rho file name
 fq      = "q.bin"   # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
+press   = "p.bin"
 #Q-models
 MAXWELL = 1
 SLS     = 2

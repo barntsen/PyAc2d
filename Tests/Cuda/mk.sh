@@ -4,12 +4,6 @@
 
 ./clean.sh
 
-#Copy in python module c shared lib
-#cp ../../Python-cuda/_fd2d.so .
-#Copy in python module module
-#cp ../../Python-cuda/fd2d.py .
-#cp ../../Python-cuda/pyeps.py .
-
 #Create wavelet
 nt=1501 #No of samples
 ricker -nt $nt -f0 30.0 -t0 0.100 -dt 0.0005 src.bin 
@@ -28,7 +22,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 #Run modelling
 echo "** Model size 251x251 Timesteps 1501" > log.txt
 BIN=../../Bin
-$BIN/ac2dmodcu  
+$BIN/ac2dmodcu mod.py 
 
-../Scripts/snp.sh
+#../Scripts/snp.sh
 
