@@ -90,6 +90,8 @@
                           nctempfloat2 *Q,float Dx,float Dt,
                           float W0,int Nb, int Rheol);
   
+  float ModelStability(struct model* Model); 
+  
   struct src *SrcNew(nctempfloat1 *source, nctempint1 *sx, nctempint1 *sy);
 
   struct rec *RecNew(nctempint1 *rx, nctempint1 *ry, int nt, int resamp, 
@@ -123,7 +125,8 @@
   struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,
                           nctempfloat2 *Q,float Dx,float Dt,
                           float W0,int Nb,int Rheol);
-
+  float ModelStability(struct model* Model); 
+  
   struct src * SrcNew(nctempfloat1 *source, nctempint1 *sx, nctempint1 *sy);
 
   struct rec * RecNew(nctempint1 *rx, nctempint1 *ry, int nt, int resamp, 

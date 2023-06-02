@@ -27,7 +27,7 @@ int Main(struct MainArg [*] MainArgs)
   char  [*] tmp;       // Temporary workspace
   float W0;
   int Nb,Rheol;
-  int Nr,rx0;
+  int Nr;
   int l;
   float si;
 
@@ -43,7 +43,7 @@ int Main(struct MainArg [*] MainArgs)
   l=6;      // Operator length
   f0=25.0;   // Peak frequency
   W0=f0*3.14159*2.0; // Central angular frequency
-  Nb = 30;             // Border for PML attenuation
+  Nb = 35;             // Border for PML attenuation
   Rheol = MAXWELL;
 
   // Read the velocity model
@@ -90,14 +90,12 @@ int Main(struct MainArg [*] MainArgs)
   LibeFlush(stderr);
 
   // Create a receiver
-  Nr=740;
+  Nr=201;
   rx=new(int[Nr]);
   ry=new(int[Nr]);
-  rx0=0;
   for(i=0; i<Nr; i=i+1){
-    rx[i] = rx0;
+    rx[i] = i;
     ry[i] = 50;
-    rx0=rx0+8;
   }
   resamp=1;   //Output receiver sampling
   sresamp=10; //Output snapshot resampling

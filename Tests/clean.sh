@@ -10,6 +10,10 @@ cd Cuda
 ./clean.sh
 cd ..
 
+cd Hip
+./clean.sh
+cd ..
+
 cd Omp
 ./clean.sh
 cd ..

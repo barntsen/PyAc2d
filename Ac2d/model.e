@@ -549,12 +549,21 @@ float ModelStability(struct model Model)
   ny = Model.Ny;
   for(i=0; i<nx; i=i+1){
     for(j=0; j<ny; j=j+1){
-      vp = LibeSqrt(Model.Kappa[i,j]/Model.Rho[i,j]);
+      vp = LibeSqrt(Model.Kappa[i,j]*Model.Rho[i,j]);
       stab = (vp*Model.Dt)/Model.Dx;
       if(stab > 1.0/LibeSqrt(2.0)){
         LibePuts(stderr,"Stability index too large! ");
         LibePutf(stderr,stab);
         LibePuts(stderr,"\n"); 
+        LibePuts(stderr,"vp: \n");
+        LibePutf(stderr,vp);
+        LibePuts(stderr,"\n");
+        LibePuts(stderr,"dt: \n");
+        LibePutf(stderr,Model.Dt);
+        LibePuts(stderr,"\n");
+        LibePuts(stderr,"dx: \n");
+        LibePutf(stderr,Model.Dx);
+        LibePuts(stderr,"\n");
         LibeFlush(stderr);
       }
     }

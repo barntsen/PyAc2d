@@ -21,6 +21,8 @@ parser.add_argument('fname',help='Configuartion file name')
 parser.add_argument("-m",dest="m",default='gpu', help="either of cpu,gpu or omp ")
 args = parser.parse_args()
 
+print("** ac2dmod ", args.m, "version **",flush=True)
+
 #Get pyeps library
 if args.m == 'cpu' :
   module1 = 'pyac2dcpu'
@@ -29,8 +31,8 @@ elif args.m == 'gpu':
   module1 = 'pyac2dcu'
   module2 = 'pyepscu'
 elif args.m == 'omp':
-  module1 = 'pyac2dcu'
-  module2 = 'pyepscu'
+  module1 = 'pyac2domp'
+  module2 = 'pyepsomp'
   
 pyac2d=importlib.import_module(module1, package=None)
 pyeps=importlib.import_module(module2, package=None)
@@ -87,8 +89,9 @@ data=fin.read((par.ny,par.nx))
 q=pyeps.PyepsStore2df(data);
 
 #Create a new model
+t1=time.perf_counter()
 model=pyac2d.ModelNew (vp,rho,q,par.dx,par.dt,par.w0,par.nb,par.rheol)
-      
+print("model time  (secs):", time.perf_counter()-t1, flush=True)
 #--------------------------------------
 #Create fd solver
 #--------------------------------------
@@ -104,14 +107,13 @@ pyac2d.Ac2dSolve(ac2d,model,src,rec,par.nt,par.l)
 #--------------------------------
 # Log wall clock time and date
 #-------------------------------
-print("** ac2dmod ", args.m, "version **")
 now = datetime.now()
 dtstring = now.strftime("%b-%d-%Y %H:%M:%S")
-print(dtstring)
+print("date            :",dtstring)
 print("grid size    nx :", par.nx)  
 print("grid size    ny :", par.ny)  
 print("timesteps    nt :", par.nt)  
-print("wall time (secs):", time.perf_counter()-t1)
+print("solver time (secs):", time.perf_counter()-t1)
 
 #--------------------------------------
 #Save Recording

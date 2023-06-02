@@ -20,9 +20,8 @@ spike -n1 $n1 -n2 $n2 -val 1000.0 rho.bin
 spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
-echo "** Model size 251x251 Timesteps 1501" > log.txt
 BIN=../../Bin
 $BIN/ac2dmod -m cpu mod.py
 
 #Display snapshots
-#../Scripts/snp.sh
+../Scripts/snp.sh
