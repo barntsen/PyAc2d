@@ -30,7 +30,7 @@ int Main(struct MainArg [*] MainArgs)
   int Nr,rx0;
   int l;
   float si;
-  float t0;         // Time at start
+  float t0,t1;         // Time at start
 
   // Initialize library
   LibeInit();
@@ -109,13 +109,16 @@ int Main(struct MainArg [*] MainArgs)
   /* Create solver    */
   Ac2d = Ac2dNew(Model);
 
+  t1=LibeClock();
   /* Run solver       */
   Ac2dSolve(Ac2d, Model, Src, Rec, nt,l);
 
   // Save recording
   RecSave(Rec,"p.bin");
 
-  LibePuts(stdout,"Wall time: "); LibePutf(stdout,LibeClock()-t0);
+  LibePuts(stdout,"Solver time : "); LibePutf(stdout,LibeClock()-t1); 
+  LibePuts(stdout,"\n");
+  LibePuts(stdout,"Wall time   : ");   LibePutf(stdout,LibeClock()-t0);
   LibePuts(stdout,"\n");
   LibeFlush(stdout);
 
