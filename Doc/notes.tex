@@ -727,21 +727,21 @@ and we also have
 %-----------------------------------------------------------------------
 The coefficents are
 \begin{eqnarray}
-  \alpha_{1x} & = & \exp\left(-\frac{d_x(x)\Delta t}
+  \alpha_{1x} & = & -\frac{1}{\tau^{\lambda}_0}\exp\left(-\frac{d_x(x)\Delta t}
                           {\tau^{\lambda}_0}\right),              \\
-  \alpha_{2x} & = & -\frac{d_x(x)\Delta t}
+  \alpha_{2x} & = & \frac{d_x(x)\Delta t}
                   {\tau^{\lambda}_0},                             \\
-  \alpha_{1z} & = & \exp\left(-\frac{d_z(z)\Delta t}
+  \alpha_{1z} & = & -\frac{1}{\tau^{\lambda}_0}\exp\left(-\frac{d_z(z)\Delta t}
                   {\tau^{\lambda}_0}\right),                      \\
-  \alpha_{2z}  & = & -\frac{d_z(z)\Delta t}
+  \alpha_{2z}  & = & \frac{d_z(z)\Delta t}
                   {\tau^{\lambda}_0}.                             \\
-  \eta_{1x} & = & \exp\left(-\frac{d_x(x)\Delta t}
+  \eta_{1x} & = & -\frac{1}{\tau^{\rho}_0}\exp\left(-\frac{d_x(x)\Delta t}
                           {\tau^{\rho}_0}\right),                 \\
-  \eta_{2x} & = & -\frac{d_x(x)\Delta t}
+  \eta_{2x} & = & \frac{d_x(x)\Delta t}
                   {\tau^{\rho}_0},                                \\
-  \eta_{1z} & = & \exp\left(-\frac{d_z(z)\Delta t}
+  \eta_{1z} & = & -\frac{1}{\tau^{\rho}_0}\exp\left(-\frac{d_z(z)\Delta t}
                   {\tau^{\rho}_0}\right),                         \\
-  \eta_{2z}  & = & -\frac{d_z(z)\Delta t}
+  \eta_{2z}  & = & \frac{d_z(z)\Delta t}
                   {\tau^{\rho}_0}.                                
 \end{eqnarray}
 We also have
@@ -750,6 +750,211 @@ We also have
     & = & \lambda_u,                  \\
   \Delta \rho^{-1} 
     & = & \rho^{-1}_u.
+\end{eqnarray}
+%-----------------------------------------------------------------------
+\subsection*{Plane Waves }
+%-----------------------------------------------------------------------
+The bulk modulus is considered to be visco-acoustic and is in the
+frequency domain given as
+\begin{eqnarray}
+ K(\omega) = K_0 G(\omega),
+                                    \label{eq:12}
+\end{eqnarray}
+where $K_0$ is a constant to be specified.
+The density is also taken to be frequency dependent and complex
+\begin{eqnarray}
+ \rho(\omega) = \rho_0 G^{-1}(\omega),
+                                    \label{eq:13}
+\end{eqnarray}
+
+ Consider a horizontally layered medium with bulk-modulus and density
+ given by equations \ref{eq:12} and \ref{eq:13}. According to Ursin
+ (1983), a downgoing wave in a homogeneous layer with unit amplitude is given by
+\begin{eqnarray}
+ \exp(-ik_z |z|),
+                               \label{eq:16}
+\end{eqnarray}
+where $z$ is the depth of the layer and the vertical wavenumber $k_z$
+is given as:
+\begin{eqnarray}
+ k_z = \frac{\omega}{c}\cos(\theta).
+                               \label{eq:17}
+\end{eqnarray}
+Here $\theta$ is the angle between the z-axis and the propagation
+direction of the wave.
+The wave velocity $c$ is given
+by
+\begin{eqnarray}
+ c=\sqrt{\frac{K(\omega)}{\rho(\omega)}} = 
+ \sqrt{\frac{K_0}{\rho_0}}G(\omega).
+                               \label{eq:18}
+\end{eqnarray}
+ The reflection coefficient
+ accross an interface between two layers (Ursin, 1983) is given by
+\begin{eqnarray}
+  R = \frac{Z_- - Z_+}{Z_ - + Z_+}, 
+                               \label{eq:19}
+\end{eqnarray}
+where the impedances $Z_-$ and $Z_+$ above and below the interface,
+respectively, are given by
+\begin{eqnarray}
+ Z = \frac{\rho\omega}{k_z} = Z_0 ,
+\end{eqnarray}
+where $Z_0 = \rho_0 c_0\cos(\theta)$.
+Consider the special case where the medium above the interface is
+purely acoustic, i.e $G=H=1$, and the medium below the interface is
+visco-acoustic, and in addition choose $Z_0$ above the interface equal
+to $Z_0$ below the interface. Then $R$ is exactly zero for all incidence
+angles.
+%------------------------------------------
+\subsection*{Maxwell solid}
+%------------------------------------------
+A particular choice is the classical Maxwell visco-acoustic
+medium with $G$ given by \citep{Casula1992}
+\begin{eqnarray}
+ G(\omega) = \left({1-\frac{i}{\omega\tau}}\right)^{-1},
+                                    \label{eq:21}
+\end{eqnarray}
+
+We then get for the velocity c
+\begin{eqnarray}
+ c=\left(1-\frac{i}{\omega\tau}\right)^{-1}\sqrt{\frac{K_0}{\rho_0}},
+                               \label{eq:23}
+\end{eqnarray}
+ and the vertical wavenumber $k_z$ becomes
+\begin{eqnarray}
+ k_z = \frac{\omega}{c_0} - \frac{i}{c_0\tau}.
+                               \label{eq:24}
+\end{eqnarray}
+The wave are then described by
+\begin{eqnarray}
+ \exp\left(\frac{-i\omega z}{c_0}\right)\exp(\frac{-z}{c_0\tau}),
+                               \label{eq:25}
+\end{eqnarray}
+ which is a dispersion-free wave with frequency independent
+ attenuation.
+%------------------------------------------
+\subsection*{Standard linear solid}
+%------------------------------------------
+A particular choice is the standard linear solid visco-acoustic
+medium with $G$ given by \citep{Casula1992}
+\begin{eqnarray}
+ G(\omega) = \frac{1+i\omega\tau_{\epsilon}}{1+i\omega\tau_{\sigma}}
+\end{eqnarray}
+
+We then get for the velocity c
+\begin{eqnarray}
+ c=\frac{1+i\omega\tau_{\epsilon}}{1+i\omega\tau_{\sigma}}
+\sqrt{\frac{K_0}{\rho_0}},
+\end{eqnarray}
+
+ and the vertical wavenumber $k_z$ becomes
+
+\begin{eqnarray}
+ k_z = \frac{\omega}{c_0}\frac{1+i\omega\tau_{\epsilon}}{1+i\omega\tau_{\sigma}}
+\end{eqnarray}
+The wave are then described by
+\begin{eqnarray}
+ \exp\left[iz \left(\frac{\omega}{c_0}\right)
+      \frac{1+i\omega\tau_{\epsilon}}{1+i\omega\tau_{\sigma}}
+     \right].
+\end{eqnarray}
+which is 
+\begin{eqnarray}
+ \exp\left[iz\left(\frac{\omega}{c_0}\right)
+             \frac{1+\omega^2\tau_{\epsilon}\tau_{\sigma}}
+                  {1+\omega^2\tau^2_{\sigma}}
+             \right]
+ \exp\left[\left(\frac{-z}{c_0}\right)
+             \frac{\omega^2(\tau_{\epsilon}-\tau_{\sigma})}
+                  {1+\omega^2\tau^2_{\sigma}}
+             \right]
+\end{eqnarray}
+
+%==========================================================================
+\section*{Time dependent density}
+%==========================================================================
+\cite{Williams2001} gives an expression for dynamic density used for
+acoustic waves in porous media:
+\begin{eqnarray}
+  \rho_{eff}(\omega) = 
+\rho_f \left( 
+              \frac{\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f 
+                    + \frac{i \beta\rho F \eta}{\rho_f\omega\kappa}
+              }
+              {\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f
+                    + \frac{i \beta F \eta}{\omega\kappa}
+              }
+       \right)
+\end{eqnarray}
+The parameters are
+\begin{center}
+\begin{tabular}{ c c }
+ $\beta$    & porosity                       \\ 
+ $\rho_s$   & Mass density of grains         \\  
+ $\eta$     & Viscosity                      \\
+ $\kappa$   & Permeability                   \\
+ $\alpha$   & Tortuosity                     \\
+ $F$        & Frequency correction function
+\end{tabular}
+\end{center}
+
+Multiply by $i\omega$ to get:
+\begin{eqnarray}
+  \rho_{eff}(\omega) = 
+\rho_f \left( 
+              \frac{[\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f]i\omega 
+                    - \frac{\beta\rho F \eta}{\rho_f\kappa}
+              }
+              {[\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f]i\omega
+                    - \frac{ \beta F \eta}{\kappa}
+              }
+       \right)
+\end{eqnarray}
+\begin{eqnarray}
+  \rho_{eff}(\omega) = 
+ \frac{\beta\rho F \eta/\rho_f \kappa}{\beta F \eta/ \kappa}
+\rho_f \left( 
+              \frac{\frac{[\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f]}{\beta\rho F \eta/ \rho_f \kappa}i\omega 
+              -1
+              }
+              {\frac{[\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f]}{\beta F \eta/ \kappa} i\omega
+              -1}
+       \right)
+\end{eqnarray}
+\begin{eqnarray}
+  \rho_{eff}(\omega) = 
+\rho \left( 
+              \frac{1-\frac{[\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f]}{\beta\rho F \eta/ \rho_f \kappa}i\omega 
+              }
+              {1-\frac{[\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f]}{\beta F \eta/ \kappa} i\omega
+              }
+       \right)
+\end{eqnarray}
+
+\begin{eqnarray}
+  \rho^{-1}_{eff}(\omega) = 
+\rho^{-1} {\left( 
+              \frac{1-\frac{[\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f]}{\beta\rho F \eta/ \rho_f \kappa}i\omega 
+              }
+              {1-\frac{[\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f]}{\beta F \eta/ \kappa} i\omega
+              }
+       \right)}^{-1}
+\end{eqnarray}
+
+\begin{eqnarray}
+  \rho^{-1}_{eff}(\omega) = 
+\rho^{-1} {\left( 
+              \frac{1-\tau_{\epsilon}i\omega} 
+                   {1-\tau_{\sigma}\i\omega}
+       \right)}^{-1}
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \tau_{\sigma}   & = &\frac{[\alpha(1-\beta)\rho_s + \beta(\alpha-1)\rho_f]}
+                            {\beta\rho F \eta/ \rho_f \kappa}, \nonumber\\
+ \tau_{\epsilon} & = &\frac{[\beta(1-\beta)\rho_s + (\alpha -2\beta+\beta^2)\rho_f]}
+                           {\beta F \eta/ \kappa}. 
 \end{eqnarray}
 %==============================================================================
 \bibliographystyle{seg}  % style file is seg.bst
@@ -1025,7 +1230,7 @@ where $s_u = s(0)=\rho^{-1}_u$.
 According to \cite{Casula1992} the Maxwell  visco-elastic solid
 has a modulus given by
 \begin{eqnarray}
-\lambda(t) = \lambda_u \left[\delta(t) -\frac{1}{\tau_0}\exp(-t/\tau_0)\right]
+\lambda(t) = \lambda_u\exp(-t/\tau_0)H(t)
 \end{eqnarray}
 In the frequency domain one gets
 \begin{eqnarray}
@@ -1044,9 +1249,14 @@ The Q-value are related to $\tau_0$ by:
 \begin{eqnarray}
   \tau_0 = Q(\omega)/\omega. 
 \end{eqnarray}
+A plane wave 
+
+
+
 %===============================================================================
 \Appendix{D}{Recursive computation of $\gamma$ and $s$.}
 %===============================================================================
+\subsection*{Standard Linear Solid}
 The $\gamma$'s involve a convolution, which is difficult to compute directly.
 However, a recursive relation can be found by considering
 \begin{eqnarray*}
@@ -1111,6 +1321,71 @@ For small $\Delta t \ll 1$ the last equation is also
 \gamma^{\lambda}_x(t+\Delta t) 
    & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
    & + & \frac{\Delta t}{\tau_{\epsilon}}\dot{e}_{xx}(t).
+\end{eqnarray*}
+%------------------------------------------
+\subsection*{Maxwell solid}
+%------------------------------------------
+The $\gamma$'s involve a convolution, which is difficult to compute directly.
+However, a recursive relation can be found by considering
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) & = &
+  -\int^{t+\Delta t}_0 d\tau\,
+  \frac{1}{\tau^{\lambda}_0}
+  \exp(-\frac{t+\Delta t -\tau}{\tau^{\lambda}_0})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) & = &
+  -\frac{1}{\tau^{\lambda}_{0}}
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})
+  \int^{t+\Delta t}_{0} d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{0}})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+ & = & 
+  -\frac{1}{\tau^{\lambda}_0}
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})
+  \int^{t}_0 d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{0}})
+  \dot{e}_{xx}(\tau)\\
+ & - &
+  \frac{1}{\tau^{\lambda}_{0}}
+  \exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})
+  \int^{t+\Delta t}_t d\tau\,
+  \exp(-\frac{t-\tau}{\tau^{\lambda}_{0}})
+  \dot{e}_{xx}(\tau).
+\end{eqnarray*}
+The second intergral is approximated by
+ assuming that $\dot{e}_{xx}(t)$ is constant in the interval $t$ to $t+\Delta t$
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+ & = & 
+  -\frac{1}{\tau^{\lambda}_{0}}
+\exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})
+       \int^{t}_0 d\tau\,
+       \exp(-\frac{t-\tau}{\tau^{\lambda}_{0}})
+       \dot{e}_{xx}(\tau)\\
+ & - &
+       \frac{1}{\tau^{\lambda}_{0}} \exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})
+       \dot{e}_{xx}(t)\int^{t+\Delta t}_t d\tau\,
+       \exp(-\frac{t-\tau}{\tau^{\lambda}_{0}})
+\end{eqnarray*}
+Performing the integral we then get
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+   & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
+   & + & 
+         \left[1-\exp(-\frac{\Delta t}{\tau^{\lambda}_{0}})\right]
+         \dot{e}_{xx}(t).
+\end{eqnarray*}
+%
+For small $\Delta t \ll 1$ the last equation is also
+\begin{eqnarray*}
+\gamma^{\lambda}_x(t+\Delta t) 
+   & = & \gamma^{\lambda}_x (t)\exp(-\frac{\Delta t}{\tau^{\lambda}_{\sigma}}) \\
+   & + & \frac{\Delta t}{\tau_{0}}\dot{e}_{xx}(t).
 \end{eqnarray*}
 %==============================================================================
 \Appendix{E}{Comparison with CPML}
