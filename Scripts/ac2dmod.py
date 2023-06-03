@@ -48,6 +48,8 @@ else :
 
 #Initialize I/O
 pyac2d.LibeInit()
+
+t0=time.perf_counter()   #Start measure wall clock time
 #----------------------------------------------
 #Create source 
 #----------------------------------------------
@@ -109,12 +111,12 @@ pyac2d.Ac2dSolve(ac2d,model,src,rec,par.nt,par.l)
 #-------------------------------
 now = datetime.now()
 dtstring = now.strftime("%b-%d-%Y %H:%M:%S")
-print("date            :",dtstring)
-print("grid size    nx :", par.nx)  
-print("grid size    ny :", par.ny)  
-print("timesteps    nt :", par.nt)  
+print("date              :",dtstring)
+print("grid size      nx :", par.nx)  
+print("grid size      ny :", par.ny)  
+print("timesteps    nt   :", par.nt)  
 print("solver time (secs):", time.perf_counter()-t1)
-
+print("wall time (secs)  :", time.perf_counter()-t0)
 #--------------------------------------
 #Save Recording
 #--------------------------------------

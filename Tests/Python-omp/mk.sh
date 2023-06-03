@@ -22,9 +22,9 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
 BIN=../../Bin
-export OMP NUM THREADS=4
+export OMP NUM THREADS=6
 $BIN/ac2dmod -m omp mod.py
 
 
 #Show snapshots
-../Scripts/snp.sh
+../../Scripts/snp.sh

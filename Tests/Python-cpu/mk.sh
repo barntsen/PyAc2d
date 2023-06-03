@@ -24,4 +24,4 @@ BIN=../../Bin
 $BIN/ac2dmod -m cpu mod.py
 
 #Display snapshots
-../Scripts/snp.sh
+../../Scripts/snp.sh

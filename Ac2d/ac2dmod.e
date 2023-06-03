@@ -30,10 +30,12 @@ int Main(struct MainArg [*] MainArgs)
   int Nr,rx0;
   int l;
   float si;
+  float t0;         // Time at start
 
   // Initialize library
   LibeInit();
 
+  t0 = LibeClock();
   // Main modeling parameters
   Nx=251; // x-dimensiom
   Ny=251; // y-dimension
@@ -112,6 +114,10 @@ int Main(struct MainArg [*] MainArgs)
 
   // Save recording
   RecSave(Rec,"p.bin");
+
+  LibePuts(stdout,"Wall time: "); LibePutf(stdout,LibeClock()-t0);
+  LibePuts(stdout,"\n");
+  LibeFlush(stdout);
 
   return(OK);
 }

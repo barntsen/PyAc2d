@@ -21,7 +21,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
 BIN=../../Bin
-time -p $BIN/ac2dmod -m gpu mod.py 
+$BIN/ac2dmod -m gpu mod.py 
 
-#../Scripts/snp.sh
+../../Scripts/snp.sh
 

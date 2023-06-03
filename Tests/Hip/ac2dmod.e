@@ -27,13 +27,15 @@ int Main(struct MainArg [*] MainArgs)
   char  [*] tmp;       // Temporary workspace
   float W0;
   int Nb,Rheol;
-  int Nr;
+  int Nr,rx0;
   int l;
   float si;
+  float t0;         // Time at start
 
   // Initialize library
   LibeInit();
 
+  t0 = LibeClock();
   // Main modeling parameters
   Nx=251; // x-dimensiom
   Ny=251; // y-dimension
@@ -43,7 +45,7 @@ int Main(struct MainArg [*] MainArgs)
   l=6;      // Operator length
   f0=25.0;   // Peak frequency
   W0=f0*3.14159*2.0; // Central angular frequency
-  Nb = 35;             // Border for PML attenuation
+  Nb = 30;             // Border for PML attenuation
   Rheol = MAXWELL;
 
   // Read the velocity model
@@ -90,12 +92,14 @@ int Main(struct MainArg [*] MainArgs)
   LibeFlush(stderr);
 
   // Create a receiver
-  Nr=201;
+  Nr=740;
   rx=new(int[Nr]);
   ry=new(int[Nr]);
+  rx0=0;
   for(i=0; i<Nr; i=i+1){
-    rx[i] = i;
+    rx[i] = rx0;
     ry[i] = 50;
+    rx0=rx0+8;
   }
   resamp=1;   //Output receiver sampling
   sresamp=10; //Output snapshot resampling
@@ -110,6 +114,10 @@ int Main(struct MainArg [*] MainArgs)
 
   // Save recording
   RecSave(Rec,"p.bin");
+
+  LibePuts(stdout,"Wall time: "); LibePutf(stdout,LibeClock()-t0);
+  LibePuts(stdout,"\n");
+  LibeFlush(stdout);
 
   return(OK);
 }
