@@ -254,14 +254,10 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   nx = len(A,0);
   ny = len(A,1);
 
-  //
-  // Top border (1 <i < l+1)
-  //
-
   l= Diff.l;
   w = Diff.w;
 
-  // Left border 
+  // Top border
 
   parallel(i=0:nx,j=0:l)
   {
@@ -276,7 +272,7 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Outside border area 
+  // Between top and bottom border
   //
   parallel(i=0:nx,j=l:ny-l)
   {
@@ -288,7 +284,7 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Right border 
+  // Bottom border 
   //
   parallel(i=0:nx,j=ny-l:ny)
   {
@@ -303,7 +299,7 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
     dA[i,j] = sum/dx;
   }
 }
-// Dyplus computes the forward derivative in the x-direction
+// Dyplus computes the forward derivative in the y-direction
 //
 // Arguments:
 //  Diff: Diff object 
@@ -328,14 +324,13 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   nx = len(A,0);
   ny = len(A,1);
 
-  //
-  // Left border (1 <i < l+1)
-  //
-
   l= Diff.l;
   w = Diff.w;
 
-  // Left border
+  //
+  // Top border
+  //
+
   parallel(i=0:nx,j=0:l)
   {
     sum=0.0;
@@ -349,7 +344,7 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Between left and right border
+  // Between top and bottom border
   //
   parallel(i=0:nx,j=l:ny-l)
   {
@@ -361,7 +356,7 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Right border 
+  // Bottom border
   //
   parallel(i=0:nx,j=ny-l:ny)
   {
