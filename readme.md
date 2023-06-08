@@ -22,7 +22,7 @@ To compile the code and run the tests clone also the
 
 ## Directories
 
- - Ac2d       -Eps source code for the core library
+ - Ac2d       -Eps source code for the library
  - Python-cpu -Python-bindings for running
                 simulations on single core pu.
  - Python-cuda -Python-bindings for running

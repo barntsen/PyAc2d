@@ -102,7 +102,7 @@ int Main(struct MainArg [*] MainArgs)
     rx0=rx0+8;
   }
   resamp=1;   //Output receiver sampling
-  sresamp=10000; //Output snapshot resampling
+  sresamp=10; //Output snapshot resampling
   ntr = nt/resamp; //No of output samples per rec
   Rec= RecNew(rx,ry,ntr,resamp,sresamp,"snp.bin");
 
@@ -114,7 +114,7 @@ int Main(struct MainArg [*] MainArgs)
   Ac2dSolve(Ac2d, Model, Src, Rec, nt,l);
 
   // Save recording
-  //RecSave(Rec,"p.bin");
+  RecSave(Rec,"p.bin");
 
   LibePuts(stdout,"Solver time : "); LibePutf(stdout,LibeClock()-t1); 
   LibePuts(stdout,"\n");
