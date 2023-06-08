@@ -8,11 +8,11 @@ ec -O ac2dmod.e
 el -o ac2dmod ac2dmod.o libac2dcpu.o 
 
 #Create wavelet
-nt=1501 #No of samples
-ricker -nt $nt -f0 30.0 -t0 0.100 -dt 0.0005 src.bin 
+nt=1001 #No of samples
+ricker -nt $nt -f0 25.0 -t0 0.100 -dt 0.0005 src.bin 
 
-n1=251
-n2=251
+n1=1001
+n2=1001
 #Create vp
 spike -n1 $n1 -n2 $n2 -val 2500.0 vp.bin
 
