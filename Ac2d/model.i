@@ -36,3 +36,4 @@ float ModelStability(struct model Model){}
 // Constants
 const MAXWELL = 1;
 const SLS     = 2;
+const MAXWELLR = 3;

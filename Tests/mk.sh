@@ -2,14 +2,18 @@
 
 # Script for running all tests
 
-cd Cuda
+cd Py-Cuda
 ./mk.sh
 cd ..
 
-cd Omp
+cd Py-Omp
 ./mk.sh
 cd ..
 
-cd Cpu
+cd Py-Cpu
+./mk.sh
+cd ..
+
+cd Hip 
 ./mk.sh
 cd ..

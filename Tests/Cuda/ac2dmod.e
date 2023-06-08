@@ -37,11 +37,11 @@ int Main(struct MainArg [*] MainArgs)
 
   t0 = LibeClock();
   // Main modeling parameters
-  Nx=251; // x-dimensiom
-  Ny=251; // y-dimension
+  Nx=1001; // x-dimensiom
+  Ny=1001; // y-dimension
   dx=5.0; // grid interval
   dt=0.0005; // Time sampling
-  nt=1501;   // No of timesteps
+  nt=1001;   // No of timesteps
   l=6;      // Operator length
   f0=25.0;   // Peak frequency
   W0=f0*3.14159*2.0; // Central angular frequency

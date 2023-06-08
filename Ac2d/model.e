@@ -217,8 +217,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.dy   =  new(float [Ny]);
 
   // Store the model
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = 1.0/rho[i,j];
       Model.Q[i,j]       = Q[i,j];
@@ -230,8 +230,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     Modeld(Model.dy, Model.Dx, Model.Nb);
  
   // Compute relaxation times
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
 
       // Compute relaxation times corresponding to Qmax and Qmin
       // Note that we compute the inverse
@@ -272,7 +272,7 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       Model.Eta2y[i,j]     = -Model.Dt*tau0y;
  
       // For the Maxwell solid Dkappa = kappa and Drho = 1/rho
-      // to comply with the solver algorithm i ac2d.e
+      // to comply with the solver algorithm in ac2d.e
       Model.Dkappax[i,j]   = Model.Kappa[i,j];
       Model.Dkappay[i,j]   = Model.Kappa[i,j];
       Model.Drhox[i,j]     = Model.Rho[i,j];
@@ -454,10 +454,10 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.dy   =  new(float [Ny]);
 
   // Store the model
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
-      Model.Rho[i,j]   = rho[i,j];
+      Model.Rho[i,j]   = 1.0/rho[i,j];
       Model.Q[i,j]       = Q[i,j];
     }
   }
@@ -467,8 +467,8 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     Modeld(Model.dy, Model.Dx, Model.Nb);
  
   // Compute relaxation times
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       tau0 = 1.0/Model.W0;   // Relaxation time corresponding to absorption top
       Qmin = 1.1;            // MinimumQ-value at the outer boundaries
 
@@ -522,9 +522,9 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
                              *(1.0-tausx/tauex);
       Model.Dkappay[i,j]   = Model.Kappa[i,j]
                              *(1.0-tausy/tauey);
-      Model.Drhox[i,j]     = (1.0/Model.Rho[i,j])
+      Model.Drhox[i,j]     = (Model.Rho[i,j])
                              *(1.0-tausx/tauex);
-      Model.Drhoy[i,j]     = (1.0/Model.Rho[i,j])
+      Model.Drhoy[i,j]     = (Model.Rho[i,j])
                              *(1.0-tausy/tauey);
     }
   }
@@ -547,14 +547,23 @@ float ModelStability(struct model Model)
 
   nx = Model.Nx;
   ny = Model.Ny;
-  for(i=0; i<nx; i=i+1){
-    for(j=0; j<ny; j=j+1){
-      vp = LibeSqrt(Model.Kappa[i,j]/Model.Rho[i,j]);
+  for(j=0; j<ny; j=j+1){
+    for(i=0; i<nx; i=i+1){
+      vp = LibeSqrt(Model.Kappa[i,j]*Model.Rho[i,j]);
       stab = (vp*Model.Dt)/Model.Dx;
       if(stab > 1.0/LibeSqrt(2.0)){
         LibePuts(stderr,"Stability index too large! ");
         LibePutf(stderr,stab);
         LibePuts(stderr,"\n"); 
+        LibePuts(stderr,"vp: \n");
+        LibePutf(stderr,vp);
+        LibePuts(stderr,"\n");
+        LibePuts(stderr,"dt: \n");
+        LibePutf(stderr,Model.Dt);
+        LibePuts(stderr,"\n");
+        LibePuts(stderr,"dx: \n");
+        LibePutf(stderr,Model.Dx);
+        LibePuts(stderr,"\n");
         LibeFlush(stderr);
       }
     }

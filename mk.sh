@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Script for compiling the ac2d library and creating pyhon bindings
+# mk is a script for compiling and installing all runable codes
+# and scripts.
 
 #Compile library
 cd Ac2d

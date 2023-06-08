@@ -35,4 +35,8 @@ cd Tests
 ./clean.sh
 cd ..
 
+cd Scripts
+./clean.sh
+cd ..
+
 rm -rf Bin/*

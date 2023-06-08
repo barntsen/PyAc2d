@@ -2,14 +2,18 @@
 
 # Script for cleaning tests
 
-cd Cpu
+cd Python-cpu
 ./clean.sh
 cd ..
 
-cd Cuda
+cd Python-cuda
 ./clean.sh
 cd ..
 
-cd Omp
+cd Hip
+./clean.sh
+cd ..
+
+cd Python-omp
 ./clean.sh
 cd ..
