@@ -39,13 +39,13 @@ int Main(struct MainArg [*] MainArgs)
   // Main modeling parameters
   Nx=1001; // x-dimensiom
   Ny=1001; // y-dimension
-  dx=10.0; // grid interval
+  dx=5.0; // grid interval
   dt=0.0005; // Time sampling
   nt=1001;   // No of timesteps
-  l=8;      // Operator length
+  l=6;      // Operator length
   f0=25.0;   // Peak frequency
   W0=f0*3.14159*2.0; // Central angular frequency
-  Nb = 15;             // Border for PML attenuation
+  Nb = 30;             // Border for PML attenuation
   Rheol = MAXWELL;
 
   // Read the velocity model
@@ -92,16 +92,17 @@ int Main(struct MainArg [*] MainArgs)
   LibeFlush(stderr);
 
   // Create a receiver
-  Nr=100;
+  Nr=740;
   rx=new(int[Nr]);
   ry=new(int[Nr]);
   rx0=0;
   for(i=0; i<Nr; i=i+1){
-    rx[i] = 200;
-    ry[i] = i;
+    rx[i] = rx0;
+    ry[i] = 50;
+    rx0=rx0+8;
   }
   resamp=1;   //Output receiver sampling
-  sresamp=1; //Output snapshot resampling
+  sresamp=10; //Output snapshot resampling
   ntr = nt/resamp; //No of output samples per rec
   Rec= RecNew(rx,ry,ntr,resamp,sresamp,"snp.bin");
 

@@ -217,8 +217,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.dy   =  new(float [Ny]);
 
   // Store the model
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = 1.0/rho[i,j];
       Model.Q[i,j]       = Q[i,j];
@@ -230,8 +230,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     Modeld(Model.dy, Model.Dx, Model.Nb);
  
   // Compute relaxation times
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
 
       // Compute relaxation times corresponding to Qmax and Qmin
       // Note that we compute the inverse
@@ -454,8 +454,8 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Model.dy   =  new(float [Ny]);
 
   // Store the model
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = 1.0/rho[i,j];
       Model.Q[i,j]       = Q[i,j];
@@ -467,8 +467,8 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     Modeld(Model.dy, Model.Dx, Model.Nb);
  
   // Compute relaxation times
-  for(i=0; i<Nx;i=i+1){
-    for(j=0; j<Ny;j=j+1){
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
       tau0 = 1.0/Model.W0;   // Relaxation time corresponding to absorption top
       Qmin = 1.1;            // MinimumQ-value at the outer boundaries
 
@@ -547,8 +547,8 @@ float ModelStability(struct model Model)
 
   nx = Model.Nx;
   ny = Model.Ny;
-  for(i=0; i<nx; i=i+1){
-    for(j=0; j<ny; j=j+1){
+  for(j=0; j<ny; j=j+1){
+    for(i=0; i<nx; i=i+1){
       vp = LibeSqrt(Model.Kappa[i,j]*Model.Rho[i,j]);
       stab = (vp*Model.Dt)/Model.Dx;
       if(stab > 1.0/LibeSqrt(2.0)){

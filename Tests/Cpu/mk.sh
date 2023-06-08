@@ -2,7 +2,7 @@
 
 cp ../../Ac2d/libac2dcpu.o .
 cp ../../Ac2d/*.i .
-cp ../../Ac2d/ac2dmod.e .
+#cp ../../Ac2d/ac2dmod.e .
 
 ec -O ac2dmod.e
 el -o ac2dmod ac2dmod.o libac2dcpu.o 
@@ -25,7 +25,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 #Run modelling
 ./ac2dmod 
 
-../../Scripts/snp.sh
+#../../Scripts/snp.sh
 
 
 

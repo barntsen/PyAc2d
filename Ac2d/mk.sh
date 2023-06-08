@@ -21,12 +21,12 @@ ar rcs libac2dcpu.o ac2d.o diff.o model.o src.o rec.o
 #ar rcs libac2domp.o ac2d.o diff.o model.o src.o rec.o
 
 # Compile nividia cuda version
-#ecc      -O -n $nt -m $nb ac2d.e
-#ecc      -O -n $nt -m $nb diff.e
-#ecc      -O -n $nt -m $nb model.e
-#ecc      -O -n $nt -m $nb src.e
-#ecc      -O -n $nt -m $nb rec.e
-#ar rcs libac2dcuda.o ac2d.o diff.o model.o src.o rec.o
+ecc      -O -n $nt -m $nb ac2d.e
+ecc      -O -n $nt -m $nb diff.e
+ecc      -O -n $nt -m $nb model.e
+ecc      -O -n $nt -m $nb src.e
+ecc      -O -n $nt -m $nb rec.e
+ar rcs libac2dcuda.o ac2d.o diff.o model.o src.o rec.o
 
 # Compile amd hip version
 #ech  -n $nt -m $nb ac2d.e
