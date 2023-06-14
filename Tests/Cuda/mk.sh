@@ -23,7 +23,7 @@ spike -n1 $n1 -n2 $n2 -val 1000.0 rho.bin
 spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
-#./ac2dmod 
+./ac2dmod 
 
 #../../Scripts/snp.sh
 
