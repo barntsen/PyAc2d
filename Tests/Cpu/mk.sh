@@ -2,7 +2,7 @@
 
 cp ../../Ac2d/libac2dcpu.o .
 cp ../../Ac2d/*.i .
-#cp ../../Ac2d/ac2dmod.e .
+cp ../../Ac2d/ac2dmod.e .
 
 ec -O ac2dmod.e
 el -o ac2dmod ac2dmod.o libac2dcpu.o 

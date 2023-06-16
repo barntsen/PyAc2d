@@ -109,13 +109,13 @@ int DiffDxminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   ny = len(A,1);
 
   //
-  // Left border 
+  // Left border (1 <i < l+1)
   //
 
   l= Diff.l;
   w = Diff.w;
 
-  parallel(j=0:ny,i=0:l)
+  parallel(i=0:l,j=0:ny)
   {
     sum=0.0;
     for(k=1; k<i+1; k=k+1){
@@ -130,7 +130,7 @@ int DiffDxminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   //
   // Outside border area 
   //
-  parallel(j=0:ny,i=l:nx-l)
+  parallel(i=l:nx-l,j=0:ny)
   {
     sum=0.0;
     for(k=1; k<l+1; k=k+1){
@@ -142,7 +142,7 @@ int DiffDxminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   //
   // Right border 
   //
-  parallel(j=0:ny,i=nx-l:nx)
+  parallel(i=nx-l:nx,j=0:ny)
   {
     sum = 0.0;
     for(k=1; k<l+1; k=k+1){
@@ -181,7 +181,7 @@ int DiffDxplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   ny = len(A,1);
 
   //
-  // Left border 
+  // Left border (1 <i < l+1)
   //
 
   l= Diff.l;
@@ -189,7 +189,7 @@ int DiffDxplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
 
   // Left border
 
-  parallel(j=0:ny,i=0:l)
+  parallel(i=0:l,j=0:ny)
   {
     sum=0.0;
     for(k=1; k<i+2; k=k+1){
@@ -203,7 +203,7 @@ int DiffDxplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   //
   // Between left and right border
   //
-  parallel(j=0:ny,i=l:nx-l)
+  parallel(i=l:nx-l,j=0:ny)
   {
     sum=0.0;
     for(k=1; k<l+1; k=k+1){
@@ -215,7 +215,7 @@ int DiffDxplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   //
   // Right border 
   //
-  parallel(j=0:ny,i=nx-l:nx)
+  parallel(i=nx-l:nx,j=0:ny)
   {
     sum = 0.0;
     for(k=1; k<l+1; k=k+1){
@@ -254,12 +254,16 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   nx = len(A,0);
   ny = len(A,1);
 
+  //
+  // Top border (1 <i < l+1)
+  //
+
   l= Diff.l;
   w = Diff.w;
 
-  // Top border
+  // Left border 
 
-  parallel(j=0:l,i=0:nx)
+  parallel(i=0:nx,j=0:l)
   {
     sum=0.0;
     for(k=1; k<j+1; k=k+1){
@@ -272,9 +276,9 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Between top and bottom border
+  // Outside border area 
   //
-  parallel(j=l:ny-l,i=0:nx)
+  parallel(i=0:nx,j=l:ny-l)
   {
     sum=0.0;
     for(k=1; k<l+1; k=k+1){
@@ -284,9 +288,9 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Bottom border 
+  // Right border 
   //
-  parallel(j=ny-l:ny,i=0:nx)
+  parallel(i=0:nx,j=ny-l:ny)
   {
     sum = 0.0;
     for(k=1; k<l+1; k=k+1){
@@ -299,7 +303,7 @@ int DiffDyminus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
     dA[i,j] = sum/dx;
   }
 }
-// Dyplus computes the forward derivative in the y-direction
+// Dyplus computes the forward derivative in the x-direction
 //
 // Arguments:
 //  Diff: Diff object 
@@ -324,14 +328,15 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   nx = len(A,0);
   ny = len(A,1);
 
+  //
+  // Left border (1 <i < l+1)
+  //
+
   l= Diff.l;
   w = Diff.w;
 
-  //
-  // Top border
-  //
-
-  parallel(j=0:l,i=0:nx)
+  // Left border
+  parallel(i=0:nx,j=0:l)
   {
     sum=0.0;
     for(k=1; k<j+2; k=k+1){
@@ -344,9 +349,9 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Between top and bottom border
+  // Between left and right border
   //
-  parallel(j=l:ny-l,i=0:nx)
+  parallel(i=0:nx,j=l:ny-l)
   {
     sum=0.0;
     for(k=1; k<l+1; k=k+1){
@@ -356,9 +361,9 @@ int DiffDyplus(struct diff Diff, float [*,*] A, float [*,*] dA, float dx){
   } 
 
   //
-  // Bottom border
+  // Right border 
   //
-  parallel(j=ny-l:ny,i=0:nx)
+  parallel(i=0:nx,j=ny-l:ny)
   {
     sum = 0.0;
     for(k=1; k<l+1; k=k+1){

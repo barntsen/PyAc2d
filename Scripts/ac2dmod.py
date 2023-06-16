@@ -33,6 +33,9 @@ elif args.m == 'gpu':
 elif args.m == 'omp':
   module1 = 'pyac2domp'
   module2 = 'pyepsomp'
+elif args.m == 'hip':
+  module1 = 'pyac2dhip'
+  module2 = 'pyepship'
   
 pyac2d=importlib.import_module(module1, package=None)
 pyeps=importlib.import_module(module2, package=None)

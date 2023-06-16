@@ -31,6 +31,11 @@ cd Python-omp
 ./clean.sh
 cd ..
 
+#Clean Python-hip bindings
+cd Python-hip
+./clean.sh
+cd ..
+
 cd Tests
 ./clean.sh
 cd ..

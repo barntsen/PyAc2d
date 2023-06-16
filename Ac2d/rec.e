@@ -27,12 +27,14 @@ struct rec RecNew(int [*] rx, int [*] ry, int nt,
   Rec.nr = len(rx,0);
   Rec.rx = rx;
   Rec.ry = ry;
-  Rec.fd = LibeOpen(file,"w");
   Rec.nt = nt;
   Rec.p = new(float [Rec.nr,Rec.nt]);
   Rec.resamp = resamp;
   Rec.sresamp = sresamp;
   Rec.pit = 0;
+  if(Rec.sresamp > 0){
+    Rec.fd = LibeOpen(file,"w");
+  }
   
   return(Rec);
 }  

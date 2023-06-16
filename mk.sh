@@ -3,24 +3,30 @@
 # mk is a script for compiling and installing all runable codes
 # and scripts.
 
+
 #Compile library
 cd Ac2d
 ./mk.sh
 cd ..
 
 #Create Python c-bindings
-cd Python-cpu
-./mk.sh
-cd ..
+#cd Python-cpu
+#./mk.sh
+#cd ..
 
 #Create Python cuda-bindings
-cd Python-cuda
+#cd Python-cuda
+#./mk.sh
+#cd ..
+
+#Create Python hip-bindings
+cd Python-hip
 ./mk.sh
 cd ..
 
 #Create Python omp-bindings
-cd Python-omp
+#cd Python-omp
 ./mk.sh
-cd ..
+#cd ..
 
 ./install.sh

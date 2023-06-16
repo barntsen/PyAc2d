@@ -42,10 +42,10 @@ int Main(struct MainArg [*] MainArgs)
   dx=5.0; // grid interval
   dt=0.0005; // Time sampling
   nt=1501;   // No of timesteps
-  l=6;      // Operator length
+  l=8;      // Operator length
   f0=25.0;   // Peak frequency
   W0=f0*3.14159*2.0; // Central angular frequency
-  Nb = 30;             // Border for PML attenuation
+  Nb = 15;             // Border for PML attenuation
   Rheol = MAXWELL;
 
   // Read the velocity model
@@ -102,7 +102,7 @@ int Main(struct MainArg [*] MainArgs)
     rx0=rx0+8;
   }
   resamp=1;   //Output receiver sampling
-  sresamp=10; //Output snapshot resampling
+  sresamp=0; //Output snapshot resampling
   ntr = nt/resamp; //No of output samples per rec
   Rec= RecNew(rx,ry,ntr,resamp,sresamp,"snp.bin");
 
@@ -116,9 +116,21 @@ int Main(struct MainArg [*] MainArgs)
   // Save recording
   RecSave(Rec,"p.bin");
 
+  LibePuts(stdout,"Nx : ");
+  LibePuti(stdout,Nx);
+  LibePuts(stdout,"\n");
+
+  LibePuts(stdout,"Ny : ");
+  LibePuti(stdout,Ny);
+  LibePuts(stdout,"\n");
+
+  LibePuts(stdout,"Nt : ");
+  LibePuti(stdout,nt);
+  LibePuts(stdout,"\n");
+
   LibePuts(stdout,"Solver time : "); LibePutf(stdout,LibeClock()-t1); 
   LibePuts(stdout,"\n");
-  LibePuts(stdout,"Wall time   : ");   LibePutf(stdout,LibeClock()-t0);
+  LibePuts(stdout,"Wall time   : "); LibePutf(stdout,LibeClock()-t0);
   LibePuts(stdout,"\n");
   LibeFlush(stdout);
 
