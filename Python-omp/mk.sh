@@ -13,12 +13,12 @@ cp ../Ac2d/diff.e .
 cp ../Ac2d/diff.i .
 cp ../Python-cpu/pyeps.e .
 
-ec -c  pyeps.e
-ec -c  model.e
-ec -c  src.e
-ec -c  rec.e
-ec -c  ac2d.e
-ec -c  diff.e
+ec -c  -f -O pyeps.e
+ec -c  -f -O model.e
+ec -c  -f -O src.e
+ec -c  -f -O rec.e
+ec -c  -f -O ac2d.e
+ec -c  -f -O diff.e
 
 cp $EPS/Src/libe.e .
 cp $EPS/Src/libe.i .
@@ -26,11 +26,11 @@ cp $EPS/Src/m.i .
 cp $EPS/Src/run.i .
 cp $EPS/Src/runcpu.e .
 
-ec -c libe.e
+ec -c -O libe.e
 cp runcpu.e runcpu.c
 
 #
-#-- Create the python interface for the fd2d module
+#-- Create the python interface for the ac2d module
 #
 swig -python pyac2domp.i
 

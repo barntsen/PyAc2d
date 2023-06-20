@@ -1,1 +1,8 @@
-** Model size 251x251 Timesteps 1501
+** ac2dmod  cpu version **
+model time  (secs): 0.005135354003868997
+date              : Jun-17-2023 11:22:33
+grid size      nx : 251
+grid size      ny : 251
+timesteps    nt   : 1501
+solver time (secs): 8.113973931001965
+wall time (secs)  : 8.171679152990691

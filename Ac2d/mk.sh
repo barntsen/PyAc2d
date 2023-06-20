@@ -1,40 +1,58 @@
 #!/bin/sh
+# mk is a script for compiling the py2acd ac2d code
 
-#Set block numbers and thread numbers
-#nt=128
-#nb=7028
-nt=128
-nb=7828
+if test -z $1 ; then 
+  echo " usage: mk.sh arg "
+  echo "        arg is one of gcc, nvcc, hip or omp"
+  exit
+fi
 
-# Compile cpu version
-#ec  -O ac2d.e
-#ec  -O diff.e
-#ec  -O model.e
-#ec  -O src.e
-#ec  -O rec.e
-#ar rcs libac2dcpu.o ac2d.o diff.o model.o src.o rec.o
+#Set compiler
 
-# Compile omp version
-#ec  -f -O ac2d.e
-#ec  -f -O diff.e
-#ec  -f -O model.e
-#ec  -f -O src.e
-#ec  -f -O rec.e
-#ar rcs libac2domp.o ac2d.o diff.o model.o src.o rec.o
+echo "** Compiling all code with " $1
 
-# Compile nividia cuda version
-#ecc      -O -n $nt -m $nb ac2d.e
-#ecc      -O -n $nt -m $nb diff.e
-#ecc      -O -n $nt -m $nb model.e
-#ecc      -O -n $nt -m $nb src.e
-#ecc      -O -n $nt -m $nb rec.e
-#ar rcs libac2dcuda.o ac2d.o diff.o model.o src.o rec.o
+if  test $1 = gcc ; then
+  cc=ec
+  nt=0
+  nb=0
+elif  test $1 = omp ; then
+  cc=ec
+  nt=0
+  nb=0
+  f=-f
+elif test $1 = nvcc ; then 
+  cc=ecc 
+  nt=1024
+  nb=1024
+elif test $1 = hip ; then 
+  cc=ech
+  cc=ecc 
+  nt=1024
+  nb=1024
+else
+    echo "argument is one of gcc, nvcc, hip or omp"
+    exit
+fi
 
-# Compile amd hip version
-ech   -n $nt -m $nb ac2d.e
-ech   -n $nt -m $nb diff.e
-ech   -n $nt -m $nb  model.e
-ech   -n $nt -m $nb  src.e
-ech   -n $nt -m $nb  rec.e
-ar rcs libac2dhip.o ac2d.o diff.o model.o src.o rec.o
+echo "Compiling with" $cc
 
+# Compile eps code
+$cc  -O -n $nt -m $nb $f ac2d.e
+$cc  -O -n $nt -m $nb $f diff.e
+$cc  -O -n $nt -m $nb $f model.e
+$cc  -O -n $nt -m $nb $f src.e
+$cc  -O -n $nt -m $nb $f rec.e
+
+if  test $1 = gcc ; then
+  lib=libac2dcpu
+elif  test $1 = omp ; then
+  lib=libac2dcpu
+elif test $1 = nvcc ; then 
+  lib=libac2dcu
+elif test $1 = hip ; then 
+  lib=libac2dhip
+else
+  echo "unsupported compiler"
+  exit
+fi
+    ar rcs $lib.o ac2d.o diff.o model.o src.o rec.o

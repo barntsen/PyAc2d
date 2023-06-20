@@ -18,5 +18,4 @@ rm -f libe.i
 rm -f m.i 
 rm -f run.i 
 rm -f runcpu.e 
-rm -rf __pycache__
-rm -f pyac2dcu.py
+rm -rf

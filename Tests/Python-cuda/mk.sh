@@ -1,6 +1,5 @@
 #!/bin/sh
-
-# Test script for PyAc2d. 
+# mk.sh is a test script for PyAc2d. 
 
 ./clean.sh
 
@@ -21,7 +20,7 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
 BIN=../../Bin
-time -p $BIN/ac2dmod -m gpu mod.py 
+$BIN/ac2dmod -m gpu mod.py > log.txt 
 
 ../../Scripts/snp.sh
 

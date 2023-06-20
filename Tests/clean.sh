@@ -1,6 +1,6 @@
 #!/bin/sh
+# clean is a script for cleaning all test directories
 
-# Script for cleaning tests
 cd Cuda
 ./clean.sh
 cd ..

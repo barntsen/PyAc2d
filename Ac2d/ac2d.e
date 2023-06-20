@@ -137,7 +137,7 @@ int Ac2dSolve(struct ac2d Ac2d, struct model Model, struct src Src, struct rec R
     RecReceiver(Rec,i,Ac2d.p); 
 
     // Record Snapshots
-    //RecSnap(Rec,i,Ac2d.p);
+    RecSnap(Rec,i,Ac2d.p);
   }
   return(OK);
 }
