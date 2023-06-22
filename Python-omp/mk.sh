@@ -34,10 +34,10 @@ cp runcpu.e runcpu.c
 #
 swig -python pyac2domp.i
 
-gcc -O2 -fopenmp -fPIC -c pyac2domp_wrap.c  libe.c runcpu.c \
+gcc -ffast-math -O3 -fopenmp -fPIC -c pyac2domp_wrap.c  libe.c runcpu.c \
      pyeps.c model.c src.c rec.c diff.c ac2d.c  -I/usr/include/python3.8	
 
-gcc -O2 -fopenmp -shared -o _pyac2domp.so -L/usr/local/cuda-10.1/lib64/ runcpu.o libe.o \
+gcc -ffast-math -O3 -fopenmp -shared -o _pyac2domp.so -L/usr/local/cuda-10.1/lib64/ runcpu.o libe.o \
                 ac2d.o model.o pyeps.o src.o rec.o diff.o pyac2domp_wrap.o
 
 

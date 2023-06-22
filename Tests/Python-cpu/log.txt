@@ -1,8 +1,8 @@
 ** ac2dmod  cpu version **
-model time  (secs): 0.005135354003868997
-date              : Jun-17-2023 11:22:33
+model time  (secs): 0.00554827700034366
+date              : Jun-21-2023 11:12:59
 grid size      nx : 251
 grid size      ny : 251
 timesteps    nt   : 1501
-solver time (secs): 8.113973931001965
-wall time (secs)  : 8.171679152990691
+solver time (secs): 6.490615924001759
+wall time (secs)  : 6.552101687997492
