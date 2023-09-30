@@ -41,7 +41,6 @@ nvcc  --x cu --compiler-options "-fPIC" -c pyac2dcu_wrap.cu  \
        libe.cpp runcuda.cpp                                  \
        pyeps.cpp model.cpp src.cpp rec.cpp diff.cpp ac2d.cpp \
        -I$PYTHONINC
-exit
 #g++  -shared -o _pyac2dcu.so -L/usr/local/cuda-11.8/lib64/      \
 nvcc  -shared -o _pyac2dcu.so -L/usr/local/cuda-11.8/lib64/      \
       runcuda.o libe.o                                          \

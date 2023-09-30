@@ -24,10 +24,10 @@ To compile the code and run the tests clone also the
 
  - Ac2d       -Eps source code for the library
  - Python-cpu -Python-bindings for running
-                simulations on single core pu.
+                simulations on single core cpu.
  - Python-cuda -Python-bindings for running
                 simulations on a single nvidia gpu.
- - Python-cuda -Python-bindings for running
+ - Python-omp -Python-bindings for running
                 simulations on multicore cpu using OpenMP.
  - Tests       -Example scripts for running simulations
                 on single and multicore cpus and nvidia gpu.

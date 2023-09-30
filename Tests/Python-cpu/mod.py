@@ -3,8 +3,8 @@ import numpy as np
 #Set all modeling parameters
 #------------------------------
 pi      = 3.14159
-nx      = 251       #No of grdipoints in x-direction
-ny      = 251       #No of gridpoints in y-direction
+nx      = 1001       #No of grdipoints in x-direction
+ny      = 1001       #No of gridpoints in y-direction
 dx      = 5.0       #Grid interval
 dt      = 0.0005;   #Time sampling interval
 nt      = 1501      #No of time steps

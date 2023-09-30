@@ -21,3 +21,9 @@ if  test $cc = hip ; then
 cd ..
 fi
 
+if  test $cc = omp ; then 
+  cd Python-omp
+  ./mk.sh
+cd ..
+fi
+

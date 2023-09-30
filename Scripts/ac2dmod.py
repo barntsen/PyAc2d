@@ -64,7 +64,8 @@ syy = pyeps.PyepsStore1di(par.sy)       #Convert numpy integer array to c-type
 wavelet = pyeps.PyepsStore1df(data) #Convert numpy float array to c-type   
 #Create source object
 src=pyac2d.SrcNew(wavelet,sxx,syy)
-#----------------------------------------------
+print("src wtime: ",time.perf_counter()-t0,flush=True) 
+#---------------------------------------------f
 #Create receivers 
 #----------------------------------------------
 rxx = pyeps.PyepsStore1di(par.rx)  #Convert numpy integer array to c-type
@@ -72,6 +73,7 @@ ryy = pyeps.PyepsStore1di(par.ry)  #Convert numpy integer array to c-type
 snp = pyeps.PyepsStore1ds(par.fsnp) #Convert python string to c-type
 #Create receiver object
 rec= pyac2d.RecNew(rxx,ryy,par.nt,par.resamp,par.sresamp,snp);
+print("rec wtime: ", time.perf_counter()-t0,flush=True) 
 #----------------------------------------
 # Create model
 #----------------------------------------
@@ -93,10 +95,10 @@ data=fin.read((par.ny,par.nx))
 #Convert 2d numpy float array to c-type
 q=pyeps.PyepsStore2df(data);
 
+print("numpy conversion wtime  (secs):", time.perf_counter()-t0, flush=True)
 #Create a new model
-t1=time.perf_counter()
 model=pyac2d.ModelNew (vp,rho,q,par.dx,par.dt,par.w0,par.nb,par.rheol)
-print("model time  (secs):", time.perf_counter()-t1, flush=True)
+print("model wtime  (secs):", time.perf_counter()-t0, flush=True)
 #--------------------------------------
 #Create fd solver
 #--------------------------------------

@@ -1,8 +1,11 @@
 ** ac2dmod  gpu version **
-model time  (secs): 0.021344404987758026
-date              : Jun-17-2023 11:38:29
+src wtime:  0.0005629410006804392
+rec wtime:  0.0007632039996678941
+numpy conversion wtime  (secs): 0.06922153000050457
+model wtime  (secs): 0.0921647329996631
+date              : Sep-30-2023 15:07:39
 grid size      nx : 251
 grid size      ny : 251
 timesteps    nt   : 1501
-solver time (secs): 1.2560129740013508
-wall time (secs)  : 1.3370711390016368
+solver time (secs): 0.4041944220007281
+wall time (secs)  : 0.4995205769992026

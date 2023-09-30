@@ -1,4 +1,4 @@
-#  Python-cpu : Python c with OpenMP pragmas bindings for the Ac2d library 
+#  Python-cpu : Python c-bindings for the Ac2d library 
 
 This directory contains the necessary source and script files
 for creating a python module capable of calling
