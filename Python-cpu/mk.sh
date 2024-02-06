@@ -46,5 +46,3 @@ gcc -O2 -fPIC -c pyac2dcpu_wrap.c  libe.c runcpu.c \
 gcc -O2 -shared -o _pyac2dcpu.so runcpu.o libe.o \
      ac2d.o model.o pyeps.o src.o rec.o diff.o pyac2dcpu_wrap.o
 
-
-#The _pyac2dcpu.so shared library contains the c-to-python bindings.
