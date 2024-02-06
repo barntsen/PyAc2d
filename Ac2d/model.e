@@ -553,16 +553,16 @@ float ModelStability(struct model Model)
       stab = (vp*Model.Dt)/Model.Dx;
       if(stab > 1.0/LibeSqrt(2.0)){
         LibePuts(stderr,"Stability index too large! ");
-        LibePutf(stderr,stab);
+        LibePutf(stderr,stab,"g");
         LibePuts(stderr,"\n"); 
         LibePuts(stderr,"vp: \n");
-        LibePutf(stderr,vp);
+        LibePutf(stderr,vp,"g");
         LibePuts(stderr,"\n");
         LibePuts(stderr,"dt: \n");
-        LibePutf(stderr,Model.Dt);
+        LibePutf(stderr,Model.Dt,"g");
         LibePuts(stderr,"\n");
         LibePuts(stderr,"dx: \n");
-        LibePutf(stderr,Model.Dx);
+        LibePutf(stderr,Model.Dx,"g");
         LibePuts(stderr,"\n");
         LibeFlush(stderr);
       }

@@ -4,7 +4,7 @@
 # and libraries.
 # The Bin directory is target for all runable scripts/code.
 
-cp Scripts/ac2dmod.py  Bin/ac2dmod 
+cp Ac2d/ac2dmod.py  Bin/ac2dmod 
 chmod +x               Bin/ac2dmod
 cp Scripts/babin.py    Bin 
 
