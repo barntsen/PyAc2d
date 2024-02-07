@@ -1,40 +1,21 @@
 #!/bin/sh
 # mk is a script for compiling the py2acd ac2d code
 
-if test -z $1 ; then 
-  echo " usage: mk.sh arg "
-  echo "        arg is one of gcc, nvcc, hip or omp"
-  exit
-fi
+# Compile nividia cuda version
+ecc      -O ac2d.e
+ecc      -O diff.e
+ecc      -O model.e
+ecc      -O src.e
+ecc      -O rec.e
+ar rcs libac2dcuda.o ac2d.o diff.o model.o src.o rec.o
 
-#Set compiler
-
-echo "** Compiling all code with " $1
-
-if  test $1 = gcc ; then
-  cc=ec
-  nt=0
-  nb=0
-elif  test $1 = omp ; then
-  cc=ec
-  nt=0
-  nb=0
-  f=-f
-elif test $1 = nvcc ; then 
-  cc=ecc 
-  nt=1024
-  nb=1024
-elif test $1 = hip ; then 
-  cc=ech
-  cc=ecc 
-  nt=1024
-  nb=1024
-else
-    echo "argument is one of gcc, nvcc, hip or omp"
-    exit
-fi
-
-echo "Compiling with" $cc
+# Compile amd hip version
+#ech  -O ac2d.e
+#ech  -O diff.e
+#ech  -O model.e
+#ech  -O src.e
+#ech  -O  rec.e
+#ar rcs libac2dhip.o ac2d.o diff.o model.o src.o rec.o
 
 # Compile eps code
 $cc  -O -n $nt -m $nb $f ac2d.e
