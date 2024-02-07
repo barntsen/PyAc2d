@@ -14,13 +14,13 @@ cp Ac2d/ac2d.py             Bin
 cp Ac2d/pyeps.py            Bin
 
 cp Python-cpu/_pyac2dcpu.so  Bin
-#cp Python-cpu/pyac2dcpu.py   Bin
-#cp Python-cpu/pyepscpu.py    Bin
-
 cp Python-cuda/_pyac2dcu.so  Bin
-#cp Python-cuda/pyac2dcu.py   Bin
-#cp Python-cuda/pyepscu.py    Bin
-
 cp Python-omp/_pyac2domp.so  Bin
-#cp Python-omp/pyac2domp.py   Bin
-#cp Python-omp/pyepsomp.py    Bin
+
+cp Scripts/spike             Bin
+cp Scripts/ricker            Bin
+cp Scripts/movie             Bin
+cp Scripts/parula.py         Bin
+cp Scripts/babin.py          Bin
+cp Scripts/bacolmap.py       Bin
+cp Scripts/pltcom.py         Bin

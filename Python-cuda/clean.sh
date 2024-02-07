@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -f *.o *.c *.cu *.so *.cpp
+rm -f *.o 
 rm -f model.i 
 rm -f model.e 
 rm -f src.i 
@@ -20,3 +20,4 @@ rm -f run.i
 rm -f runcpu.e 
 rm -rf __pycache__
 rm -f pyac2dcu.py
+rm -f runcuda.e

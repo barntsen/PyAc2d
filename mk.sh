@@ -9,7 +9,7 @@ cd Ac2d
 cd ..
 
 #Create Python c-bindings
-cd Python-cpu
+cd Python-c
 ./mk.sh
 cd ..
 

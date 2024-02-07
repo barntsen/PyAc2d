@@ -25,10 +25,10 @@ ecc      -O rec.e
 ar rcs libac2dcuda.o ac2d.o diff.o model.o src.o rec.o
 
 # Compile amd hip version
-#ech  -n $nt -m $nb ac2d.e
-#ech  -n $nt -m $nb diff.e
-#ech  -n $nt -m $nb  model.e
-#ech  -n $nt -m $nb  src.e
-#ech  -n $nt -m $nb  rec.e
+#ech  -O ac2d.e
+#ech  -O diff.e
+#ech  -O model.e
+#ech  -O src.e
+#ech  -O  rec.e
 #ar rcs libac2dhip.o ac2d.o diff.o model.o src.o rec.o
 
