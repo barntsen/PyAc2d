@@ -16,8 +16,8 @@ class bin :
              
     def read(self,dim) :
         """Read binary data"""
-        #n=product(dim)
-        data=np.fromfile(self.file,dtype='float32')
+        n=product(dim)
+        data=np.fromfile(self.file, count=n ,dtype='float32')
         data=data.reshape(dim)
         self.file.close()
         return data 
@@ -36,11 +36,8 @@ class bin :
 
 def product(tuple1):
     """Calculates the product of a tuple"""
-    if len(tuple) == 1 :
-      return tuple(0)
-    else :
-      prod = 1
-      for x in tuple1:
+    prod = 1
+    for x in tuple1:
         prod = prod * x
     return prod
 

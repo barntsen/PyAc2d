@@ -3,7 +3,7 @@ import babin as ba
 
 
 class rec :
-   ''' rec is a class for creating receiver geometry from
+  ''' rec is a class for creating receiver geometry from
        the variables in the configuration (mod.py) file
 
        Parameters :
@@ -14,7 +14,7 @@ class rec :
                     configuration (mod.py) file.
        
        Returns    : Receiver object.
-   '''
+  '''
 
   def __init__(self,pyac2d,par):
     #Convert from python variables to eps variables

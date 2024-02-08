@@ -10,14 +10,13 @@ cd Doc
 ./clean.sh
 cd ..
 
-
 #Clean library
 cd Ac2d
 ./clean.sh
 cd ..
 
 #Clean Python-cpu bindings
-cd Python-cpu
+cd Python-c
 ./clean.sh
 cd ..
 

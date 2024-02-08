@@ -62,7 +62,7 @@ rec=rec.rec(pyac2d,par)
 
 # Create model
 model = model.model(pyac2d,par)
-print("model time  (secs):", time.perf_counter()-t1, flush=True)
+print("model time  (secs):", time.perf_counter()-t0, flush=True)
 
 # Create fd solver
 ac2d = ac2d.ac2d(pyac2d,model)

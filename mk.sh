@@ -19,11 +19,11 @@ fi
 echo "** Compiling and installing binaries"
 
 if test $cc = gcc ;  then
-  cd Ac2d       #Compile ac2d library for cpu
+  cd Ac2d       #Compile ac2d library for c
   ./mk.sh $cc   
   cd ..
 
-  cd Python-cpu #Compile Python bindings for cpu
+  cd Python-c #Compile Python bindings for c
   ./mk.sh
   cd ..
 fi

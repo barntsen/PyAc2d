@@ -4,7 +4,7 @@ import babin as ba # File manipulation
 
 
 class src :
-   ''' src is a class for reading a source wavelet 
+  ''' src is a class for reading a source wavelet 
        and creating the source geometry 
 
        Parameters:
@@ -16,7 +16,7 @@ class src :
   
        The pyac2d module is implemented in eps
        and contains all essential wave propagation methods.
-   '''
+  '''
 
   def __init__(self,pyac2d,par):
     # Read the source time function
