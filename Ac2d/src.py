@@ -21,7 +21,7 @@ class src :
   def __init__(self,pyac2d,par):
     # Read the source time function
     fin = ba.bin(par.fsrc)  
-    data=fin.read((par.nt))
+    data=fin.read((par.nt,))
     
     # Convert python variables to eps variables
     sxx = pyeps.PyepsStore1di(pyac2d,par.sx)

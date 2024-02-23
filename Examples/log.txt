@@ -1,11 +1,8 @@
 ** ac2dmod  cpu version **
-src wtime:  0.005538679004530422
-rec wtime:  0.0449206929988577
-numpy conversion wtime  (secs): 0.32473738900444005
-model wtime  (secs): 0.41876754099939717
-date              : Oct-06-2023 10:29:19
+model time  (secs): 0.3717226650005614
+date              : Feb-23-2024 14:25:55
 grid size      nx : 1201
 grid size      ny : 251
 timesteps    nt   : 20001
-solver time (secs): 152.74347578699962
-wall time (secs)  : 153.17347784899903
+solver time (secs): 838.2558822520004
+wall time (secs)  : 838.6307266930016
