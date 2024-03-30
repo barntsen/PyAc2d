@@ -12,83 +12,20 @@
 \newcommand{\difb}[1]{D^-_{#1}}
 %---------------------------------------------------------------
 \title{Visco-elastic Finite difference seismic modeling with 
-       simple and effective boundary conditions}
+       simple and effective absorbing boundary conditions}
 \author{B.Arntsen}
 \date{\today}
 \maketitle
 \clearpage
 PRELIMINARY VERSION UNDER DEVELOPMENT. CONTAINS ERRORS.
 %===============================================================================
-\section*{Elastic equations of motion} 
+\section*{Introduction} 
 %===============================================================================
-Consider an elastic medium characterized by the density $\rho(\xx)$, 
-and lam\'{e}
-parameters $\lambda(\xx)$ and $\mu(\xx)$ at each spatial point $\xx$.
-Now assume that $u(\xx)_i$ is the i'th component of the particle displacement 
-and
-$\sigma_{ij}$ is the stress tensor and $c_{ijkl}$ is Hook's tensor.
-The elastic equations of motion and Hook's law in Cartesian coordinates are
-given as
-%
-\begin{eqnarray}
-  \rho(\xx) \ddt{u_i(\xx, t)} & = & \p_j \sigma_{ij}(\xx, t) +f_i(\xx,t),\\
-					   \label{eq:el-eqm}
-        \sigma_{ij}(\xx,t)    & = & c_{ijkl}e_{kl} +q_{ij}.
-					  \label{eq:el-cse}
-\end{eqnarray}
-%
-Here $f_i$ is a driving force, and $q_{ij}$ is a driving stress.
-In the isotropic case one has
-%
-\begin{eqnarray}
-   c_{ijkl} = \lambda\delta_{ij}\delta_{kl} + \mu\left(\delta_{ik}\delta_{jl} + \delta_{il}\delta_{jk}\right),
-                                 \label{eq:el-moduli}
-\end{eqnarray}
-%
-giving
-%
-\begin{eqnarray}
-  \rho(\xx) \ddt{u_i(\xx, t)} & = & \p_j \sigma_{ij}(\xx, t) +f_i(\xx,t),\\
-					   \label{eq:iso-elm}
-  \sigma_{ij}(\xx, t) & = & 
-        \lambda(\xx) e_{kk}\delta_{ij} + 2\mu e_{ij} +q_{ij}.
-					  \label{eq:iso-cse}
-\end{eqnarray}
-%
-Here $f_i$ is the i'th component of the driving force, while the strain
-tensor $e_{ij}$
-is equal to
-%
-\begin{eqnarray}
-    e_{ij} = \frac{1}{2}[\p_i u_j(\xx, t) + \p_j u_i(\xx,t)].
-					  \label{eq:iso-strain}
-\end{eqnarray}
-%
-Writing out the individual components of the equations above, one gets:
-%
-\begin{eqnarray}
-  \rho \ddt{u}_x = \p_x \sigma_{xx} +\p_y \sigma_{xy} +\p_z  \sigma_{xz} 
-                                                      + f_x, \nonumber\\
-  \rho \ddt{u}_y = \p_x \sigma_{yx} +\p_y \sigma_{yy} +\p_z  \sigma_{yz} 
-                                                      + f_y, \nonumber\\
-  \rho \ddt{u}_z = \p_x \sigma_{zx} +\p_y \sigma_{zy} +\p_z  \sigma_{zz} 
-                                                      + f_z, \nonumber\\
-\end{eqnarray}
-%
-\begin{eqnarray}
-  \sigma_{xx} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{xx} 
-                                                   +q_{xx}, \nonumber\\
-  \sigma_{yy} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{yy} 
-                                                   +q_{yy}, \nonumber\\
-  \sigma_{zz} & = & \lambda \left (e_{xx} + e_{yy} + e_{zz}\right)+ 2\mu e_{zz} 
-                                                   +q_{zz}, \nonumber\\
-  \sigma_{xy} & = & 2\mu e_{xy} +q_{xy}, \nonumber\\
-  \sigma_{xz} & = & 2\mu e_{xz} +q_{xz}, \nonumber\\
-  \sigma_{yz} & = & 2\mu e_{yz} +q_{yz}. \nonumber\\ 
-\end{eqnarray}
-%
+The PML absorbing boundary conditions have successfully used for seismic wave
+modeling since its introduction by \citep{
+
 %===============================================================================
-\section*{Viscoelastic equations of motion} 
+\section*{The Viscoelastic equations of motion} 
 %===============================================================================
 Using the description in Appendix A, we can write down the viscoe-elastic equations
 of motion and the constitutive relation.
@@ -479,6 +416,7 @@ Using the numerical differentiators the equations of motion becomes:
            & + & \sum_{l=0}^N\theta^l_{xyx} +  \sum_{l=0}^N\theta^l_{yyy} +  \sum_{l=0}^N\theta^l_{zyz}, \\ 
   \dt{v}_z & = & d^+_x \sigma_{zx} +d^+_y \sigma_{zy} +d^+_z \sigma_{zz} + f_z, \\
            & + & \sum_{l=0}^N\theta^l_{xzx} +  \sum_{l=0}^N\theta^l_{yzy} +  \sum_{l=0}^N\theta^l_{zzz}.
+                      \label{eq:vel-discrete}
 \end{eqnarray}
 
 The computation of the strains becomes as follows:

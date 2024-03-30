@@ -8,6 +8,9 @@ movie                  \
       -cmax 0.5e-07   \
        -cbmin 1500.0   \
        -cbmax 8500.0   \
+       -xlabel "Distance (km)"    \
+       -ylabel "Depth (km)"    \
+       -cbtitle "Velocity (m/s)" \
        -n1 $n1         \
        -n2 $n2         \
        -n3 $n3         \
@@ -19,4 +22,5 @@ movie                  \
        -bgcolormap crust \
        -trans 0.65      \
         snp.bin
+
 
