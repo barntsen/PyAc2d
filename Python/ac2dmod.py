@@ -30,15 +30,6 @@ args = parser.parse_args()
 
 print("** ac2dmod ", args.m, "version **",flush=True)
 
-#Get pyeps library
-if args.m == 'cpu' :
-  module1 = 'pyac2dcpu'
-elif args.m == 'gpu':
-  module1 = 'pyac2dcu'
-elif args.m == 'omp':
-  module1 = 'pyac2domp'
-  
-pyac2d=importlib.import_module(module1, package=None)
 
 #Get configuration file 
 if args.fname is not None :
@@ -49,37 +40,32 @@ else :
   sys.exit("No cfg file name")
   
 
-#Initialize I/O
-pyac2d.LibeInit()
-
-t0=time.perf_counter()   #Start measure wall clock time
-
 # Create source 
-src=src.src(pyac2d,par)
+#src=src.src(par)
 
 # Create receivers 
-rec=rec.rec(pyac2d,par)
+#rec=rec.rec(,par)
 
 # Create model
-model = model.model(pyac2d,par)
+model = model.model(par)
 print("model time  (secs):", time.perf_counter()-t0, flush=True)
 
 # Create fd solver
-ac2d = ac2d.ac2d(pyac2d,model)
+#ac2d = ac2d.ac2d(pyac2d,model)
 
 # Run solver
-t1=time.perf_counter()
-ac2d.solve(pyac2d,model,src,rec,par)
+#t1=time.perf_counter()
+#ac2d.solve(pyac2d,model,src,rec,par)
 
 # Log wall clock time and date
-now = datetime.now()
-dtstring = now.strftime("%b-%d-%Y %H:%M:%S")
-print("date              :",dtstring)
-print("grid size      nx :", par.nx)  
-print("grid size      ny :", par.ny)  
-print("timesteps    nt   :", par.nt)  
-print("solver time (secs):", time.perf_counter()-t1)
-print("wall time (secs)  :", time.perf_counter()-t0)
+#now = datetime.now()
+#dtstring = now.strftime("%b-%d-%Y %H:%M:%S")
+#print("date              :",dtstring)
+#print("grid size      nx :", par.nx)  
+#print("grid size      ny :", par.ny)  
+#print("timesteps    nt   :", par.nt)  
+#print("solver time (secs):", time.perf_counter()-t1)
+#print("wall time (secs)  :", time.perf_counter()-t0)
 
 # Save data
-rec.save(pyac2d,par)
+#rec.save(pyac2d,par)
