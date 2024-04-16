@@ -6,13 +6,13 @@ cc=$1
 
 if test -z $cc ; then 
   echo " usage: install.sh arg "
-  echo "        arg is one of gcc, nvcc, hip or omp"
+  echo "        arg is one of cpu, cuda, hip or omp"
   exit
 fi
 
-if test $cc != gcc  && test $cc != nvcc  && test $cc != hip && test $cc != omp ; then 
+if test $cc != cpu  && test $cc != cuda  && test $cc != hip && test $cc != omp ; then 
   echo " usage: mk.sh arg "
-  echo "        arg is one of gcc, nvcc, hip or omp"
+  echo "        arg is one of cpu, cuda, hip or omp"
 fi
 
 echo "** Installing binaries to the Bin folder"
@@ -35,23 +35,19 @@ cp Scripts/pltcom.py         Bin
 
 # Install shared libs (python callable)
 
-if  test $cc = gcc ; then 
-  cp Python-c/_pyac2dcpu.so  Bin
-  cp Python-c/pyac2dcpu.py   Bin
+if  test $cc = cpu ; then 
+  cp Python-c/pyac2dcpu.so  Bin
 fi
 
 if  test $cc = omp ; then 
-  cp Python-omp/_pyac2domp.so  Bin
-  cp Python-omp/pyac2domp.py   Bin
+  cp Python-omp/pyac2domp.so  Bin
 fi
 
-if test $cc = nvcc ; then 
-  cp Python-cuda/_pyac2dcu.so  Bin
-  cp Python-cuda/pyac2dcu.py   Bin
+if test $cc = cuda ; then 
+  cp Python-cuda/pyac2dcuda.so  Bin
 fi
 
 if test $cc = hip ; then 
-  cp Python-hip/_pyac2dhip.so  Bin
-  cp Python-hip/pyac2dhip.py   Bin
+  cp Python-hip/pyac2dhip.so  Bin
 fi
 

@@ -1,4 +1,5 @@
 /*  Translated by epsc  version December 2021 */
+extern "C" {
 typedef struct { float r; float i;} complex; 
 typedef struct nctempfloat1 { int d[1]; float *a;} nctempfloat1; 
 typedef struct nctempint1 { int d[1]; int *a;} nctempint1; 
@@ -17,10 +18,8 @@ typedef struct nctempint4 { int d[4]; int *a;} nctempint4;
 typedef struct nctempchar4 { int d[4]; char *a;} nctempchar4; 
 typedef struct nctempcomplex4 { int d[4]; complex *a;} nctempcomplex4; 
 #include <stdio.h>
-extern "C" {
 #include <stdlib.h>
 #include <string.h>
-}
 
 void *GpuNew(int n);
 void *GpuDelete(void *f);
@@ -331,13 +330,13 @@ int nctemp399=A->d[1];ny =nctemp399;
 l =Diff->l;
 w=Diff->w;
 int nctemp415=0;
-int nctemp417=ny;
+int nctemp417=l;
 int nctemp420=0;
-int nctemp422=l;
+int nctemp422=ny;
 int nctemp413=(nctemp417-nctemp415)*(nctemp422-nctemp420);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp413;nctempno+=blockDim.x*gridDim.x){
-i=nctemp420+nctempno/(nctemp417-nctemp415);
-j=nctemp415+nctempno%(nctemp417-nctemp415);
+j=nctemp420+nctempno/(nctemp417-nctemp415);
+i=nctemp415+nctempno%(nctemp417-nctemp415);
 {
 sum =0.0;
 k =1;
@@ -388,15 +387,15 @@ float nctemp560 = sum / dx;
 dA->a[nctemp552] =nctemp560;
 }
 }
-int nctemp563=0;
-int nctemp565=ny;
-int nctemp568=l;
-int nctemp575 = nx - l;
-int nctemp570=nctemp575;
-int nctemp561=(nctemp565-nctemp563)*(nctemp570-nctemp568);
+int nctemp563=l;
+int nctemp570 = nx - l;
+int nctemp565=nctemp570;
+int nctemp572=0;
+int nctemp574=ny;
+int nctemp561=(nctemp565-nctemp563)*(nctemp574-nctemp572);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp561;nctempno+=blockDim.x*gridDim.x){
-i=nctemp568+nctempno/(nctemp565-nctemp563);
-j=nctemp563+nctempno%(nctemp565-nctemp563);
+j=nctemp572+nctempno/(nctemp565-nctemp563);
+i=nctemp563+nctempno%(nctemp565-nctemp563);
 {
 sum =0.0;
 k =1;
@@ -431,15 +430,15 @@ float nctemp666 = sum / dx;
 dA->a[nctemp658] =nctemp666;
 }
 }
-int nctemp669=0;
-int nctemp671=ny;
-int nctemp680 = nx - l;
-int nctemp674=nctemp680;
-int nctemp681=nx;
-int nctemp667=(nctemp671-nctemp669)*(nctemp681-nctemp674);
+int nctemp675 = nx - l;
+int nctemp669=nctemp675;
+int nctemp676=nx;
+int nctemp679=0;
+int nctemp681=ny;
+int nctemp667=(nctemp676-nctemp669)*(nctemp681-nctemp679);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp667;nctempno+=blockDim.x*gridDim.x){
-i=nctemp674+nctempno/(nctemp671-nctemp669);
-j=nctemp669+nctempno%(nctemp671-nctemp669);
+j=nctemp679+nctempno/(nctemp676-nctemp669);
+i=nctemp669+nctempno%(nctemp676-nctemp669);
 {
 sum =0.0;
 k =1;
@@ -515,13 +514,13 @@ int nctemp842=A->d[1];ny =nctemp842;
 l =Diff->l;
 w=Diff->w;
 int nctemp858=0;
-int nctemp860=ny;
+int nctemp860=l;
 int nctemp863=0;
-int nctemp865=l;
+int nctemp865=ny;
 int nctemp856=(nctemp860-nctemp858)*(nctemp865-nctemp863);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp856;nctempno+=blockDim.x*gridDim.x){
-i=nctemp863+nctempno/(nctemp860-nctemp858);
-j=nctemp858+nctempno%(nctemp860-nctemp858);
+j=nctemp863+nctempno/(nctemp860-nctemp858);
+i=nctemp858+nctempno%(nctemp860-nctemp858);
 {
 sum =0.0;
 k =1;
@@ -572,15 +571,15 @@ float nctemp1003 = sum / dx;
 dA->a[nctemp995] =nctemp1003;
 }
 }
-int nctemp1006=0;
-int nctemp1008=ny;
-int nctemp1011=l;
-int nctemp1018 = nx - l;
-int nctemp1013=nctemp1018;
-int nctemp1004=(nctemp1008-nctemp1006)*(nctemp1013-nctemp1011);
+int nctemp1006=l;
+int nctemp1013 = nx - l;
+int nctemp1008=nctemp1013;
+int nctemp1015=0;
+int nctemp1017=ny;
+int nctemp1004=(nctemp1008-nctemp1006)*(nctemp1017-nctemp1015);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1004;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1011+nctempno/(nctemp1008-nctemp1006);
-j=nctemp1006+nctempno%(nctemp1008-nctemp1006);
+j=nctemp1015+nctempno/(nctemp1008-nctemp1006);
+i=nctemp1006+nctempno%(nctemp1008-nctemp1006);
 {
 sum =0.0;
 k =1;
@@ -615,15 +614,15 @@ float nctemp1109 = sum / dx;
 dA->a[nctemp1101] =nctemp1109;
 }
 }
-int nctemp1112=0;
-int nctemp1114=ny;
-int nctemp1123 = nx - l;
-int nctemp1117=nctemp1123;
-int nctemp1124=nx;
-int nctemp1110=(nctemp1114-nctemp1112)*(nctemp1124-nctemp1117);
+int nctemp1118 = nx - l;
+int nctemp1112=nctemp1118;
+int nctemp1119=nx;
+int nctemp1122=0;
+int nctemp1124=ny;
+int nctemp1110=(nctemp1119-nctemp1112)*(nctemp1124-nctemp1122);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1110;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1117+nctempno/(nctemp1114-nctemp1112);
-j=nctemp1112+nctempno%(nctemp1114-nctemp1112);
+j=nctemp1122+nctempno/(nctemp1119-nctemp1112);
+i=nctemp1112+nctempno%(nctemp1119-nctemp1112);
 {
 sum =0.0;
 k =1;
@@ -697,13 +696,13 @@ int nctemp1275=A->d[1];ny =nctemp1275;
 l =Diff->l;
 w=Diff->w;
 int nctemp1291=0;
-int nctemp1293=l;
+int nctemp1293=nx;
 int nctemp1296=0;
-int nctemp1298=nx;
+int nctemp1298=l;
 int nctemp1289=(nctemp1293-nctemp1291)*(nctemp1298-nctemp1296);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1289;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1296+nctempno/(nctemp1293-nctemp1291);
-j=nctemp1291+nctempno%(nctemp1293-nctemp1291);
+j=nctemp1296+nctempno/(nctemp1293-nctemp1291);
+i=nctemp1291+nctempno%(nctemp1293-nctemp1291);
 {
 sum =0.0;
 k =1;
@@ -754,15 +753,15 @@ float nctemp1436 = sum / dx;
 dA->a[nctemp1428] =nctemp1436;
 }
 }
-int nctemp1439=l;
-int nctemp1446 = ny - l;
-int nctemp1441=nctemp1446;
-int nctemp1448=0;
-int nctemp1450=nx;
-int nctemp1437=(nctemp1441-nctemp1439)*(nctemp1450-nctemp1448);
+int nctemp1439=0;
+int nctemp1441=nx;
+int nctemp1444=l;
+int nctemp1451 = ny - l;
+int nctemp1446=nctemp1451;
+int nctemp1437=(nctemp1441-nctemp1439)*(nctemp1446-nctemp1444);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1437;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1448+nctempno/(nctemp1441-nctemp1439);
-j=nctemp1439+nctempno%(nctemp1441-nctemp1439);
+j=nctemp1444+nctempno/(nctemp1441-nctemp1439);
+i=nctemp1439+nctempno%(nctemp1441-nctemp1439);
 {
 sum =0.0;
 k =1;
@@ -797,15 +796,15 @@ float nctemp1542 = sum / dx;
 dA->a[nctemp1534] =nctemp1542;
 }
 }
-int nctemp1551 = ny - l;
-int nctemp1545=nctemp1551;
-int nctemp1552=ny;
-int nctemp1555=0;
-int nctemp1557=nx;
-int nctemp1543=(nctemp1552-nctemp1545)*(nctemp1557-nctemp1555);
+int nctemp1545=0;
+int nctemp1547=nx;
+int nctemp1556 = ny - l;
+int nctemp1550=nctemp1556;
+int nctemp1557=ny;
+int nctemp1543=(nctemp1547-nctemp1545)*(nctemp1557-nctemp1550);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1543;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1555+nctempno/(nctemp1552-nctemp1545);
-j=nctemp1545+nctempno%(nctemp1552-nctemp1545);
+j=nctemp1550+nctempno/(nctemp1547-nctemp1545);
+i=nctemp1545+nctempno%(nctemp1547-nctemp1545);
 {
 sum =0.0;
 k =1;
@@ -881,13 +880,13 @@ int nctemp1718=A->d[1];ny =nctemp1718;
 l =Diff->l;
 w=Diff->w;
 int nctemp1734=0;
-int nctemp1736=l;
+int nctemp1736=nx;
 int nctemp1739=0;
-int nctemp1741=nx;
+int nctemp1741=l;
 int nctemp1732=(nctemp1736-nctemp1734)*(nctemp1741-nctemp1739);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1732;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1739+nctempno/(nctemp1736-nctemp1734);
-j=nctemp1734+nctempno%(nctemp1736-nctemp1734);
+j=nctemp1739+nctempno/(nctemp1736-nctemp1734);
+i=nctemp1734+nctempno%(nctemp1736-nctemp1734);
 {
 sum =0.0;
 k =1;
@@ -938,15 +937,15 @@ float nctemp1879 = sum / dx;
 dA->a[nctemp1871] =nctemp1879;
 }
 }
-int nctemp1882=l;
-int nctemp1889 = ny - l;
-int nctemp1884=nctemp1889;
-int nctemp1891=0;
-int nctemp1893=nx;
-int nctemp1880=(nctemp1884-nctemp1882)*(nctemp1893-nctemp1891);
+int nctemp1882=0;
+int nctemp1884=nx;
+int nctemp1887=l;
+int nctemp1894 = ny - l;
+int nctemp1889=nctemp1894;
+int nctemp1880=(nctemp1884-nctemp1882)*(nctemp1889-nctemp1887);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1880;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1891+nctempno/(nctemp1884-nctemp1882);
-j=nctemp1882+nctempno%(nctemp1884-nctemp1882);
+j=nctemp1887+nctempno/(nctemp1884-nctemp1882);
+i=nctemp1882+nctempno%(nctemp1884-nctemp1882);
 {
 sum =0.0;
 k =1;
@@ -981,15 +980,15 @@ float nctemp1985 = sum / dx;
 dA->a[nctemp1977] =nctemp1985;
 }
 }
-int nctemp1994 = ny - l;
-int nctemp1988=nctemp1994;
-int nctemp1995=ny;
-int nctemp1998=0;
-int nctemp2000=nx;
-int nctemp1986=(nctemp1995-nctemp1988)*(nctemp2000-nctemp1998);
+int nctemp1988=0;
+int nctemp1990=nx;
+int nctemp1999 = ny - l;
+int nctemp1993=nctemp1999;
+int nctemp2000=ny;
+int nctemp1986=(nctemp1990-nctemp1988)*(nctemp2000-nctemp1993);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp1986;nctempno+=blockDim.x*gridDim.x){
-i=nctemp1998+nctempno/(nctemp1995-nctemp1988);
-j=nctemp1988+nctempno%(nctemp1995-nctemp1988);
+j=nctemp1993+nctempno/(nctemp1990-nctemp1988);
+i=nctemp1988+nctempno%(nctemp1990-nctemp1988);
 {
 sum =0.0;
 k =1;
@@ -1046,4 +1045,5 @@ int DiffDyplus (struct diff* Diff,nctempfloat2 *A,nctempfloat2 *dA,float dx)
   kernel_DiffDyplus<<< RunGetnb(),RunGetnt() >>>(Diff,A,dA,dx);
 GpuError();
 return(1);
+}
 }

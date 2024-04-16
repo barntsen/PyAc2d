@@ -3,8 +3,6 @@
 
 # To regenerate the cuda-code from
 # eps source uncomment below.
-#swig -c++ -python pyac2dcu.i
-#mv pyac2dcu_wrap.cxx pyac2dcu_wrap.cu
 #cp ../Ac2d/model.i .
 #cp ../Ac2d/model.e .
 #cp ../Ac2d/src.i .
@@ -30,10 +28,10 @@
 #ecc -c libe.e
 #cp runcuda.e runcuda.cpp
 
-nvcc  --x cu --compiler-options "-fPIC" -c pyac2dcu_wrap.cu     \
+nvcc  --x cu --compiler-options "-fPIC" -c                      \
        libe.cpp runcuda.cpp pyeps.cpp model.cpp src.cpp rec.cpp \
-       diff.cpp ac2d.cpp  -I/usr/include/python3.8	       
+       diff.cpp ac2d.cpp  
 
-g++  -shared -o _pyac2dcu.so -L/usr/local/cuda-11.8/lib64/ runcuda.o libe.o \
+g++  -shared -o pyac2dcuda.so -L/usr/local/cuda-11.8/lib64/ runcuda.o libe.o \
                 ac2d.o model.o pyeps.o src.o rec.o diff.o \
-                pyac2dcu_wrap.o -lcuda -lcudart
+                -lcuda -lcudart

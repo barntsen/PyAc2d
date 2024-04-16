@@ -1,4 +1,5 @@
 /*  Translated by epsc  version December 2021 */
+extern "C" {
 typedef struct { float r; float i;} complex; 
 typedef struct nctempfloat1 { int d[1]; float *a;} nctempfloat1; 
 typedef struct nctempint1 { int d[1]; int *a;} nctempint1; 
@@ -17,10 +18,8 @@ typedef struct nctempint4 { int d[4]; int *a;} nctempint4;
 typedef struct nctempchar4 { int d[4]; char *a;} nctempchar4; 
 typedef struct nctempcomplex4 { int d[4]; complex *a;} nctempcomplex4; 
 #include <stdio.h>
-extern "C" {
 #include <stdlib.h>
 #include <string.h>
-}
 
 void *GpuNew(int n);
 void *GpuDelete(void *f);
@@ -186,4 +185,5 @@ int nctemp180 = (i < nt);
 nctemp89=nctemp180;
 }
 return 1;
+}
 }

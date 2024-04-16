@@ -1,7 +1,6 @@
-import pyeps       # Python interface for functions 
-                   # contained in pyeps.e
-import babin as ba # File manipulation
-
+from ctypes import *
+import pyeps  
+import babin as ba 
 
 class src :
   ''' src is a class for reading a source wavelet 
@@ -19,14 +18,18 @@ class src :
   '''
 
   def __init__(self,pyac2d,par):
+    # Set return type 
+    pyac2d.SrcNew.restype=c_void_p
     # Read the source time function
     fin = ba.bin(par.fsrc)  
     data=fin.read((par.nt,))
     
     # Convert python variables to eps variables
-    sxx = pyeps.PyepsStore1di(pyac2d,par.sx)
-    syy = pyeps.PyepsStore1di(pyac2d,par.sy)
-    wavelet = pyeps.PyepsStore1df(pyac2d,data)
+    sxx = pyeps.Store1di(pyac2d,par.sx)
+    syy = pyeps.Store1di(pyac2d,par.sy)
+    wavelet = pyeps.Store1df(pyac2d,data)
 
     #Create source eps object
+    # Set argument types
+    pyac2d.SrcNew.argtypes=[c_void_p,c_void_p,c_void_p]
     self.src=pyac2d.SrcNew(wavelet,sxx,syy) 

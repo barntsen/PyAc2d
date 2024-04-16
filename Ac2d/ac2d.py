@@ -1,3 +1,5 @@
+from ctypes import *
+
 import pyeps
 import babin as ba
 import pyeps
@@ -17,9 +19,12 @@ class ac2d :
 
 
   def __init__(self,pyac2d,model):
+    # Set return type
+    pyac2d.Ac2dNew.restype=c_void_p
 
     #Create fd solver
     m = model.model
+    pyac2d.Ac2dNew.argtypes=[c_void_p]
     self.ac2d = pyac2d.Ac2dNew(m)
   
   def solve(self, pyac2d,model,src,rec,par) :
@@ -36,5 +41,7 @@ class ac2d :
     '''
     # Run the pyac2d solver.
     m=model.model
-    pyac2d.Ac2dSolve(self.ac2d,m,src.src,rec.rec,par.nt,par.l)
+    # Set argument types
+    pyac2d.Ac2dSolve.argtypes=[c_void_p,c_void_p,c_void_p,c_void_p,c_int,c_int]
+    pyac2d.Ac2dSolve(self.ac2d,m,src.src,rec.rec,c_int(par.nt),c_int(par.l))
 

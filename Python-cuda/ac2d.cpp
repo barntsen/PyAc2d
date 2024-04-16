@@ -1,4 +1,5 @@
 /*  Translated by epsc  version December 2021 */
+extern "C" {
 typedef struct { float r; float i;} complex; 
 typedef struct nctempfloat1 { int d[1]; float *a;} nctempfloat1; 
 typedef struct nctempint1 { int d[1]; int *a;} nctempint1; 
@@ -17,10 +18,8 @@ typedef struct nctempint4 { int d[4]; int *a;} nctempint4;
 typedef struct nctempchar4 { int d[4]; char *a;} nctempchar4; 
 typedef struct nctempcomplex4 { int d[4]; complex *a;} nctempcomplex4; 
 #include <stdio.h>
-extern "C" {
 #include <stdlib.h>
 #include <string.h>
-}
 
 void *GpuNew(int n);
 void *GpuDelete(void *f);
@@ -276,12 +275,12 @@ nctemp100->d[0]=Model->Nx;
 nctemp100->d[1]=Model->Ny;
 nctemp100->a=(float *)RunMalloc(sizeof(float)*nctemp101);
 Ac2d->thetay=nctemp100;
-j =0;
-int nctemp110 = (j < Model->Ny);
+i =0;
+int nctemp110 = (i < Model->Nx);
 while(nctemp110){
 {
-i =0;
-int nctemp118 = (i < Model->Nx);
+j =0;
+int nctemp118 = (j < Model->Ny);
 while(nctemp118){
 {
 int nctemp125=i;
@@ -313,15 +312,15 @@ nctemp181=j*Ac2d->thetay->d[0]+nctemp181;
 Ac2d->thetay->a[nctemp181] =0.0;
 Ac2d->ts =0;
 }
-int nctemp197 = i + 1;
-i =nctemp197;
-int nctemp198 = (i < Model->Nx);
+int nctemp197 = j + 1;
+j =nctemp197;
+int nctemp198 = (j < Model->Ny);
 nctemp118=nctemp198;
 }
 }
-int nctemp210 = j + 1;
-j =nctemp210;
-int nctemp211 = (j < Model->Ny);
+int nctemp210 = i + 1;
+i =nctemp210;
+int nctemp211 = (i < Model->Nx);
 nctemp110=nctemp211;
 }
 return Ac2d;
@@ -462,13 +461,13 @@ int j;
 nx =Model->Nx;
 ny =Model->Ny;
 int nctemp502=0;
-int nctemp504=ny;
+int nctemp504=nx;
 int nctemp507=0;
-int nctemp509=nx;
+int nctemp509=ny;
 int nctemp500=(nctemp504-nctemp502)*(nctemp509-nctemp507);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp500;nctempno+=blockDim.x*gridDim.x){
-i=nctemp507+nctempno/(nctemp504-nctemp502);
-j=nctemp502+nctempno%(nctemp504-nctemp502);
+j=nctemp507+nctempno/(nctemp504-nctemp502);
+i=nctemp502+nctempno%(nctemp504-nctemp502);
 {
 int nctemp514=i;
 nctemp514=j*Ac2d->vx->d[0]+nctemp514;
@@ -522,13 +521,13 @@ int j;
 nx =Model->Nx;
 ny =Model->Ny;
 int nctemp607=0;
-int nctemp609=ny;
+int nctemp609=nx;
 int nctemp612=0;
-int nctemp614=nx;
+int nctemp614=ny;
 int nctemp605=(nctemp609-nctemp607)*(nctemp614-nctemp612);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp605;nctempno+=blockDim.x*gridDim.x){
-i=nctemp612+nctempno/(nctemp609-nctemp607);
-j=nctemp607+nctempno%(nctemp609-nctemp607);
+j=nctemp612+nctempno/(nctemp609-nctemp607);
+i=nctemp607+nctempno%(nctemp609-nctemp607);
 {
 int nctemp619=i;
 nctemp619=j*Ac2d->vy->d[0]+nctemp619;
@@ -582,13 +581,13 @@ int j;
 nx =Model->Nx;
 ny =Model->Ny;
 int nctemp712=0;
-int nctemp714=ny;
+int nctemp714=nx;
 int nctemp717=0;
-int nctemp719=nx;
+int nctemp719=ny;
 int nctemp710=(nctemp714-nctemp712)*(nctemp719-nctemp717);
 for(int nctempno=blockIdx.x*blockDim.x + threadIdx.x; nctempno<nctemp710;nctempno+=blockDim.x*gridDim.x){
-i=nctemp717+nctempno/(nctemp714-nctemp712);
-j=nctemp712+nctempno%(nctemp714-nctemp712);
+j=nctemp717+nctempno/(nctemp714-nctemp712);
+i=nctemp712+nctempno%(nctemp714-nctemp712);
 {
 int nctemp724=i;
 nctemp724=j*Ac2d->p->d[0]+nctemp724;
@@ -654,4 +653,5 @@ int Ac2dstress (struct ac2d* Ac2d,struct model* Model)
   kernel_Ac2dstress<<< RunGetnb(),RunGetnt() >>>(Ac2d,Model);
 GpuError();
 return(1);
+}
 }

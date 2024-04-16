@@ -19,10 +19,9 @@ spike -n1 $n1 -n2 $n2 -val 1000.0 rho.bin
 spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 
 #Run modelling
-export NTHREADS=1024
-export NBLOCKS=1024
-BIN=../../Bin
-$BIN/ac2dmod -m cpu mod.py 
+cp ../../Python/babin.py .
+cp ../../Python/model.py .
+./ac2dmod.py -m python mod.py 
 
 #./snp.sh
 

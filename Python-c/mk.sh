@@ -29,13 +29,7 @@
 #swig -python pyac2dcpu.i
 
 #--- Uncomment lines below for Ubuntu
-gcc -O2 -fPIC -c pyac2dcpu_wrap.c  libe.c runcpu.c \
-     pyeps.c model.c src.c rec.c diff.c ac2d.c  -I/usr/include/python3.8	
-
-#--- Uncomment lines below for Idun ntnu cluster
-#gcc -O2 -fPIC -c pyac2dcpu_wrap.c  libe.c runcpu.c \
-#    pyeps.c model.c src.c rec.c diff.c ac2d.c  -I/cluster/apps/eb/software/Python/3.8.2-GCCcore-9.3.0/include/python3.8
-
-gcc -O2 -shared -o _pyac2dcpu.so runcpu.o libe.o \
-     ac2d.o model.o pyeps.o src.o rec.o diff.o pyac2dcpu_wrap.o
+gcc -O2 -fPIC -c libe.c runcpu.c \
+     pyeps.c model.c src.c rec.c diff.c ac2d.c  
+gcc -shared -o pyac2dcpu.so pyeps.o libe.o runcpu.o src.o rec.o model.o ac2d.o diff.o
 

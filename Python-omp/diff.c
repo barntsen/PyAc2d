@@ -322,7 +322,7 @@ l =Diff->l;
 w=Diff->w;
 
  #pragma omp parallel for
-for(i=0;i<l;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){for(i=0;i<l;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp433 = i + 1;
@@ -371,10 +371,10 @@ nctemp545=j*dA->d[0]+nctemp545;
 float nctemp553 = sum / dx;
 dA->a[nctemp545] =nctemp553;
 }
-}}int nctemp559 = nx - l;
-
+}}
  #pragma omp parallel for
-for(i=l;i<nctemp559;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){int nctemp561 = nx - l;
+for(i=l;i<nctemp561;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp578 = l + 1;
@@ -407,10 +407,10 @@ nctemp644=j*dA->d[0]+nctemp644;
 float nctemp652 = sum / dx;
 dA->a[nctemp644] =nctemp652;
 }
-}}int nctemp657 = nx - l;
-
+}}
  #pragma omp parallel for
-for(i=nctemp657;i<nx;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){int nctemp659 = nx - l;
+for(i=nctemp659;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp677 = l + 1;
@@ -478,7 +478,7 @@ l =Diff->l;
 w=Diff->w;
 
  #pragma omp parallel for
-for(i=0;i<l;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){for(i=0;i<l;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp854 = i + 2;
@@ -527,10 +527,10 @@ nctemp966=j*dA->d[0]+nctemp966;
 float nctemp974 = sum / dx;
 dA->a[nctemp966] =nctemp974;
 }
-}}int nctemp980 = nx - l;
-
+}}
  #pragma omp parallel for
-for(i=l;i<nctemp980;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){int nctemp982 = nx - l;
+for(i=l;i<nctemp982;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp999 = l + 1;
@@ -563,10 +563,10 @@ nctemp1065=j*dA->d[0]+nctemp1065;
 float nctemp1073 = sum / dx;
 dA->a[nctemp1065] =nctemp1073;
 }
-}}int nctemp1078 = nx - l;
-
+}}
  #pragma omp parallel for
-for(i=nctemp1078;i<nx;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){int nctemp1080 = nx - l;
+for(i=nctemp1080;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1098 = l + 1;
@@ -632,7 +632,7 @@ l =Diff->l;
 w=Diff->w;
 
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){for(j=0;j<l;j=j+1){{
+for(j=0;j<l;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1265 = j + 1;
@@ -681,10 +681,10 @@ nctemp1377=j*dA->d[0]+nctemp1377;
 float nctemp1385 = sum / dx;
 dA->a[nctemp1377] =nctemp1385;
 }
-}}
+}}int nctemp1391 = ny - l;
+
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){int nctemp1393 = ny - l;
-for(j=l;j<nctemp1393;j=j+1){{
+for(j=l;j<nctemp1391;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1410 = l + 1;
@@ -717,10 +717,10 @@ nctemp1476=j*dA->d[0]+nctemp1476;
 float nctemp1484 = sum / dx;
 dA->a[nctemp1476] =nctemp1484;
 }
-}}
+}}int nctemp1489 = ny - l;
+
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){int nctemp1491 = ny - l;
-for(j=nctemp1491;j<ny;j=j+1){{
+for(j=nctemp1489;j<ny;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1509 = l + 1;
@@ -788,7 +788,7 @@ l =Diff->l;
 w=Diff->w;
 
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){for(j=0;j<l;j=j+1){{
+for(j=0;j<l;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1686 = j + 2;
@@ -837,10 +837,10 @@ nctemp1798=j*dA->d[0]+nctemp1798;
 float nctemp1806 = sum / dx;
 dA->a[nctemp1798] =nctemp1806;
 }
-}}
+}}int nctemp1812 = ny - l;
+
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){int nctemp1814 = ny - l;
-for(j=l;j<nctemp1814;j=j+1){{
+for(j=l;j<nctemp1812;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1831 = l + 1;
@@ -873,10 +873,10 @@ nctemp1897=j*dA->d[0]+nctemp1897;
 float nctemp1905 = sum / dx;
 dA->a[nctemp1897] =nctemp1905;
 }
-}}
+}}int nctemp1910 = ny - l;
+
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){int nctemp1912 = ny - l;
-for(j=nctemp1912;j<ny;j=j+1){{
+for(j=nctemp1910;j<ny;j=j+1){for(i=0;i<nx;i=i+1){{
 sum =0.0;
 k =1;
 int nctemp1930 = l + 1;

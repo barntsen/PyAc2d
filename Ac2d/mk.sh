@@ -23,7 +23,7 @@ if  test $cc = hip ; then
 fi
 
 # Compile eps code
-if  test $cc = gcc ; then
+if  test $cc = cpu ; then
   ec  -O $f ac2d.e
   ec  -O $f diff.e
   ec  -O $f model.e
