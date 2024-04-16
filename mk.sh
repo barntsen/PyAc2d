@@ -6,19 +6,19 @@ cc=$1
 
 if test -z $cc ; then 
   echo " usage: mk.sh arg "
-  echo "        arg is one of gcc, nvcc, hip or omp"
+  echo "        arg is one of cpu, cuda, hip or omp"
   exit
 fi
 
-if test $cc != gcc && test $cc != nvcc  && test $cc != hip && test $cc != omp ; then
+if test $cc != cpu && test $cc != cuda  && test $cc != hip && test $cc != omp ; then
   echo " usage: mk.sh arg "
-  echo "        arg is one of gcc, nvcc, hip or omp"
+  echo "        arg is one of cpu, cuda, hip or omp"
   exit
 fi
 
 echo "** Compiling and installing binaries"
 
-if test $cc = gcc ;  then
+if test $cc = cpu ;  then
   cd Ac2d       #Compile ac2d library for c
   ./mk.sh $cc   
   cd ..
@@ -38,7 +38,7 @@ if test $cc = omp ;  then
   cd ..
 fi
 
-if test $cc = nvcc ; then  
+if test $cc = cuda ; then  
   cd Ac2d        #Compile ac2d library for nvidia gpu
   ./mk.sh $cc    
   cd ..

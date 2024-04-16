@@ -1,4 +1,5 @@
 /*  Translated by epsc  version December 2021 */
+extern "C" {
 typedef struct { float r; float i;} complex; 
 typedef struct nctempfloat1 { int d[1]; float *a;} nctempfloat1; 
 typedef struct nctempint1 { int d[1]; int *a;} nctempint1; 
@@ -17,10 +18,8 @@ typedef struct nctempint4 { int d[4]; int *a;} nctempint4;
 typedef struct nctempchar4 { int d[4]; char *a;} nctempchar4; 
 typedef struct nctempcomplex4 { int d[4]; complex *a;} nctempcomplex4; 
 #include <stdio.h>
-extern "C" {
 #include <stdlib.h>
 #include <string.h>
-}
 
 void *GpuNew(int n);
 void *GpuDelete(void *f);
@@ -105,16 +104,16 @@ float LibePow (float base,float exponent);
 int LibeSystem (nctempchar1 *cmd);
 nctempchar1* PyepsCre1ds (int Nx);
 int PyepsDel1ds (nctempchar1 *arr);
-nctempchar1* PyepsSet1ds (nctempchar1 *arr,int i,char val);
+int PyepsSet1ds (nctempchar1 *arr,int i,char val);
 nctempint1* PyepsCre1di (int Nx);
 int PyepsDel1di (nctempint1 *arr);
-nctempint1* PyepsSet1di (nctempint1 *arr,int i,int val);
+int PyepsSet1di (nctempint1 *arr,int i,int val);
 nctempfloat1* PyepsCre1df (int Nx);
 int PyepsDel1df (nctempfloat1 *arr);
-nctempfloat1* PyepsSet1df (nctempfloat1 *arr,int i,float val);
+int PyepsSet1df (nctempfloat1 *arr,int i,float val);
 nctempfloat2* PyepsCre2df (int Nx,int Ny);
 int PyepsDel2df (nctempfloat2 *arr);
-nctempfloat2* PyepsSet2df (nctempfloat2 *arr,int i,int j,float val);
+int PyepsSet2df (nctempfloat2 *arr,int i,int j,float val);
 int Main (struct nctempMainArg1 *MainArgs)
 {
 return 1;
@@ -141,21 +140,21 @@ RunFree(arr->a);
 RunFree(arr);
 return 1;
 }
-nctempchar1 * PyepsSet1ds (nctempchar1 *arr,int i,char val)
+int PyepsSet1ds (nctempchar1 *arr,int i,char val)
 {
 int nctemp37=i;
 arr->a[nctemp37] =val;
-return arr;
+return 1;
 }
 nctempint1 * PyepsCre1di (int Nx)
 {
 nctempint1 *tmp;
-int nctemp48=Nx;
-nctempint1 *nctemp47;
-nctemp47=(nctempint1*)RunMalloc(sizeof(nctempint1));
-nctemp47->d[0]=Nx;
-nctemp47->a=(int *)RunMalloc(sizeof(int)*nctemp48);
-tmp=nctemp47;
+int nctemp47=Nx;
+nctempint1 *nctemp46;
+nctemp46=(nctempint1*)RunMalloc(sizeof(nctempint1));
+nctemp46->d[0]=Nx;
+nctemp46->a=(int *)RunMalloc(sizeof(int)*nctemp47);
+tmp=nctemp46;
 return tmp;
 }
 int PyepsDel1di (nctempint1 *arr)
@@ -164,21 +163,21 @@ RunFree(arr->a);
 RunFree(arr);
 return 1;
 }
-nctempint1 * PyepsSet1di (nctempint1 *arr,int i,int val)
+int PyepsSet1di (nctempint1 *arr,int i,int val)
 {
-int nctemp60=i;
-arr->a[nctemp60] =val;
-return arr;
+int nctemp59=i;
+arr->a[nctemp59] =val;
+return 1;
 }
 nctempfloat1 * PyepsCre1df (int Nx)
 {
 nctempfloat1 *tmp;
-int nctemp71=Nx;
-nctempfloat1 *nctemp70;
-nctemp70=(nctempfloat1*)RunMalloc(sizeof(nctempfloat1));
-nctemp70->d[0]=Nx;
-nctemp70->a=(float *)RunMalloc(sizeof(float)*nctemp71);
-tmp=nctemp70;
+int nctemp69=Nx;
+nctempfloat1 *nctemp68;
+nctemp68=(nctempfloat1*)RunMalloc(sizeof(nctempfloat1));
+nctemp68->d[0]=Nx;
+nctemp68->a=(float *)RunMalloc(sizeof(float)*nctemp69);
+tmp=nctemp68;
 return tmp;
 }
 int PyepsDel1df (nctempfloat1 *arr)
@@ -187,22 +186,22 @@ RunFree(arr->a);
 RunFree(arr);
 return 1;
 }
-nctempfloat1 * PyepsSet1df (nctempfloat1 *arr,int i,float val)
+int PyepsSet1df (nctempfloat1 *arr,int i,float val)
 {
-int nctemp83=i;
-arr->a[nctemp83] =val;
-return arr;
+int nctemp81=i;
+arr->a[nctemp81] =val;
+return 1;
 }
 nctempfloat2 * PyepsCre2df (int Nx,int Ny)
 {
-int nctemp90=Nx;
-nctemp90=nctemp90*Ny;
-nctempfloat2 *nctemp89;
-nctemp89=(nctempfloat2*)RunMalloc(sizeof(nctempfloat2));
-nctemp89->d[0]=Nx;
-nctemp89->d[1]=Ny;
-nctemp89->a=(float *)RunMalloc(sizeof(float)*nctemp90);
-return nctemp89;
+int nctemp87=Nx;
+nctemp87=nctemp87*Ny;
+nctempfloat2 *nctemp86;
+nctemp86=(nctempfloat2*)RunMalloc(sizeof(nctempfloat2));
+nctemp86->d[0]=Nx;
+nctemp86->d[1]=Ny;
+nctemp86->a=(float *)RunMalloc(sizeof(float)*nctemp87);
+return nctemp86;
 }
 int PyepsDel2df (nctempfloat2 *arr)
 {
@@ -210,10 +209,11 @@ RunFree(arr->a);
 RunFree(arr);
 return 1;
 }
-nctempfloat2 * PyepsSet2df (nctempfloat2 *arr,int i,int j,float val)
+int PyepsSet2df (nctempfloat2 *arr,int i,int j,float val)
 {
-int nctemp102=i;
-nctemp102=j*arr->d[0]+nctemp102;
-arr->a[nctemp102] =val;
-return arr;
+int nctemp99=i;
+nctemp99=j*arr->d[0]+nctemp99;
+arr->a[nctemp99] =val;
+return 1;
+}
 }

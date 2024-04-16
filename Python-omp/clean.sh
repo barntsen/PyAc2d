@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -f *.o 
+rm -f *.o *.so 
 rm -f model.i 
 rm -f model.e 
 rm -f src.i 

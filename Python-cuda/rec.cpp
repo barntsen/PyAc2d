@@ -1,4 +1,5 @@
 /*  Translated by epsc  version December 2021 */
+extern "C" {
 typedef struct { float r; float i;} complex; 
 typedef struct nctempfloat1 { int d[1]; float *a;} nctempfloat1; 
 typedef struct nctempint1 { int d[1]; int *a;} nctempint1; 
@@ -17,10 +18,8 @@ typedef struct nctempint4 { int d[4]; int *a;} nctempint4;
 typedef struct nctempchar4 { int d[4]; char *a;} nctempchar4; 
 typedef struct nctempcomplex4 { int d[4]; complex *a;} nctempcomplex4; 
 #include <stdio.h>
-extern "C" {
 #include <stdlib.h>
 #include <string.h>
-}
 
 void *GpuNew(int n);
 void *GpuDelete(void *f);
@@ -160,25 +159,29 @@ Rec =nctemp5;
 int nctemp11=rx->d[0];Rec->nr =nctemp11;
 Rec->rx=rx;
 Rec->ry=ry;
-nctempchar1* nctemp31= file;
-struct nctempchar1 *nctemp36;
-static struct nctempchar1 nctemp37 = {{ 2}, (char*)"w\0"};
-nctemp36=&nctemp37;
-nctempchar1* nctemp34= nctemp36;
-int nctemp38=LibeOpen(nctemp31,nctemp34);
-Rec->fd =nctemp38;
 Rec->nt =nt;
-int nctemp49=Rec->nr;
-nctemp49=nctemp49*Rec->nt;
-nctempfloat2 *nctemp48;
-nctemp48=(nctempfloat2*)RunMalloc(sizeof(nctempfloat2));
-nctemp48->d[0]=Rec->nr;
-nctemp48->d[1]=Rec->nt;
-nctemp48->a=(float *)RunMalloc(sizeof(float)*nctemp49);
-Rec->p=nctemp48;
+int nctemp37=Rec->nr;
+nctemp37=nctemp37*Rec->nt;
+nctempfloat2 *nctemp36;
+nctemp36=(nctempfloat2*)RunMalloc(sizeof(nctempfloat2));
+nctemp36->d[0]=Rec->nr;
+nctemp36->d[1]=Rec->nt;
+nctemp36->a=(float *)RunMalloc(sizeof(float)*nctemp37);
+Rec->p=nctemp36;
 Rec->resamp =resamp;
 Rec->sresamp =sresamp;
 Rec->pit =0;
+int nctemp54 = (Rec->sresamp > 0);
+if(nctemp54)
+{
+nctempchar1* nctemp62= file;
+struct nctempchar1 *nctemp67;
+static struct nctempchar1 nctemp68 = {{ 2}, (char*)"w\0"};
+nctemp67=&nctemp68;
+nctempchar1* nctemp65= nctemp67;
+int nctemp69=LibeOpen(nctemp62,nctemp65);
+Rec->fd =nctemp69;
+}
 return Rec;
 }
 int RecReceiver (struct rec* Rec,int it,nctempfloat2 *p)
@@ -186,39 +189,39 @@ int RecReceiver (struct rec* Rec,int it,nctempfloat2 *p)
 int pos;
 int ixr;
 int iyr;
-int nctemp75 = Rec->nt - 1;
-int nctemp67 = (Rec->pit > nctemp75);
-if(nctemp67)
+int nctemp79 = Rec->nt - 1;
+int nctemp71 = (Rec->pit > nctemp79);
+if(nctemp71)
 {
 return 0;
 }
-int nctemp80= it;
-int nctemp82= Rec->resamp;
-int nctemp84=LibeMod(nctemp80,nctemp82);
-int nctemp77 = (nctemp84 ==0);
-if(nctemp77)
+int nctemp84= it;
+int nctemp86= Rec->resamp;
+int nctemp88=LibeMod(nctemp84,nctemp86);
+int nctemp81 = (nctemp88 ==0);
+if(nctemp81)
 {
 pos =0;
-int nctemp90 = (pos < Rec->nr);
-while(nctemp90){
+int nctemp94 = (pos < Rec->nr);
+while(nctemp94){
 {
-int nctemp98=pos;
-ixr =Rec->rx->a[nctemp98];
-int nctemp104=pos;
-iyr =Rec->ry->a[nctemp104];
-int nctemp109=pos;
-nctemp109=Rec->pit*Rec->p->d[0]+nctemp109;
-int nctemp113=ixr;
-nctemp113=iyr*p->d[0]+nctemp113;
-Rec->p->a[nctemp109] =p->a[nctemp113];
+int nctemp102=pos;
+ixr =Rec->rx->a[nctemp102];
+int nctemp108=pos;
+iyr =Rec->ry->a[nctemp108];
+int nctemp113=pos;
+nctemp113=Rec->pit*Rec->p->d[0]+nctemp113;
+int nctemp117=ixr;
+nctemp117=iyr*p->d[0]+nctemp117;
+Rec->p->a[nctemp113] =p->a[nctemp117];
 }
-int nctemp124 = pos + 1;
-pos =nctemp124;
-int nctemp125 = (pos < Rec->nr);
-nctemp90=nctemp125;
+int nctemp128 = pos + 1;
+pos =nctemp128;
+int nctemp129 = (pos < Rec->nr);
+nctemp94=nctemp129;
 }
-int nctemp137 = Rec->pit + 1;
-Rec->pit =nctemp137;
+int nctemp141 = Rec->pit + 1;
+Rec->pit =nctemp141;
 }
 return 1;
 }
@@ -226,28 +229,28 @@ int RecSave (struct rec* Rec,nctempchar1 *file)
 {
 int fd;
 int n;
-nctempchar1* nctemp143= file;
-struct nctempchar1 *nctemp148;
-static struct nctempchar1 nctemp149 = {{ 2}, (char*)"w\0"};
-nctemp148=&nctemp149;
-nctempchar1* nctemp146= nctemp148;
-int nctemp150=LibeOpen(nctemp143,nctemp146);
-fd =nctemp150;
-int nctemp158=Rec->p->d[0];int nctemp163=Rec->p->d[1];int nctemp167 = nctemp158 * nctemp163;
-n =nctemp167;
-int nctemp169= fd;
-int nctemp176 = 4 * n;
-int nctemp171= nctemp176;
-nctempchar1 nctemp180;
-nctempchar1 *nctemp179;
-nctemp180=*(nctempchar1*)(Rec->p);
-int nctemp187 = 4 * n;
-nctemp180.d[0]=nctemp187;
-nctemp179=&nctemp180;
-nctempchar1* nctemp177= nctemp179;
-int nctemp188=LibeWrite(nctemp169,nctemp171,nctemp177);
-int nctemp190= fd;
-int nctemp192=LibeClose(nctemp190);
+nctempchar1* nctemp147= file;
+struct nctempchar1 *nctemp152;
+static struct nctempchar1 nctemp153 = {{ 2}, (char*)"w\0"};
+nctemp152=&nctemp153;
+nctempchar1* nctemp150= nctemp152;
+int nctemp154=LibeOpen(nctemp147,nctemp150);
+fd =nctemp154;
+int nctemp162=Rec->p->d[0];int nctemp167=Rec->p->d[1];int nctemp171 = nctemp162 * nctemp167;
+n =nctemp171;
+int nctemp173= fd;
+int nctemp180 = 4 * n;
+int nctemp175= nctemp180;
+nctempchar1 nctemp184;
+nctempchar1 *nctemp183;
+nctemp184=*(nctempchar1*)(Rec->p);
+int nctemp191 = 4 * n;
+nctemp184.d[0]=nctemp191;
+nctemp183=&nctemp184;
+nctempchar1* nctemp181= nctemp183;
+int nctemp192=LibeWrite(nctemp173,nctemp175,nctemp181);
+int nctemp194= fd;
+int nctemp196=LibeClose(nctemp194);
 return 1;
 }
 int RecSnap (struct rec* Rec,int it,nctempfloat2 *snp)
@@ -256,33 +259,34 @@ int n;
 int Nx;
 int Ny;
 nctempchar1 *tmp;
-int nctemp194 = (Rec->sresamp <= 0);
-if(nctemp194)
+int nctemp198 = (Rec->sresamp <= 0);
+if(nctemp198)
 {
 return 1;
 }
-int nctemp203=snp->d[0];Nx =nctemp203;
-int nctemp211=snp->d[1];Ny =nctemp211;
-int nctemp223 = Nx * Ny;
-n =nctemp223;
-int nctemp227= it;
-int nctemp229= Rec->sresamp;
-int nctemp231=LibeMod(nctemp227,nctemp229);
-int nctemp224 = (nctemp231 ==0);
-if(nctemp224)
+int nctemp207=snp->d[0];Nx =nctemp207;
+int nctemp215=snp->d[1];Ny =nctemp215;
+int nctemp227 = Nx * Ny;
+n =nctemp227;
+int nctemp231= it;
+int nctemp233= Rec->sresamp;
+int nctemp235=LibeMod(nctemp231,nctemp233);
+int nctemp228 = (nctemp235 ==0);
+if(nctemp228)
 {
-nctempchar1 nctemp239;
-nctempchar1 *nctemp238;
-nctemp239=*(nctempchar1*)(snp);
-int nctemp246 = 4 * n;
-nctemp239.d[0]=nctemp246;
-nctemp238=&nctemp239;
-tmp=nctemp238;
-int nctemp248= Rec->fd;
-int nctemp255 = 4 * n;
-int nctemp250= nctemp255;
-nctempchar1* nctemp256= tmp;
-int nctemp259=LibeWrite(nctemp248,nctemp250,nctemp256);
+nctempchar1 nctemp243;
+nctempchar1 *nctemp242;
+nctemp243=*(nctempchar1*)(snp);
+int nctemp250 = 4 * n;
+nctemp243.d[0]=nctemp250;
+nctemp242=&nctemp243;
+tmp=nctemp242;
+int nctemp252= Rec->fd;
+int nctemp259 = 4 * n;
+int nctemp254= nctemp259;
+nctempchar1* nctemp260= tmp;
+int nctemp263=LibeWrite(nctemp252,nctemp254,nctemp260);
 }
 return 1;
+}
 }

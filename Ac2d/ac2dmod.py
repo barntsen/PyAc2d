@@ -15,6 +15,7 @@ import time
 import argparse
 import sys
 
+from ctypes import *
 import src
 import rec
 import model
@@ -24,21 +25,23 @@ import pyeps
 #Get configuration file name
 parser = argparse.ArgumentParser(description='ac2dmod - 2D acoustic modeling')
 parser.add_argument('fname',help='Configuartion file name')
-parser.add_argument("-m",dest="m",default='gpu', 
-                    help="either of cpu,gpu or omp ")
+parser.add_argument("-m",dest="m",default='cuda', 
+                    help="either of cpu,cuda or omp ")
 args = parser.parse_args()
 
 print("** ac2dmod ", args.m, "version **",flush=True)
 
 #Get pyeps library
 if args.m == 'cpu' :
-  module1 = 'pyac2dcpu'
-elif args.m == 'gpu':
-  module1 = 'pyac2dcu'
+  module1 = 'pyac2dcpu.so'
+elif args.m == 'cuda':
+  module1 = 'pyac2dcuda.so'
 elif args.m == 'omp':
-  module1 = 'pyac2domp'
+  module1 = 'pyac2domp.so'
   
-pyac2d=importlib.import_module(module1, package=None)
+libpath="/home/barn/Dropbox/Src/PyAc2d/Bin/"+module1
+cdll.LoadLibrary(libpath)
+pyac2d = CDLL(libpath)
 
 #Get configuration file 
 if args.fname is not None :

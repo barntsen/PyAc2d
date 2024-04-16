@@ -1,3 +1,5 @@
+
+from ctypes import *
 import pyeps
 import babin as ba
 
@@ -17,12 +19,16 @@ class rec :
   '''
 
   def __init__(self,pyac2d,par):
-    #Convert from python variables to eps variables
-    rxx = pyeps.PyepsStore1di(pyac2d,par.rx)  
-    ryy = pyeps.PyepsStore1di(pyac2d,par.ry)  
-    snp = pyeps.PyepsStore1ds(pyac2d,par.fsnp) 
-    #Create receiver eps object.
-    self.rec= pyac2d.RecNew(rxx,ryy,par.nt,par.resamp,par.sresamp,snp);
+    pyac2d.RecNew.restype=c_void_p
+    # Convert from python variables to eps variables
+    rxx = pyeps.Store1di(pyac2d,par.rx)  
+    ryy = pyeps.Store1di(pyac2d,par.ry)  
+    snp = pyeps.Store1ds(pyac2d,par.fsnp) 
+    # Create receiver eps object.
+    # Set argument types 
+    pyac2d.RecNew.argtypes=[c_void_p,c_void_p,c_int,c_int,c_int,c_void_p]
+    self.rec= pyac2d.RecNew(rxx,ryy,c_int(par.nt),c_int(par.resamp),
+                            c_int(par.sresamp),snp);
 
   def save(self,pyac2d,par):
     ''' save records data to file.
@@ -34,7 +40,8 @@ class rec :
  
           Returns :  None
     '''
-
     fname  = par.press   # Output file name for pressure recording
-    fp=pyeps.PyepsStore1ds(pyac2d,fname)
+    fp=pyeps.Store1ds(pyac2d,fname)
+    # Set argument types
+    pyac2d.RecSave.argtypes=[c_void_p,c_void_p]
     pyac2d.RecSave(self.rec,fp)
