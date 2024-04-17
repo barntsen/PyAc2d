@@ -26,10 +26,11 @@
 #ec -c  diff.e
 #ec -c libe.e
 #cp runcpu.e runcpu.c
-#swig -python pyac2dcpu.i
 
 #--- Uncomment lines below for Ubuntu
 gcc -O2 -fPIC -c libe.c runcpu.c \
      pyeps.c model.c src.c rec.c diff.c ac2d.c  
-gcc -shared -o pyac2dcpu.so pyeps.o libe.o runcpu.o src.o rec.o model.o ac2d.o diff.o
+
+gcc -shared -o pyac2dcpu.so pyeps.o libe.o runcpu.o src.o rec.o model.o \
+               ac2d.o diff.o
 
