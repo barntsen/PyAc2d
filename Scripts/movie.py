@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 '''Make video movie
 
 This scripts reads a binary file of frames (snapshots) and outputs
@@ -125,6 +124,8 @@ parser.add_argument("-o",dest="out",
            help="output graphics file")
 parser.add_argument("-title",dest="title",
            help="Title of plot, default: None")
+parser.add_argument("-cbtitle",dest="cbtitle",
+           help="Color bar title, default: None")
 parser.add_argument("-xlabel",dest="xlabel",
            help="x-axis label, default: None")
 parser.add_argument("-ylabel",dest="ylabel",
@@ -333,7 +334,6 @@ if background == True :
     print(args.bgcolormap)
     vl=plt.imshow(bg,interpolation='nearest',clim=(cbmin,cbmax),alpha=args.trans,
     extent=[o1,o1+d1*n1,o2+d2*n2,o2],cmap=args.bgcolormap, animated=True)
-    plt.colorbar(shrink=1.0/ar)
 
 #Set sensible aspcet ratio (The logic behind the aspect ratio this is weird)
 ax=plt.gca()
@@ -346,6 +346,8 @@ if args.xlabel is not None:
     plt.xlabel(args.xlabel)
 if args.ylabel is not None:
     plt.ylabel(args.ylabel)
+#if args.cbtitle is not None:
+#   cbar.ax.set_title(args.cbtitle)
 
 #
 # Start the animation loop, frames are updated by calling updatefig

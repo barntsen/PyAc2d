@@ -16,21 +16,20 @@ and the same source code can then be used for both CPUs and GPUs.
 
 ## Installation
 Clone the repo to a local directory.
-To compile the code and run the tests clone also the 
-[Eps](https://github.com/barntsen/Eps.git) repo and the python
-[Utils](https://github.com/barntsen/Utils.git) repo.
+The run the mk.sh in the top directory.
+The script will compile the c/cuda/hip code and
+install a simple script (ac2dmod) for running simulations.
 
 ## Directories
 
- - Ac2d       -Eps source code for the library
- - Python-cpu -Python-bindings for running
-                simulations on single core cpu.
- - Python-cuda -Python-bindings for running
-                simulations on a single nvidia gpu.
- - Python-omp -Python-bindings for running
-                simulations on multicore cpu using OpenMP.
- - Tests       -Example scripts for running simulations
-                on single and multicore cpus and nvidia gpu.
+ - Ac2d        -Eps and Python source code for the library
+ - Python-c    -C code for the wave propagation library.
+ - Python-cuda -Cuda code for the wave propagation library.
+ - Python-hip  -Hip code for the wave propagation library.
+ - Python-omp  -C code with openmp for the wave propagation library.
+ - Scripts     -Support scripts for plotting, model creation etc..
+ - Examples    -Simulation examples
+ - Tests       -Simple test cases
  - Doc         -Documentation of the finite-difference method
                 and code.
  - Bin         -Python executable scripts

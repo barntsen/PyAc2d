@@ -22,5 +22,5 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 q.bin
 BIN=../Bin
 export NTHREADS=1024
 export NBLOCKS=1024
-#$BIN/ac2dmod -m gpu mod.py > log.txt 
+#$BIN/ac2dmod -m cuda mod.py > log.txt 
 
