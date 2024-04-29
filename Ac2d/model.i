@@ -3,7 +3,8 @@ struct model {
 int Nx,Ny;
 int Nb;
 float W0;
-float [*,*] Q;
+float [*,*] Qp;
+float [*,*] Qr;
 float [*,*] Kappa;
 float [*,*] Dkappax;
 float [*,*] Dkappay;
@@ -27,7 +28,7 @@ float Dt;
 // Methods for the model object
 
 // ModelNew creates a new Model obejct
-struct model ModelNew(float [*,*] kappa, float [*,*] rho, float [*,*] Q,
+struct model ModelNew(float [*,*] kappa, float [*,*] rho, float [*,*] Qp, float [*,*] Qr,
                       float Dx, float Dt, float W0, int Nb, int Rheol){}
 
 // ModelStability computes stability index

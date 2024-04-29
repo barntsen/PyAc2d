@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+
+
 '''Make video movie
 
 This scripts reads a binary file of frames (snapshots) and outputs

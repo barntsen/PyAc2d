@@ -19,19 +19,22 @@ echo "** Installing binaries to the Bin folder"
 
 #Install all python scripts
 cp Ac2d/ac2dmod.py  Bin/ac2dmod 
-chmod +x               Bin/ac2dmod
+chmod +x                    Bin/ac2dmod
 cp Ac2d/src.py              Bin
 cp Ac2d/rec.py              Bin
 cp Ac2d/model.py            Bin
 cp Ac2d/ac2d.py             Bin
 cp Ac2d/pyeps.py            Bin
-cp Scripts/spike             Bin
-cp Scripts/ricker            Bin
-cp Scripts/movie             Bin
-cp Scripts/parula.py         Bin
-cp Ac2d/babin.py             Bin
-cp Scripts/bacolmaps.py      Bin
-cp Scripts/pltcom.py         Bin
+cp Scripts/spike.py         Bin/spike
+chmod +x                    Bin/spike
+cp Scripts/ricker.py        Bin/ricker
+chmod +x                    Bin/ricker
+cp Scripts/movie.py         Bin/movie
+chmod +x                    Bin/movie
+cp Scripts/parula.py        Bin
+cp Ac2d/babin.py            Bin
+cp Scripts/bacolmaps.py     Bin
+cp Scripts/pltcom.py        Bin
 
 # Install shared libs (python callable)
 

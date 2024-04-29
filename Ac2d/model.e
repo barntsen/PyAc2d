@@ -5,13 +5,15 @@ include <libe.i>  // Standard library
 include "model.i" // Model struct definition
 
 //Internal functions
-struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,*] Qr,
                       float Dx, float Dt, float W0, int Nb){} // Maxwell Q-model
-struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,*] Qr, 
                       float Dx, float Dt, float W0, int Nb){}   // Sls Q-model
 int Modeld(float [*] d, float dx, int nb){}  // 1D profile function
 float Modeltaus(float Q, float w0){}         // Compute taus
 float Modeltaue(float Q, float w0){}         // Compute taue
+int ModelAlpha(struct model Model){}
+int ModelTheta(struct model Model){}
 
 // ModelNew creates a new model.
 //
@@ -35,18 +37,20 @@ float Modeltaue(float Q, float w0){}         // Compute taue
 // see the comments in Modelmaxwell and Modelsls.
 
 
-struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
-                      float Dx, float Dt, float W0, int Nb, int Rheol)
+struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Qp,
+                      float [*,*] Qr,float Dx, float Dt, float W0, int Nb, int Rheol)
 {
   struct model m;
 
+  LibePuts(stderr,"Rheol: "); LibePuti(stderr,Rheol); LibePuts(stderr,"\n");
+  LibeFlush(stderr);
   if(Rheol == MAXWELL){
-    m = Modelmaxwell(vp, rho, Q, Dx, Dt, W0, Nb); 
+    m = Modelmaxwell(vp, rho, Qp, Qr, Dx, Dt, W0, Nb); 
   } else if(Rheol == SLS){
-    m= Modelsls(vp, rho, Q, Dx, Dt, W0, Nb);
+    m= Modelsls(vp, rho, Qp, Qr,Dx, Dt, W0, Nb);
   }
   else{
-    LibePuts(stderr, "Uknown Q-model\n"); 
+    LibePuts(stderr, "Unknown Q-model\n"); 
     LibeFlush(stderr);
     // Bailing out
     LibeExit();
@@ -161,7 +165,7 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Q,
 // Here Qmin= 1.1, while Qmax is equal to the value 
 // of Q at the inner border.
 // 
-struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,*] Qr, 
                       float Dx, float Dt, float W0, int Nb)
 {
   struct model Model; // Object to instantiate
@@ -189,7 +193,8 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Nx = Model.Nx;
   Ny = Model.Ny;
   Model.Rho     =  new(float [Nx,Ny]); // Density
-  Model.Q       =  new(float [Nx,Ny]); // Q-values
+  Model.Qp       =  new(float [Nx,Ny]); // Q-values
+  Model.Qr       =  new(float [Nx,Ny]); // Q-values
   Model.Kappa   = new(float [Nx,Ny]);  // Unrelaxed bulk modulus
 
   // The following parameters are the change in the 
@@ -221,14 +226,46 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = 1.0/rho[i,j];
-      Model.Q[i,j]       = Q[i,j];
+      Model.Qp[i,j]       = Qp[i,j];
+      Model.Qr[i,j]       = Qr[i,j];
     }
   }
 
   //Compute 1D profile functions
-    Modeld(Model.dx, Model.Dx, Model.Nb);
-    Modeld(Model.dy, Model.Dx, Model.Nb);
- 
+  Modeld(Model.dx, Model.Dx, Model.Nb);
+  Modeld(Model.dy, Model.Dx, Model.Nb);
+
+  // Comput Alpha coefficients
+  ModelAlpha(Model);
+
+  // Comput Theta coefficients
+  ModelTheta(Model);
+
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
+      // For the Maxwell solid Dkappa = kappa and Drho = 1/rho
+      // to comply with the solver algorithm in ac2d.e
+      Model.Dkappax[i,j]   = Model.Kappa[i,j];
+      Model.Dkappay[i,j]   = Model.Kappa[i,j];
+      Model.Drhox[i,j]     = Model.Rho[i,j];
+      Model.Drhoy[i,j]     = Model.Rho[i,j];
+    }
+  }
+  return(Model);
+}
+
+// ModelAlpha computes the alpha coefficients
+int ModelAlpha(struct model Model){
+  int Nx,Ny;
+  int i,j;
+  float Qmin, Qmax;
+  float tau0min, tau0max;
+  float tau0x, tau0y;
+  float argx, argy;
+
+  Nx = Model.Nx;
+  Ny = Model.Ny;
+
   // Compute relaxation times
   for(j=0; j<Ny;j=j+1){
     for(i=0; i<Nx;i=i+1){
@@ -241,14 +278,14 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       Qmin = 1.1;  // MinimumQ-value at the outer boundaries:       
       tau0min = Qmin/Model.W0;
       tau0min = 1.0/tau0min;
-      Qmax  = Model.Q[Nb,j];
+      Qmax  = Model.Qp[Model.Nb,j];
       tau0max = Qmax/Model.W0;
       tau0max = 1.0/tau0max;
 
       // Interpolate tau0 in x-direxction
       tau0x = tau0min + (tau0max-tau0min)*Model.dx[i];
 
-      Qmax  = Model.Q[i,Nb];
+      Qmax  = Model.Qp[i,Model.Nb];
       tau0max = Qmax/Model.W0;
       tau0max = 1.0/tau0max;
 
@@ -266,6 +303,56 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       Model.Alpha1y[i,j]   = LibeExp(-argy)*LibeExp(-Model.Dt*tau0y);
       Model.Alpha2x[i,j]   = -Model.Dt*tau0x;
       Model.Alpha2y[i,j]   = -Model.Dt*tau0y;
+ 
+    }
+  }
+}
+
+// ModelTheta computes the Theta coefficients
+int ModelTheta(struct model Model){
+  int Nx,Ny;
+  int i,j;
+  float Qmin, Qmax;
+  float tau0min, tau0max;
+  float tau0x, tau0y;
+  float argx, argy;
+
+  Nx=Model.Nx;
+  Ny=Model.Ny;
+
+  // Compute relaxation times
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
+
+      // Compute relaxation times corresponding to Qmax and Qmin
+      // Note that we compute the inverse
+      // of tau0, and use the same
+      // name for the inverse, tau0=1/tau0.
+      
+      Qmin = 1.1;  // MinimumQ-value at the outer boundaries:       
+      tau0min = Qmin/Model.W0;
+      tau0min = 1.0/tau0min;
+      Qmax  = Model.Qr[Model.Nb,j];
+      tau0max = Qmax/Model.W0;
+      tau0max = 1.0/tau0max;
+
+      // Interpolate tau0 in x-direxction
+      tau0x = tau0min + (tau0max-tau0min)*Model.dx[i];
+
+      Qmax  = Model.Qr[i,Model.Nb];
+      tau0max = Qmax/Model.W0;
+      tau0max = 1.0/tau0max;
+
+      // Interpolate tau0 in y-direxction
+      tau0y = tau0min + (tau0max-tau0min)*Model.dy[j];
+
+      // In the equations below the relaxation time tau0 
+      // is inverse (1/tau0)
+      // Compute alpha and eta coefficients
+      argx = Model.dx[i];
+      argy = Model.dy[j];
+      // An extra tapering factor of exp(-(x/L)**2)
+      // is used to taper some coefficeints 
       Model.Eta1x[i,j]     = LibeExp(-argx)*LibeExp(-Model.Dt*tau0x);
       Model.Eta1y[i,j]     = LibeExp(-argy)*LibeExp(-Model.Dt*tau0y);
       Model.Eta2x[i,j]     = -Model.Dt*tau0x;
@@ -273,14 +360,12 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
  
       // For the Maxwell solid Dkappa = kappa and Drho = 1/rho
       // to comply with the solver algorithm in ac2d.e
-      Model.Dkappax[i,j]   = Model.Kappa[i,j];
-      Model.Dkappay[i,j]   = Model.Kappa[i,j];
-      Model.Drhox[i,j]     = Model.Rho[i,j];
-      Model.Drhoy[i,j]     = Model.Rho[i,j];
+      //Model.Dkappax[i,j]   = Model.Kappa[i,j];
+      //Model.Dkappay[i,j]   = Model.Kappa[i,j];
+      //Model.Drhox[i,j]     = Model.Rho[i,j];
+      //Model.Drhoy[i,j]     = Model.Rho[i,j];
     }
   }
-
-  return(Model);
 }
 // Modelsls creates a new model with Standard Linear Solid Q
 //
@@ -395,7 +480,7 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Q,
 //
 // Here Qmin= 1.1, while Qmax is equal to the value 
 // of Q at the inner border.
-struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q, 
+struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,*] Qr, 
                       float Dx, float Dt, float W0, int Nb)
 {
   struct model Model; // Object to instantiate
@@ -426,7 +511,8 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
   Nx = Model.Nx;
   Ny = Model.Ny;
   Model.Rho     =  new(float [Nx,Ny]); // Density
-  Model.Q       =  new(float [Nx,Ny]); // Q-values
+  Model.Qp       =  new(float [Nx,Ny]); // Q-values
+  Model.Qr       =  new(float [Nx,Ny]); // Q-values
   Model.Kappa   = new(float [Nx,Ny]);  // Unrelaxed bulk modulus
 
   // The following parameters are the change in the 
@@ -458,7 +544,8 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
     for(i=0; i<Nx;i=i+1){
       Model.Kappa[i,j] = rho[i,j]*vp[i,j]*vp[i,j];
       Model.Rho[i,j]   = 1.0/rho[i,j];
-      Model.Q[i,j]       = Q[i,j];
+      Model.Qp[i,j]       = Qp[i,j];
+      Model.Qr[i,j]       = Qr[i,j];
     }
   }
 
@@ -478,7 +565,7 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
       tausmin = 1.0/tausmin;
 
-      Qmax  = Model.Q[Nb,j];
+      Qmax  = Model.Qp[Nb,j];
       // Note that we compute the inverse
       // of relaxation times, and use the same
       // name for the inverses, taus=1/taus.
@@ -490,7 +577,7 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Q,
       tausmax = 1.0/tausmax;
       tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
       tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
-      Qmax  = Model.Q[i,Nb];
+      Qmax  = Model.Qp[i,Nb];
       tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
       tauemax = 1.0/tauemax;
       tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
