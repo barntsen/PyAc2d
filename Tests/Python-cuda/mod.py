@@ -22,10 +22,13 @@ fqr      = "qr.bin"  # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
 press   = "p.bin"
+
 #Q-models
 MAXWELL = 1
 SLS     = 2
 rheol   = MAXWELL
+#rheol   = SLS
+
 #Source position
 sx       = np.zeros(1)
 sy       = np.zeros(1)

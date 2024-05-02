@@ -12,8 +12,10 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,
 int Modeld(float [*] d, float dx, int nb){}  // 1D profile function
 float Modeltaus(float Q, float w0){}         // Compute taus
 float Modeltaue(float Q, float w0){}         // Compute taue
-int ModelAlpha(struct model Model){}
-int ModelTheta(struct model Model){}
+int Modelalphamax(struct model Model){}
+int Modelthetamax(struct model Model){}
+int Modelalphasls(struct model Model){}
+int Modelthetasls(struct model Model){}
 
 // ModelNew creates a new model.
 //
@@ -58,6 +60,141 @@ struct model ModelNew(float [*,*] vp, float [*,*] rho, float [*,*] Qp,
   
   return(m);
 }
+
+// Modelalphasls computes the sls alpha coefficients
+int Modelalphasls(struct model Model){
+
+  int Nx,Ny;
+  int i,j;
+  float Qmin, Qmax;      // Min and Max value of Q
+  float argx, argy;     // Tapering values
+  float tau0;
+  float tauemax,tauemin;  // Max and min of taue
+  float tausmax,tausmin; // Max and min of taus
+  float tauex, tausx;    // Taus and Taue relaxation values  x-dir
+  float tauey, tausy;    // Taus and Taue relaxation valuses y-dir
+
+  Nx = Model.Nx;
+  Ny = Model.Ny;
+
+  // Compute relaxation times
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
+      tau0 = 1.0/Model.W0;   // Relaxation time corresponding to absorption top
+      Qmin = 1.1;            // MinimumQ-value at the outer boundaries
+
+      // Compute relaxation times corresponding to Qmax and Qmin
+      tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
+      tauemin = 1.0/tauemin;
+      tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
+      tausmin = 1.0/tausmin;
+
+      Qmax  = Model.Qp[Model.Nb,j];
+      // Note that we compute the inverse
+      // of relaxation times, and use the same
+      // name for the inverses, taus=1/taus.
+      // In all formulas below this section we
+      // work with the inverse of the relaxation times.
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+      tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
+      tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
+      Qmax  = Model.Qp[i,Model.Nb];
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+
+      // Interpolate relaxation times 
+      tauey = tauemin + (tauemax-tauemin)*Model.dy[j];
+      tausy = tausmin + (tausmax-tausmin)*Model.dy[j];
+
+      // In the equations below the relaxation times taue and taus
+      // are inverses (1/taue, 1/taus)
+      // Compute alpha and eta coefficients
+      argx = Model.dx[i];
+      argy = Model.dy[j];
+      // An extra tapering factor of exp(-(x/L)**2)
+      // is used to taper some coefficeints 
+      Model.Alpha1x[i,j]   = LibeExp(-argx)*LibeExp(-Model.Dt*tausx);
+      Model.Alpha1y[i,j]   = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
+      Model.Alpha2x[i,j]   = Model.Dt*tauex;
+      Model.Alpha2y[i,j]   = Model.Dt*tauey;
+    }
+  }
+  return (OK);
+}
+
+// Modelthetasls computes the sls theta coefficients
+int Modelthetasls(struct model Model){
+
+  int Nx,Ny;
+  int i,j;
+  float Qmin, Qmax;      // Q max and min
+  float argx, argy;      // Tapering values
+  float tauemax,tauemin; // Max and min of taue
+  float tausmax,tausmin; // Max and min of taus
+  float tauex, tausx;    // Taus and Taue relaxation values  x-dir
+  float tauey, tausy;    // Taus and Taue relaxation valuses y-dir
+  float tau0;
+
+  Nx = Model.Nx;
+  Ny = Model.Ny;
+
+  // Compute relaxation times
+  for(j=0; j<Ny;j=j+1){
+    for(i=0; i<Nx;i=i+1){
+      tau0 = 1.0/Model.W0;   // Relaxation time corresponding to absorption top
+      Qmin = 1.1;            // MinimumQ-value at the outer boundaries
+
+      // Compute relaxation times corresponding to Qmax and Qmin
+      tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
+      tauemin = 1.0/tauemin;
+      tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
+      tausmin = 1.0/tausmin;
+
+      Qmax  = Model.Qr[Model.Nb,j];
+      // Note that we compute the inverse
+      // of relaxation times, and use the same
+      // name for the inverses, taus=1/taus.
+      // In all formulas below this section we
+      // work with the inverse of the relaxation times.
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+      tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
+      tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
+      Qmax  = Model.Qr[i,Model.Nb];
+      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
+      tauemax = 1.0/tauemax;
+      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
+      tausmax = 1.0/tausmax;
+
+      // Interpolate relaxation times 
+      tauey = tauemin + (tauemax-tauemin)*Model.dy[j];
+      tausy = tausmin + (tausmax-tausmin)*Model.dy[j];
+
+      // In the equations below the relaxation times taue and taus
+      // are inverses (1/taue, 1/taus)
+      // Compute alpha and eta coefficients
+      argx = Model.dx[i];
+      argy = Model.dy[j];
+      // An extra tapering factor of exp(-(x/L)**2)
+      // is used to taper some coefficeints 
+      Model.Eta1x[i,j]     = LibeExp(-argx)*LibeExp(-Model.Dt*tausx);
+      Model.Eta1y[i,j]     = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
+      Model.Eta2x[i,j]     = Model.Dt*tauex;
+      Model.Eta2y[i,j]     = Model.Dt*tauey;
+    }
+  }
+  return (OK);
+}
+ 
+
+
 // Modelmaxwell creates a new model.
 //
 // Parameters: 
@@ -171,17 +308,7 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float
   struct model Model; // Object to instantiate
 
   int Nx,Ny;          // Model dimensions in x- and y-directions
-  
-  // Smoothing parameters
-  float Qmin, Qmax;       // Minimum and Maximum Q-values in boundary zone
-  float tau0min,tau0max;  // Taue values corresponding to Qmin and Qmax
-
-  // Relaxation times
-  float tau0x, tau0y;     
-
-  float argx;            // Temp variabels
-  float argy;            // Temp variables
-  int i,j;               // Loop indices
+  int i,j;            // Loop indices
 
   Model= new(struct model);
   Model.Dx = Dx;
@@ -236,10 +363,10 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float
   Modeld(Model.dy, Model.Dx, Model.Nb);
 
   // Comput Alpha coefficients
-  ModelAlpha(Model);
+  Modelalphamax(Model);
 
   // Comput Theta coefficients
-  ModelTheta(Model);
+  Modelthetamax(Model);
 
   for(j=0; j<Ny;j=j+1){
     for(i=0; i<Nx;i=i+1){
@@ -254,14 +381,15 @@ struct model Modelmaxwell(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float
   return(Model);
 }
 
-// ModelAlpha computes the alpha coefficients
-int ModelAlpha(struct model Model){
+// Modelalphamax computes the alpha coefficients
+// for the Maxwell model.
+int Modelalphamax(struct model Model){
   int Nx,Ny;
   int i,j;
-  float Qmin, Qmax;
-  float tau0min, tau0max;
-  float tau0x, tau0y;
-  float argx, argy;
+  float Qmin, Qmax;          // Q max and min
+  float tau0min, tau0max;    // Tau0 max and min
+  float tau0x, tau0y;        // Tau0 in x and y-dir
+  float argx, argy;          // Tapering values
 
   Nx = Model.Nx;
   Ny = Model.Ny;
@@ -306,16 +434,17 @@ int ModelAlpha(struct model Model){
  
     }
   }
+  return (OK);
 }
 
-// ModelTheta computes the Theta coefficients
-int ModelTheta(struct model Model){
+// Modelthetamax computes the Theta coefficients
+int Modelthetamax(struct model Model){
   int Nx,Ny;
   int i,j;
-  float Qmin, Qmax;
-  float tau0min, tau0max;
-  float tau0x, tau0y;
-  float argx, argy;
+  float Qmin, Qmax;         // Q max and min
+  float tau0min, tau0max;   // Tau0 max and min
+  float tau0x, tau0y;       // tau0 in x- and y-directions
+  float argx, argy;         // Tapering values
 
   Nx=Model.Nx;
   Ny=Model.Ny;
@@ -366,6 +495,7 @@ int ModelTheta(struct model Model){
       //Model.Drhoy[i,j]     = Model.Rho[i,j];
     }
   }
+  return(OK);
 }
 // Modelsls creates a new model with Standard Linear Solid Q
 //
@@ -486,19 +616,11 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,
   struct model Model; // Object to instantiate
 
   int Nx,Ny;          // Model dimensions in x- and y-directions
-  float tau0;         // Relaxation time at Peak 1/Q-value
-  
-  // Smoothing parameters
-  float Qmin, Qmax;       // Minimum and Maximum Q-values in boundary zone
-  float tauemin,tauemax;  // Taue values corresponding to Qmin and Qmax
-  float tausmin,tausmax;  // Taus values corresponding to Qmin and Qmax
 
   // Relaxation times
   float tausx, tausy;     
   float tauex, tauey;
 
-  float argx;            // Temp variabels
-  float argy;            // Temp variables
   int i,j;               // Loop indices
 
   Model= new(struct model);
@@ -552,57 +674,16 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,
   //Compute 1D profile functions
     Modeld(Model.dx, Model.Dx, Model.Nb);
     Modeld(Model.dy, Model.Dx, Model.Nb);
+
+ // Compute Alpha coefficients 
+    Modelalphasls(Model);
+
  
-  // Compute relaxation times
+ // Compute Theta coeffcients
+    Modelthetasls(Model);
+
   for(j=0; j<Ny;j=j+1){
-    for(i=0; i<Nx;i=i+1){
-      tau0 = 1.0/Model.W0;   // Relaxation time corresponding to absorption top
-      Qmin = 1.1;            // MinimumQ-value at the outer boundaries
-
-      // Compute relaxation times corresponding to Qmax and Qmin
-      tauemin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)+1.0);
-      tauemin = 1.0/tauemin;
-      tausmin = (tau0/Qmin)*(LibeSqrt(Qmin*Qmin+1.0)-1.0);
-      tausmin = 1.0/tausmin;
-
-      Qmax  = Model.Qp[Nb,j];
-      // Note that we compute the inverse
-      // of relaxation times, and use the same
-      // name for the inverses, taus=1/taus.
-      // In all formulas below this section we
-      // work with the inverse of the relaxation times.
-      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
-      tauemax = 1.0/tauemax;
-      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
-      tausmax = 1.0/tausmax;
-      tauex = tauemin + (tauemax-tauemin)*Model.dx[i];
-      tausx = tausmin + (tausmax-tausmin)*Model.dx[i];
-      Qmax  = Model.Qp[i,Nb];
-      tauemax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)+1.0);
-      tauemax = 1.0/tauemax;
-      tausmax = (tau0/Qmin)*(LibeSqrt(Qmax*Qmax+1.0)-1.0);
-      tausmax = 1.0/tausmax;
-
-      // Interpolate relaxation times 
-      tauey = tauemin + (tauemax-tauemin)*Model.dy[j];
-      tausy = tausmin + (tausmax-tausmin)*Model.dy[j];
-
-      // In the equations below the relaxation times taue and taus
-      // are inverses (1/taue, 1/taus)
-      // Compute alpha and eta coefficients
-      argx = Model.dx[i];
-      argy = Model.dy[j];
-      // An extra tapering factor of exp(-(x/L)**2)
-      // is used to taper some coefficeints 
-      Model.Alpha1x[i,j]   = LibeExp(-argx)*LibeExp(-Model.Dt*tausx);
-      Model.Alpha1y[i,j]   = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
-      Model.Alpha2x[i,j]   = Model.Dt*tauex;
-      Model.Alpha2y[i,j]   = Model.Dt*tauey;
-      Model.Eta1x[i,j]     = LibeExp(-argx)*LibeExp(-Model.Dt*tausx);
-      Model.Eta1y[i,j]     = LibeExp(-argy)*LibeExp(-Model.Dt*tausy);
-      Model.Eta2x[i,j]     = Model.Dt*tauex;
-      Model.Eta2y[i,j]     = Model.Dt*tauey;
- 
+    for(i=0; i<Nx;i=i+1){  
       // Compute the change in moduli due to
       // visco-ealsticity (is equal to zero for the elastic case)
       Model.Dkappax[i,j]   = Model.Kappa[i,j]
@@ -615,7 +696,6 @@ struct model Modelsls(float [*,*] vp, float [*,*] rho, float [*,*] Qp, float [*,
                              *(1.0-tausy/tauey);
     }
   }
-
   return(Model);
 }
 //
