@@ -47,6 +47,5 @@ class model :
                                 c_void_p,c_float,c_float,c_float,c_int,c_int]
     pyac2d.ModelNew.restype=c_void_p
 
-    print("rheol :", par.rheol)
     self.model=pyac2d.ModelNew (vp,rho,qp,qr,c_float(par.dx),c_float(par.dt),
                                 c_float(par.w0),c_int(par.nb),c_int(par.rheol))

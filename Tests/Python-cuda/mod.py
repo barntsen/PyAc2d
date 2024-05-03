@@ -26,8 +26,8 @@ press   = "p.bin"
 #Q-models
 MAXWELL = 1
 SLS     = 2
-rheol   = MAXWELL
-#rheol   = SLS
+#rheol   = MAXWELL
+rheol   = SLS
 
 #Source position
 sx       = np.zeros(1)
