@@ -142,7 +142,8 @@ struct model {int Nx;
 int Ny;
 int Nb;
 float W0;
-nctempfloat2 *Q;
+nctempfloat2 *Qp;
+nctempfloat2 *Qr;
 nctempfloat2 *Kappa;
 nctempfloat2 *Dkappax;
 nctempfloat2 *Dkappay;
@@ -166,7 +167,7 @@ typedef struct nctempmodel1 {int d[1]; struct model *a; } nctempmodel1;
 struct nctempmodel2 {int d[2]; struct model *a; } ;
 struct nctempmodel3 {int d[3]; struct model *a; } ;
 struct nctempmodel4 {int d[4]; struct model *a; } ;
-struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,nctempfloat2 *Q,float Dx,float Dt,float W0,int Nb,int Rheol);
+struct model* ModelNew (nctempfloat2 *kappa,nctempfloat2 *rho,nctempfloat2 *Qp,nctempfloat2 *Qr,float Dx,float Dt,float W0,int Nb,int Rheol);
 float ModelStability (struct model* Model);
 struct ac2d {nctempfloat2 *p;
 nctempfloat2 *vx;
@@ -267,12 +268,12 @@ nctemp100->d[0]=Model->Nx;
 nctemp100->d[1]=Model->Ny;
 nctemp100->a=(float *)RunMalloc(sizeof(float)*nctemp101);
 Ac2d->thetay=nctemp100;
-j =0;
-int nctemp110 = (j < Model->Ny);
+i =0;
+int nctemp110 = (i < Model->Nx);
 while(nctemp110){
 {
-i =0;
-int nctemp118 = (i < Model->Nx);
+j =0;
+int nctemp118 = (j < Model->Ny);
 while(nctemp118){
 {
 int nctemp125=i;
@@ -304,15 +305,15 @@ nctemp181=j*Ac2d->thetay->d[0]+nctemp181;
 Ac2d->thetay->a[nctemp181] =0.0;
 Ac2d->ts =0;
 }
-int nctemp197 = i + 1;
-i =nctemp197;
-int nctemp198 = (i < Model->Nx);
+int nctemp197 = j + 1;
+j =nctemp197;
+int nctemp198 = (j < Model->Ny);
 nctemp118=nctemp198;
 }
 }
-int nctemp210 = j + 1;
-j =nctemp210;
-int nctemp211 = (j < Model->Ny);
+int nctemp210 = i + 1;
+i =nctemp210;
+int nctemp211 = (i < Model->Nx);
 nctemp110=nctemp211;
 }
 return Ac2d;
@@ -453,7 +454,7 @@ nx =Model->Nx;
 ny =Model->Ny;
 
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){for(i=0;i<nx;i=i+1){{
 int nctemp507=i;
 nctemp507=j*Ac2d->vx->d[0]+nctemp507;
 int nctemp524=i;
@@ -499,7 +500,7 @@ nx =Model->Nx;
 ny =Model->Ny;
 
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){for(i=0;i<nx;i=i+1){{
 int nctemp605=i;
 nctemp605=j*Ac2d->vy->d[0]+nctemp605;
 int nctemp622=i;
@@ -545,7 +546,7 @@ nx =Model->Nx;
 ny =Model->Ny;
 
  #pragma omp parallel for
-for(i=0;i<nx;i=i+1){for(j=0;j<ny;j=j+1){{
+for(j=0;j<ny;j=j+1){for(i=0;i<nx;i=i+1){{
 int nctemp703=i;
 nctemp703=j*Ac2d->p->d[0]+nctemp703;
 int nctemp720=i;

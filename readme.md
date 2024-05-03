@@ -16,7 +16,7 @@ and the same source code can then be used for both CPUs and GPUs.
 
 ## Installation
 Clone the repo to a local directory.
-The run the mk.sh in the top directory.
+Run the mk.sh in the top directory.
 The script will compile the c/cuda/hip code and
 install a simple script (ac2dmod) for running simulations.
 

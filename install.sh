@@ -35,6 +35,7 @@ cp Scripts/parula.py        Bin
 cp Ac2d/babin.py            Bin
 cp Scripts/bacolmaps.py     Bin
 cp Scripts/pltcom.py        Bin
+cp Scripts/segy.py          Bin
 
 # Install shared libs (python callable)
 

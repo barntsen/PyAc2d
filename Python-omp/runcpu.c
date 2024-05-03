@@ -265,10 +265,10 @@ int RunExit()
   return(OK);
 }
 // RunExp - exponential
-float RunExp(float x)
-{
-  return(exp(x));
-}
+//float RunExp(float x)
+//{
+//  return(exp(x));
+//}
 
 // RunSystem executes a shell command
 int RunSystem (nctempchar1 *cmd)

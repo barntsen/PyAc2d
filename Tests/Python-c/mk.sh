@@ -22,8 +22,6 @@ spike -n1 $n1 -n2 $n2 -val 100000.0 qp.bin
 spike -n1 $n1 -n2 $n2 -val 100000.0 qr.bin
 
 #Run modelling
-export NTHREADS=1024
-export NBLOCKS=1024
 BIN=../../Bin
 $BIN/ac2dmod -m cpu mod.py 
 

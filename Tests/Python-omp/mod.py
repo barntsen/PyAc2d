@@ -3,8 +3,8 @@ import numpy as np
 #Set all modeling parameters
 #------------------------------
 pi      = 3.14159
-nx      = 256       #No of grdipoints in x-direction
-ny      = 256       #No of gridpoints in y-direction
+nx      = 251       #No of grdipoints in x-direction
+ny      = 251       #No of gridpoints in y-direction
 dx      = 5.0       #Grid interval
 dt      = 0.0005;   #Time sampling interval
 nt      = 1501      #No of time steps
@@ -17,7 +17,8 @@ nb      = 35        #No of PML boundary points
 l       = 6         #Length of differentiator
 fvp     = "vp.bin"  # Vp file name
 frho    = "rho.bin" # Rho file name
-fq      = "q.bin"   # Q file name
+fqp      = "qp.bin"   # Q file name
+fqr      = "qr.bin"   # Q file name
 fsrc    = "src.bin" # Wavelet file name
 fsnp    = "snp.bin" # Snapshot file name
 press   = "p.bin"

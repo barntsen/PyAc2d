@@ -27,7 +27,6 @@
 #ec -c libe.e
 #cp runcpu.e runcpu.c
 
-#--- Uncomment lines below for Ubuntu
 gcc -O2 -fPIC -c libe.c runcpu.c \
      pyeps.c model.c src.c rec.c diff.c ac2d.c  
 
